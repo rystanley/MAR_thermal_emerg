@@ -27,7 +27,7 @@ p1 <- ggplot()+
   geom_sf(data=draft_network,fill=NA,lwd=0.8)+
   theme_bw()
 
-ggsave("inst/network_grid.png",p1,width=6,height=6,dpi=600,units="in")
+ggsave("inst/network_grid.png",p1,width=6,height=6,dpi=600,units="in") #this is used by the readme
 
 #count the number of grid cells occupied by each site
 grid_count <- sites_grid%>%
