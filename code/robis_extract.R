@@ -54,16 +54,18 @@
       geom_sf(data=nw_alantic,fill=NA)+
       geom_sf(data=bioregion)+
       theme_bw()+
-      coord_sf(expand=0;p1#this makes it so there is no buffer around the extent of the nw_atlantic (zoomed out range)
+      coord_sf(expand=0);p1  #this makes it so there is no buffer around the extent of the nw_atlantic (zoomed out range)
 
 ## Depth limit extractions ------------
+    
+    if(!dir.exists("output/robis_extractions")){dir.create("output/robis_extractions")} #This will create the directory if it doesn't already exist that the outputs will be stored
 
     depth_ranges <- NULL #this is a holder that will be built in the loop
     depth_extracts <- list() #this empty list object that will be filled in the loop for each species.
     
-    for(i in target_species$scientific){
-      
-     message(paste0("working on ",i)) #progress message so you can see where you are at
+  for(i in target_species$scientific){
+    
+      message(paste0("working on ",i)) #progress message so you can see where you are at
       
       #do the obis extraction
       temp <- occurrence(i, #'i' is iteratively assigned the value of each species 
@@ -71,31 +73,44 @@
                          startdate = "2000-01-01",enddate = "2021-09-01")%>% #all observations as of September for the past 2 decades
               mutate(scientific=i)# this will make sure you know what the 'input' was. 
       
+      #for some species there are no depth records and obis doesn't return a depth based column, so we need to build in a contingency
+      if(!"depth" %in% colnames(temp)){
+        
+        temp$depth <- NA
+        depth_temp <- data.frame(depth_lower_obis=NA,depth_upper_obis=NA,scientific=i)
+        
+       
+      } else {
+      
       #now extract the depth ranges based on quantiles
       depth_temp <- temp%>%
                     filter(!is.na(depth))%>%
                     summarise(depth_lower_obis=quantile(depth,0.1), #10th percentile
-                              upper_depth_obis=quantile(depth,0.9))%>% #90th percentile
+                              depth_upper_obis=quantile(depth,0.9))%>% #90th percentile
                     mutate(scientific = i)%>%
                     data.frame()
+      }
       
       #now you can iteratively build a dataframe that has the scientific name and the approximate 10th and 90th percentiles
       depth_ranges <- rbind(depth_ranges,depth_temp)
       
-      #data extracts for location and full depth range - just so we have an idea of the distribution for later checking. This will be saved as a list object in R
-      depth_extracts[[i]] <- temp%>%dplyr::select(scientific,decimalLongitude,decimalLatitude,depth)
-      
       #create a variable new name without spaces
       name <- gsub(" ","_",i)
-     
+      
+      #data extracts for location and full depth range - just so we have an idea of the distribution for later checking. This will be saved as a list object in R
+      depth_extracts[[name]] <- temp%>%dplyr::select(scientific,decimalLongitude,decimalLatitude,depth)
+      
       #assign that  name  to the data object 'temp' in the work environment. This stops it from being saved over each iteration of the loop
       #assign(name,temp) #now you want to create a variable name that 
       
-      save(temp,file=paste0("output/",name,".RData")) #save the output for future use. 
+      save(temp,file=paste0("output/robis_extractions/",name,".RData")) #save the output for future use. 
       
     }
 
-
+  #save the summarized outputs and coordinates
+    save(depth_extracts,file="output/depth_extracts_coordinates.RData")
+    write.csv(depth_ranges,file="output/depth_ranges_output.csv",row.names=FALSE)
+    
 
 ### DEPRICATED CODE ----------------
 
