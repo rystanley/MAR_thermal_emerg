@@ -64,11 +64,13 @@ for(i in target_species$scientific){
   
  message(paste0("working on ",i)) #progress message so you can see where you are at
   
+  #do the obis extraction
   temp <- occurrence(i, #'i' is iteratively assigned the value of each species 
                      geometry=nw_atlantic%>%st_as_text(), #this is the text based syntax required of robis for the polygon
                      startdate = "2000-01-01",enddate = "2021-09-01")%>% #all observations as of September for the past 2 decades
           mutate(scientific=i)# this will make sure you know what the 'input' was. 
   
+  #now extract the depth ranges based on quantiles
   depth_temp <- temp%>%
                 filter(!is.na(depth))%>%
                 summarise(depth_lower_obis=quantile(depth,0.1), #10th percentile
