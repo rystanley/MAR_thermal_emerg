@@ -93,22 +93,23 @@ for(i in target_species$scientific){
 }
 
 
-obis_extract <- target_species%>%
-                filter(scientific %in% c("Homarus americanus","Anarhichas lupus"))%>%
-                group_by(scientific)%>% #so dplyr will apply the function 'occurrence' using the 'do' function. so it 'does' 'occurance' for each 'scientific' name
-                do(occurrence(.$scientific,# flags that you want this column 
-                              geometry=nw_atlantic%>%st_as_text(), #this is the text based syntax required of robis for the polygon
-                              startdate = "2000-01-01",enddate = "2021-09-01"))%>% #all observations as of September
-                dplyr::select(decimalLatitude,decimalLongitude,scientificName,
-                              date_start,date_end,date_year,month,year,
-                              lifeStage,
-                              maximumDepthInMeters,minimumDepthInMeters,depth)%>%
-                ungroup()%>% #this will collapse the information down with a column corresponding to each row for each 'scientific' or species
-                data.frame() #this just converts it to a data.frame 
-                
-depth_extract <- 
-                
-tt <- occurrence("gadus morhua",geometry=bioregion_box%>%st_as_text(),startdate = "2000-01-01",enddate = "2020-01-01") #st_as_text
 
-ggplot()+geom_histogram(data=tt,aes(x=depth))+geom_vline(xintercept = quantile(tt$depth,c(0.1,0.9),na.rm=T))
+
+
+#if you want to do this in dplyr (a bit faster but more risky because the data from each obis extraction isn't saved)
+# obis_extract <- target_species%>%
+#                 filter(scientific %in% c("Homarus americanus","Anarhichas lupus"))%>%
+#                 group_by(scientific)%>% #so dplyr will apply the function 'occurrence' using the 'do' function. so it 'does' 'occurance' for each 'scientific' name
+#                 do(occurrence(.$scientific,# flags that you want this column 
+#                               geometry=nw_atlantic%>%st_as_text(), #this is the text based syntax required of robis for the polygon
+#                               startdate = "2000-01-01",enddate = "2021-09-01"))%>% #all observations as of September
+#                 dplyr::select(decimalLatitude,decimalLongitude,scientificName,
+#                               date_start,date_end,date_year,month,year,
+#                               lifeStage,
+#                               maximumDepthInMeters,minimumDepthInMeters,depth)%>%
+#                 ungroup()%>% #this will collapse the information down with a column corresponding to each row for each 'scientific' or species
+#                 data.frame() #this just converts it to a data.frame 
+#                 
+# 
+# ggplot()+geom_histogram(data=tt,aes(x=depth))+geom_vline(xintercept = quantile(tt$depth,c(0.1,0.9),na.rm=T))
 
