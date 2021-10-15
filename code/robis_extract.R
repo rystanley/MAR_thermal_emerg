@@ -107,9 +107,9 @@
       
     }
 
-  #save the summarized outputs and coordinates
-    save(depth_extracts,file="output/depth_extracts_coordinates.RData")
-    write.csv(depth_ranges,file="output/depth_ranges_output.csv",row.names=FALSE)
+  #save the summarized outputs and coordinates. Note this will only overwrite if the file is not there already. 
+    if(!file.exists("output/depth_extracts_coordinates.RData")) {save(depth_extracts,file="output/depth_extracts_coordinates.RData")}
+    if(!file.exists("output/depth_ranges_output.csv")){write.csv(depth_ranges,file="output/depth_ranges_output.csv",row.names=FALSE)}
     
 
 ### DEPRICATED CODE ----------------
