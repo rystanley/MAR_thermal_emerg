@@ -1,6 +1,6 @@
 Common,scientific,functional,importance,temp_lower,temp_upper,depth_lower,depth_upper
 American lobster,Homarus americanus,Decapod,Commercially fished,7.93,16.23,4,50
-American plaice,Hippoglossaides platessoides,Large benthivore,Commercially fished/Endangered,0.91,11.4,90,250
+American plaice,Hippoglossoides platessoides,Large benthivore,Commercially fished/Endangered,0.91,11.4,90,250
 (ESS/WSS) Atlantic cod,Gadus morhua,Piscivore,Commercially fished/Endangered,4.15,12.16,20,200
 Atlantic halibut,Hippoglossus hippoglossus,Piscivore,Commercially fished,2.23,10.87,313,864
 Atlantic wolffish,Anarhichas lupus,Large benthivore,Special concern,2.01,10.1,1,500
