@@ -1,15 +1,15 @@
 ## Function for extracting species specific observations from OBIS 
-#https://ropensci.org/blog/2017/01/25/obis/
+  #https://ropensci.org/blog/2017/01/25/obis/
 
 #load libraries --------------
-library(sf)
-library(ggplot2)
-library(dplyr)
-library(robis)
-library(rnaturalearth)
+  library(sf)
+  library(ggplot2)
+  library(dplyr)
+  library(robis)
+  library(rnaturalearth)
 
 #load data ----------
-target_species <- read.csv("data/input_data_ryan.csv")
+  target_species <- read.csv("data/input_data_ryan.csv")
 
 #Projections ------------
   latlong <- "+proj=longlat +datum=NAD83 +no_defs +ellps=GRS80 +towgs84=0,0,0"
