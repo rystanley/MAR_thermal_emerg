@@ -35,7 +35,7 @@ grid_count <- sites_grid%>%
               summarise(count = n())%>%
               right_join(.,draft_network%>%data.frame()%>%dplyr::select(NAME,area))
 
-#shows as expected there is a correleation between the site size and the amount of overlap with the grids
+#shows as expected there is a correlation between the site size and the amount of overlap with the grids
 ggplot()+
   geom_point(data=grid_count,aes(area,count))+
   stat_smooth(method="lm")+
