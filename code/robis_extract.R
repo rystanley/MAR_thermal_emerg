@@ -21,7 +21,11 @@
     nw_atlantic <- st_bbox(c(xmin = -72 , xmax = -47.9, ymax = 61, ymin = 39.8 ),crs=latlong)%>%
                     st_as_sfc()%>%st_bbox()%>%st_as_sfc() #this is for ~ the Canadian NW Atlantic
     
-    bioregion_box <- bioregion%>%st_bbox()%>%st_as_sfc() #this is for the bioregion 
+    st_bbox(nw_atlantic) #this is the extent of our study area for obis extractions
+    
+    bioregion_box <- bioregion%>%st_bbox()%>%st_as_sfc() #bounding box for the focus region
+    
+    st_bbox(bioregion_box)#this is extent of our focal region 
 
 #basemaps ----------
     #full extent - this is a basemap of Canada and the USA
