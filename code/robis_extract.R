@@ -57,12 +57,52 @@ target_species <- read.csv("data/input_data_ryan.csv")
 
 #now extract data for each species from obis
 
+depth_ranges <- NULL #this is a holder that will be built in the loop
+depth_extracts <- list() #this empty list object that will be filled in the loop for each species.
+
+for(i in target_species$scientific){
+  
+ message(paste0("working on ",i)) #progress message so you can see where you are at
+  
+  temp <- occurrence(i, #'i' is iteratively assigned the value of each species 
+                     geometry=nw_atlantic%>%st_as_text(), #this is the text based syntax required of robis for the polygon
+                     startdate = "2000-01-01",enddate = "2021-09-01")%>% #all observations as of September for the past 2 decades
+          mutate(scientific=i)# this will make sure you know what the 'input' was. 
+  
+  depth_temp <- temp%>%
+                filter(!is.na(depth))%>%
+                summarise(depth_lower_obis=quantile(depth,0.1), #10th percentile
+                          upper_depth_obis=quantile(depth,0.9))%>% #90th percentile
+                mutate(scientific = i)%>%
+                data.frame()
+  
+  #now you can iteratively build a dataframe that has the scientific name and the approximate 10th and 90th percentiles
+  depth_ranges <- rbind(depth_ranges,depth_temp)
+  
+  #data extracts for location and full depth range - just so we have an idea of the distribution for later checking. This will be saved as a list object in R
+  depth_extracts[[i]] <- temp%>%dplyr::select(scientific,decimalLongitude,decimalLatitude,depth)
+  
+  #create a variable new name without spaces
+  name <- gsub(" ","_",i)
+ 
+  #assign that  name  to the data object 'temp' in the work environment. This stops it from being saved over each iteration of the loop
+  #assign(name,temp) #now you want to create a variable name that 
+  
+  save(temp,file=paste0("output/",name,".RData")) #save the output for future use. 
+  
+}
+
+
 obis_extract <- target_species%>%
-                filter(scientific %in% c("Homarus americanus","Gadus morhua"))%>%
-                group_by(scientific)%>% #so dplyr will apply the function 'occurance' using the 'do' function. so it 'does' 'occurance' for each 'scientific' name
+                filter(scientific %in% c("Homarus americanus","Anarhichas lupus"))%>%
+                group_by(scientific)%>% #so dplyr will apply the function 'occurrence' using the 'do' function. so it 'does' 'occurance' for each 'scientific' name
                 do(occurrence(.$scientific,# flags that you want this column 
                               geometry=nw_atlantic%>%st_as_text(), #this is the text based syntax required of robis for the polygon
-                              startdate = "2000-01-01",enddate = "2021-09-01")) #all observations as of September
+                              startdate = "2000-01-01",enddate = "2021-09-01"))%>% #all observations as of September
+                dplyr::select(decimalLatitude,decimalLongitude,scientificName,
+                              date_start,date_end,date_year,month,year,
+                              lifeStage,
+                              maximumDepthInMeters,minimumDepthInMeters,depth)%>%
                 ungroup()%>% #this will collapse the information down with a column corresponding to each row for each 'scientific' or species
                 data.frame() #this just converts it to a data.frame 
                 
