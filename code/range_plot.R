@@ -1,4 +1,4 @@
-## Code to create ggplot of the depth and thermal range comparisons
+### Ryan's code to create ggplot of the depth and thermal range comparisons
 
 #load libraries ----
 library(ggplot2)
@@ -84,4 +84,98 @@ dat <- read.csv("data/species_niche_formatted.csv")
     ggsave("output/depth_comparison.png",depth_plot,width=6,height=6,units="in",dpi=300)
     ggsave("output/temp_comparison.png",temp_plot,width=6,height=6,units="in",dpi=300)
     ggsave("output/combination_comparison.png",combo_plot,width=8,height=9,units="in",dpi=300)
+
+    #End.
     
+    
+#### Christine's ggplot code ####
+    #note: I like Ryan's better, but showing you anyways 
+    #so you get an example of how there are always multiple ways 
+      #to do the same thing
+    #Also, there are a few peices of code in here that will be good for 
+    #you to learn (e.g., black and white colour scale)
+df<-read.csv("Species list-Shaylyn_reformatted.csv")
+head(df) #see reformatting and new column names
+
+require(ggplot2) # can use "library()" or "require()"... both work
+require(dplyr)
+require(tidyr)
+require(patchwork)
+
+#use Ryan's code for ordering -- definitely most effective
+depth_order <- df%>%
+  filter(var=="depth")%>%
+  group_by(sci.name)%>%
+  summarise(max=max(upr,na.rm=T))%>% # highest estimated depth among datasets
+  ungroup()%>%
+  arrange(max)%>% # too many here
+  select(sci.name)
+
+#limit data to where depth data exist (only aquamaps and obis), and reorder sci.name by depth
+#note square brackets to subset data
+df.d <- df[df$source%in%c("aquamaps","obis"),]%>%
+  filter(var=="depth")%>%
+  mutate(sci.name=factor(sci.name,levels=depth_order$sci.name))
+
+p.depth<-ggplot(data=df.d,aes(group=source,col=source,x=upr,
+                xmin=lwr,xmax=upr.depth,y=sci.name))+
+  geom_errorbar(aes(xmin=lwr, xmax=upr), width=0.65,
+                position=position_dodge(width=0.6))+
+  theme_bw()+
+  scale_colour_grey(start=0.2, end=0.63)+
+  labs(x="Estimated depth range (m)",y="",col="")+
+  theme(legend.position = c(0.85,0.2),
+        panel.grid = element_blank())
+
+#Ryan's code for ordering again
+temp_order <- df%>%
+  filter(var=="temp")%>%
+  group_by(sci.name)%>%
+  summarise(max=max(upr,na.rm=T))%>% # highest estimated depth among datasets
+  ungroup()%>%
+  arrange(max)%>% # too many here
+  select(sci.name)
+
+#limit data to our temps (only aquamaps and shackell), and reorder sci.name by temp
+df.t <- df[df$source%in%c("aquamaps","shackell"),]%>%
+  filter(var=="temp")%>%
+  mutate(sci.name=factor(sci.name,levels=temp_order$sci.name))
+
+p.temp<-ggplot(data=df.t,aes(group=source,col=source,x=upr,
+                              xmin=lwr,xmax=upr.depth,y=sci.name))+
+  geom_errorbar(aes(xmin=lwr, xmax=upr), width=0.65,
+                position=position_dodge(width=0.6))+
+  theme_bw()+
+  scale_colour_grey(start=0.2, end=0.63)+
+  labs(x="Estimated temperature tolerance range ",y="",col="")+
+  theme(legend.position = c(0.85,0.2),
+        panel.grid = element_blank())
+
+#I have only used grid.arrange in the past, shown here, but Ryan's way 
+  #to combine plots using patchwork is better n the long-run
+  #(you'll run into fewer issues with lining up y axes when plots get more complicated)
+  #but mine works great here and is quite simple
+require(gridExtra)
+grid.arrange(p.depth,p.temp,ncol=1)
+
+#We could also arrange the y-axes both by depth, so they match
+#Then we could merge the two plots side-by-side (i.e., ncol=2 in grid.arrange),
+  #so that they are 2 panels of the same figure
+#I often do this by clipping the figures together in GIMP
+
+#..and another way to print your plots to a tiff 
+  #tiff often a good choice for publications (they usually perfer tiff over jpeg)
+  #also note 300dpi is often the preferred resolution for publications
+  #168mm is also the maximum width of a figure for publication (full page)
+tiff("Depth&TempRanges.tiff",width=168,height=168,units="mm",compression="lzw",bg="white", res=300)
+grid.arrange(p.depth,p.temp,ncol=1)
+dev.off()
+
+##Final notes: 
+##It's often a good idea to stick with black and grey 
+  #colour-schemes to avoid the issue of red/green being hard to decipher 
+  #for colour-blind people, and because it can be cheaper to publish
+  #black and white manuscripts.
+##With my code, I usually save the figure and check the legend position
+  #sometimes I need to go back and adjust the position since it changes
+  #slightly after saving to tiff.

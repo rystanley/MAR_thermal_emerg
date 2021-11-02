@@ -1,0 +1,181 @@
+common,sci.name,group,details,var,source,lwr,upr
+American lobster,Homarus americanus,Decapod,Commercially fished,temp,aquamaps,7.93,16.23
+American plaice,Hippoglossoides platessoides,Large benthivore,Commercially fished/Endangered,temp,aquamaps,0.91,11.4
+(ESS/WSS) Atlantic cod,Gadus morhua,Piscivore,Commercially fished/Endangered,temp,aquamaps,4.15,12.16
+Atlantic halibut,Hippoglossus hippoglossus,Piscivore,Commercially fished,temp,aquamaps,2.23,10.87
+Atlantic wolffish,Anarhichas lupus,Large benthivore,Special concern,temp,aquamaps,2.01,10.1
+Basking shark,Cetorhinus maximus,Planktivore,Endangered species,temp,aquamaps,8.71,21.14
+Blue whale,Balaenoptera musculus,Piscivore,Endangered species,temp,aquamaps,-1.3,27.88
+Copepod (1),Calanus glacialis,Zooplankton,Important food source,temp,aquamaps,-1.5,6
+Copepod (2),Calanus finmarchicus,Zooplankton,Important food source,temp,aquamaps,0.06,13.9
+Common shortfin squid,Illex illecebrosus,Piscivore,Important food source,temp,aquamaps,5.51,18.07
+Cusk,Brosme brosme,Piscivore,Endangered species,temp,aquamaps,5.55,11.9
+(ESS/WSS)haddock,Melanogrammus aeglefinus,Large benthivore,Commercially fished,temp,aquamaps,6.57,12.75
+Little skate,Leucoraja erinacea,Medium benthivore,Sensitive population,temp,aquamaps,8.47,17.04
+Loggerhead turtle,Caretta caretta,Piscivore,Vulnerable species,temp,aquamaps,15.31,27.9
+Monkfish,Lophius americanus,Piscivore,Commercially fished/Sensitive population,temp,aquamaps,6.42,18.33
+North Atlantic Right whale,Eubalaena glacialis,Planktivore,Critically Endangered,temp,aquamaps,7.94,23.94
+Northern Bottlenose whale,Hyperoodon ampullatus,Piscivore,Depleted species,temp,aquamaps,3.57,19.32
+Northern shrimp,Pandalus borealis,Planktivore,Commercially fished,temp,aquamaps,0,14
+(ESS/WSS)pollock,Pollachius virens,Piscivore,Commercially fished/Sensitive population,temp,aquamaps,7.13,12.26
+Porbeagle shark,Lamna nasus,Piscivore,Vulnerable species,temp,aquamaps,8.03,22.18
+Redfish species (1),Sebastes fasciatus,Piscivore,Commercially fished/Endangered,temp,aquamaps,5.7,11.92
+Redfish species (2),Sebastes mentella,Piscivore,Commercially fished/Endangered,temp,aquamaps,0.53,5.9
+Smooth skate,Malacoraja senta,Medium benthivore,Special concern,temp,aquamaps,4.19,11.38
+Snow crab,Chionoecetes opilio,Decapod,Commercially fished,temp,aquamaps,1.97,9.28
+Spiny dogfish,Squalus acanthias,Piscivore,Commercially fished/Threatened,temp,aquamaps,8.19,19.45
+Thorny skate,Amblyraja radiata,Large benthivore,Special concern,temp,aquamaps,0.37,11.22
+White hake,Urophycis tenuis,Piscivore,Commercially fished/Threatened,temp,aquamaps,5.91,15.32
+White shark,Carcharodon carcharias,Carnivore,Vulnerable species,temp,aquamaps,12.62,26.93
+Winter skate,Leucoraja ocellata,Large benthivore,Threatened,temp,aquamaps,6.85,15.44
+Witch flounder,Glyptocephalus cynoglossus,Medium benthivore,Commercially fished/Sensitive population,temp,aquamaps,4.31,12.76
+American lobster,Homarus americanus,Decapod,Commercially fished,temp,shackell,0,22
+American plaice,Hippoglossoides platessoides,Large benthivore,Commercially fished/Endangered,temp,shackell,-1,5
+(ESS/WSS) Atlantic cod,Gadus morhua,Piscivore,Commercially fished/Endangered,temp,shackell,6,13
+Atlantic halibut,Hippoglossus hippoglossus,Piscivore,Commercially fished,temp,shackell,3,9
+Atlantic wolffish,Anarhichas lupus,Large benthivore,Special concern,temp,shackell,,
+Basking shark,Cetorhinus maximus,Planktivore,Endangered species,temp,shackell,,
+Blue whale,Balaenoptera musculus,Piscivore,Endangered species,temp,shackell,,
+Copepod (1),Calanus glacialis,Zooplankton,Important food source,temp,shackell,,
+Copepod (2),Calanus finmarchicus,Zooplankton,Important food source,temp,shackell,,
+Common shortfin squid,Illex illecebrosus,Piscivore,Important food source,temp,shackell,,
+Cusk,Brosme brosme,Piscivore,Endangered species,temp,shackell,,
+(ESS/WSS)haddock,Melanogrammus aeglefinus,Large benthivore,Commercially fished,temp,shackell,1,13
+Little skate,Leucoraja erinacea,Medium benthivore,Sensitive population,temp,shackell,,
+Loggerhead turtle,Caretta caretta,Piscivore,Vulnerable species,temp,shackell,,
+Monkfish,Lophius americanus,Piscivore,Commercially fished/Sensitive population,temp,shackell,,
+North Atlantic Right whale,Eubalaena glacialis,Planktivore,Critically Endangered,temp,shackell,,
+Northern Bottlenose whale,Hyperoodon ampullatus,Piscivore,Depleted species,temp,shackell,,
+Northern shrimp,Pandalus borealis,Planktivore,Commercially fished,temp,shackell,0,8
+(ESS/WSS)pollock,Pollachius virens,Piscivore,Commercially fished/Sensitive population,temp,shackell,,
+Porbeagle shark,Lamna nasus,Piscivore,Vulnerable species,temp,shackell,,
+Redfish species (1),Sebastes fasciatus,Piscivore,Commercially fished/Endangered,temp,shackell,3,8
+Redfish species (2),Sebastes mentella,Piscivore,Commercially fished/Endangered,temp,shackell,,
+Smooth skate,Malacoraja senta,Medium benthivore,Special concern,temp,shackell,,
+Snow crab,Chionoecetes opilio,Decapod,Commercially fished,temp,shackell,-1,4
+Spiny dogfish,Squalus acanthias,Piscivore,Commercially fished/Threatened,temp,shackell,,
+Thorny skate,Amblyraja radiata,Large benthivore,Special concern,temp,shackell,,
+White hake,Urophycis tenuis,Piscivore,Commercially fished/Threatened,temp,shackell,,
+White shark,Carcharodon carcharias,Carnivore,Vulnerable species,temp,shackell,,
+Winter skate,Leucoraja ocellata,Large benthivore,Threatened,temp,shackell,,
+Witch flounder,Glyptocephalus cynoglossus,Medium benthivore,Commercially fished/Sensitive population,temp,shackell,,
+American lobster,Homarus americanus,Decapod,Commercially fished,temp,obis,,
+American plaice,Hippoglossoides platessoides,Large benthivore,Commercially fished/Endangered,temp,obis,,
+(ESS/WSS) Atlantic cod,Gadus morhua,Piscivore,Commercially fished/Endangered,temp,obis,,
+Atlantic halibut,Hippoglossus hippoglossus,Piscivore,Commercially fished,temp,obis,,
+Atlantic wolffish,Anarhichas lupus,Large benthivore,Special concern,temp,obis,,
+Basking shark,Cetorhinus maximus,Planktivore,Endangered species,temp,obis,,
+Blue whale,Balaenoptera musculus,Piscivore,Endangered species,temp,obis,,
+Copepod (1),Calanus glacialis,Zooplankton,Important food source,temp,obis,,
+Copepod (2),Calanus finmarchicus,Zooplankton,Important food source,temp,obis,,
+Common shortfin squid,Illex illecebrosus,Piscivore,Important food source,temp,obis,,
+Cusk,Brosme brosme,Piscivore,Endangered species,temp,obis,,
+(ESS/WSS)haddock,Melanogrammus aeglefinus,Large benthivore,Commercially fished,temp,obis,,
+Little skate,Leucoraja erinacea,Medium benthivore,Sensitive population,temp,obis,,
+Loggerhead turtle,Caretta caretta,Piscivore,Vulnerable species,temp,obis,,
+Monkfish,Lophius americanus,Piscivore,Commercially fished/Sensitive population,temp,obis,,
+North Atlantic Right whale,Eubalaena glacialis,Planktivore,Critically Endangered,temp,obis,,
+Northern Bottlenose whale,Hyperoodon ampullatus,Piscivore,Depleted species,temp,obis,,
+Northern shrimp,Pandalus borealis,Planktivore,Commercially fished,temp,obis,,
+(ESS/WSS)pollock,Pollachius virens,Piscivore,Commercially fished/Sensitive population,temp,obis,,
+Porbeagle shark,Lamna nasus,Piscivore,Vulnerable species,temp,obis,,
+Redfish species (1),Sebastes fasciatus,Piscivore,Commercially fished/Endangered,temp,obis,,
+Redfish species (2),Sebastes mentella,Piscivore,Commercially fished/Endangered,temp,obis,,
+Smooth skate,Malacoraja senta,Medium benthivore,Special concern,temp,obis,,
+Snow crab,Chionoecetes opilio,Decapod,Commercially fished,temp,obis,,
+Spiny dogfish,Squalus acanthias,Piscivore,Commercially fished/Threatened,temp,obis,,
+Thorny skate,Amblyraja radiata,Large benthivore,Special concern,temp,obis,,
+White hake,Urophycis tenuis,Piscivore,Commercially fished/Threatened,temp,obis,,
+White shark,Carcharodon carcharias,Carnivore,Vulnerable species,temp,obis,,
+Winter skate,Leucoraja ocellata,Large benthivore,Threatened,temp,obis,,
+Witch flounder,Glyptocephalus cynoglossus,Medium benthivore,Commercially fished/Sensitive population,temp,obis,,
+American lobster,Homarus americanus,Decapod,Commercially fished,depth,aquamaps,4,50
+American plaice,Hippoglossoides platessoides,Large benthivore,Commercially fished/Endangered,depth,aquamaps,90,250
+(ESS/WSS) Atlantic cod,Gadus morhua,Piscivore,Commercially fished/Endangered,depth,aquamaps,20,200
+Atlantic halibut,Hippoglossus hippoglossus,Piscivore,Commercially fished,depth,aquamaps,313,864
+Atlantic wolffish,Anarhichas lupus,Large benthivore,Special concern,depth,aquamaps,1,500
+Basking shark,Cetorhinus maximus,Planktivore,Endangered species,depth,aquamaps,0,834
+Blue whale,Balaenoptera musculus,Piscivore,Endangered species,depth,aquamaps,1000,4000
+Copepod (1),Calanus glacialis,Zooplankton,Important food source,depth,aquamaps,,
+Copepod (2),Calanus finmarchicus,Zooplankton,Important food source,depth,aquamaps,423,1221
+Common shortfin squid,Illex illecebrosus,Piscivore,Important food source,depth,aquamaps,126,434
+Cusk,Brosme brosme,Piscivore,Endangered species,depth,aquamaps,18,549
+(ESS/WSS)haddock,Melanogrammus aeglefinus,Large benthivore,Commercially fished,depth,aquamaps,10,200
+Little skate,Leucoraja erinacea,Medium benthivore,Sensitive population,depth,aquamaps,37,152
+Loggerhead turtle,Caretta caretta,Piscivore,Vulnerable species,depth,aquamaps,0,40
+Monkfish,Lophius americanus,Piscivore,Commercially fished/Sensitive population,depth,aquamaps,99,352
+North Atlantic Right whale,Eubalaena glacialis,Planktivore,Critically Endangered,depth,aquamaps,10,200
+Northern Bottlenose whale,Hyperoodon ampullatus,Piscivore,Depleted species,depth,aquamaps,1000,2000
+Northern shrimp,Pandalus borealis,Planktivore,Commercially fished,depth,aquamaps,50,500
+(ESS/WSS)pollock,Pollachius virens,Piscivore,Commercially fished/Sensitive population,depth,aquamaps,74,188
+Porbeagle shark,Lamna nasus,Piscivore,Vulnerable species,depth,aquamaps,0,300
+Redfish species (1),Sebastes fasciatus,Piscivore,Commercially fished/Endangered,depth,aquamaps,128,366
+Redfish species (2),Sebastes mentella,Piscivore,Commercially fished/Endangered,depth,aquamaps,446,791
+Smooth skate,Malacoraja senta,Medium benthivore,Special concern,depth,aquamaps,154,426
+Snow crab,Chionoecetes opilio,Decapod,Commercially fished,depth,aquamaps,100,300
+Spiny dogfish,Squalus acanthias,Piscivore,Commercially fished/Threatened,depth,aquamaps,50,300
+Thorny skate,Amblyraja radiata,Large benthivore,Special concern,depth,aquamaps,25,440
+White hake,Urophycis tenuis,Piscivore,Commercially fished/Threatened,depth,aquamaps,100,247
+White shark,Carcharodon carcharias,Carnivore,Vulnerable species,depth,aquamaps,0,250
+Winter skate,Leucoraja ocellata,Large benthivore,Threatened,depth,aquamaps,12,59
+Witch flounder,Glyptocephalus cynoglossus,Medium benthivore,Commercially fished/Sensitive population,depth,aquamaps,45,366
+American lobster,Homarus americanus,Decapod,Commercially fished,depth,shackell,,
+American plaice,Hippoglossoides platessoides,Large benthivore,Commercially fished/Endangered,depth,shackell,,
+(ESS/WSS) Atlantic cod,Gadus morhua,Piscivore,Commercially fished/Endangered,depth,shackell,,
+Atlantic halibut,Hippoglossus hippoglossus,Piscivore,Commercially fished,depth,shackell,,
+Atlantic wolffish,Anarhichas lupus,Large benthivore,Special concern,depth,shackell,,
+Basking shark,Cetorhinus maximus,Planktivore,Endangered species,depth,shackell,,
+Blue whale,Balaenoptera musculus,Piscivore,Endangered species,depth,shackell,,
+Copepod (1),Calanus glacialis,Zooplankton,Important food source,depth,shackell,,
+Copepod (2),Calanus finmarchicus,Zooplankton,Important food source,depth,shackell,,
+Common shortfin squid,Illex illecebrosus,Piscivore,Important food source,depth,shackell,,
+Cusk,Brosme brosme,Piscivore,Endangered species,depth,shackell,,
+(ESS/WSS)haddock,Melanogrammus aeglefinus,Large benthivore,Commercially fished,depth,shackell,,
+Little skate,Leucoraja erinacea,Medium benthivore,Sensitive population,depth,shackell,,
+Loggerhead turtle,Caretta caretta,Piscivore,Vulnerable species,depth,shackell,,
+Monkfish,Lophius americanus,Piscivore,Commercially fished/Sensitive population,depth,shackell,,
+North Atlantic Right whale,Eubalaena glacialis,Planktivore,Critically Endangered,depth,shackell,,
+Northern Bottlenose whale,Hyperoodon ampullatus,Piscivore,Depleted species,depth,shackell,,
+Northern shrimp,Pandalus borealis,Planktivore,Commercially fished,depth,shackell,,
+(ESS/WSS)pollock,Pollachius virens,Piscivore,Commercially fished/Sensitive population,depth,shackell,,
+Porbeagle shark,Lamna nasus,Piscivore,Vulnerable species,depth,shackell,,
+Redfish species (1),Sebastes fasciatus,Piscivore,Commercially fished/Endangered,depth,shackell,,
+Redfish species (2),Sebastes mentella,Piscivore,Commercially fished/Endangered,depth,shackell,,
+Smooth skate,Malacoraja senta,Medium benthivore,Special concern,depth,shackell,,
+Snow crab,Chionoecetes opilio,Decapod,Commercially fished,depth,shackell,,
+Spiny dogfish,Squalus acanthias,Piscivore,Commercially fished/Threatened,depth,shackell,,
+Thorny skate,Amblyraja radiata,Large benthivore,Special concern,depth,shackell,,
+White hake,Urophycis tenuis,Piscivore,Commercially fished/Threatened,depth,shackell,,
+White shark,Carcharodon carcharias,Carnivore,Vulnerable species,depth,shackell,,
+Winter skate,Leucoraja ocellata,Large benthivore,Threatened,depth,shackell,,
+Witch flounder,Glyptocephalus cynoglossus,Medium benthivore,Commercially fished/Sensitive population,depth,shackell,,
+American lobster,Homarus americanus,Decapod,Commercially fished,depth,obis,7.32,32.92
+American plaice,Hippoglossoides platessoides,Large benthivore,Commercially fished/Endangered,depth,obis,59.7,350.5
+(ESS/WSS) Atlantic cod,Gadus morhua,Piscivore,Commercially fished/Endangered,depth,obis,58.5,339
+Atlantic halibut,Hippoglossus hippoglossus,Piscivore,Commercially fished,depth,obis,58.5,319.85
+Atlantic wolffish,Anarhichas lupus,Large benthivore,Special concern,depth,obis,65,325.5
+Basking shark,Cetorhinus maximus,Planktivore,Endangered species,depth,obis,0,0
+Blue whale,Balaenoptera musculus,Piscivore,Endangered species,depth,obis,,
+Copepod (1),Calanus glacialis,Zooplankton,Important food source,depth,obis,7.5,210
+Copepod (2),Calanus finmarchicus,Zooplankton,Important food source,depth,obis,7.5,175.29
+Common shortfin squid,Illex illecebrosus,Piscivore,Important food source,depth,obis,57.6,398.9
+Cusk,Brosme brosme,Piscivore,Endangered species,depth,obis,95.35,383.45
+(ESS/WSS)haddock,Melanogrammus aeglefinus,Large benthivore,Commercially fished,depth,obis,56.5,220
+Little skate,Leucoraja erinacea,Medium benthivore,Sensitive population,depth,obis,32,115.3
+Loggerhead turtle,Caretta caretta,Piscivore,Vulnerable species,depth,obis,6,250
+Monkfish,Lophius americanus,Piscivore,Commercially fished/Sensitive population,depth,obis,60.55,334
+North Atlantic Right whale,Eubalaena glacialis,Planktivore,Critically Endangered,depth,obis,0,0.8
+Northern Bottlenose whale,Hyperoodon ampullatus,Piscivore,Depleted species,depth,obis,,
+Northern shrimp,Pandalus borealis,Planktivore,Commercially fished,depth,obis,80.79,352.8
+(ESS/WSS)pollock,Pollachius virens,Piscivore,Commercially fished/Sensitive population,depth,obis,46,244.5
+Porbeagle shark,Lamna nasus,Piscivore,Vulnerable species,depth,obis,580,1592.5
+Redfish species (1),Sebastes fasciatus,Piscivore,Commercially fished/Endangered,depth,obis,63.375,216
+Redfish species (2),Sebastes mentella,Piscivore,Commercially fished/Endangered,depth,obis,127,570
+Smooth skate,Malacoraja senta,Medium benthivore,Special concern,depth,obis,84.1248,417
+Snow crab,Chionoecetes opilio,Decapod,Commercially fished,depth,obis,77.5,373.5
+Spiny dogfish,Squalus acanthias,Piscivore,Commercially fished/Threatened,depth,obis,39.5,223
+Thorny skate,Amblyraja radiata,Large benthivore,Special concern,depth,obis,65.5,440.5
+White hake,Urophycis tenuis,Piscivore,Commercially fished/Threatened,depth,obis,59.68,397.5
+White shark,Carcharodon carcharias,Carnivore,Vulnerable species,depth,obis,,
+Winter skate,Leucoraja ocellata,Large benthivore,Threatened,depth,obis,32.5,138
+Witch flounder,Glyptocephalus cynoglossus,Medium benthivore,Commercially fished/Sensitive population,depth,obis,80.695,486
