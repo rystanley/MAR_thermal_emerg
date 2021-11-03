@@ -167,8 +167,8 @@ grid.arrange(p.depth,p.temp,ncol=1)
   #tiff often a good choice for publications (they usually perfer tiff over jpeg)
   #also note 300dpi is often the preferred resolution for publications
   #168mm is also the maximum width of a figure for publication (full page)
-tiff("Depth&TempRanges.tiff",width=168,height=168,units="mm",compression="lzw",bg="white", res=300)
-grid.arrange(p.depth,p.temp,ncol=1)
+tiff("output/Depth-TempRanges.tiff",width=168,height=168,units="mm",compression="lzw",bg="white", res=300)
+grid.arrange(p.depth,p.temp,ncol=1) # note that the original had a '&' in the file name and github won't track the change. I am actually not sure why
 dev.off()
 
 ##Final notes: 
