@@ -169,7 +169,7 @@ grid.arrange(p.depth,p.temp,ncol=1)
   #168mm is also the maximum width of a figure for publication (full page)
 tiff("output/Depth-TempRanges.tiff",width=168,height=168,units="mm",compression="lzw",bg="white", res=300)
 grid.arrange(p.depth,p.temp,ncol=1) # note that the original had a '&' in the file name and github won't track the change. I am actually not sure why
-dev.off() #apparently tiff won't show up in figures at main page of repository because github doesnt like tiffs, alas, Ill save as jpeg just for GitHub
+dev.off() #apparently tiff won't show up in figures at main page of repository because github doesnt like tiffs, alas, Ill save as png just for GitHub
 
 ggsave("output/storts_range_plot.png",grid.arrange(p.depth,p.temp,ncol=1),width=8,height=9,units="in",dpi=300)
 
