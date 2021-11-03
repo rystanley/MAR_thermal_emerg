@@ -9,6 +9,6 @@ __Figure 1__ Map of the potential network sites for he Scotian Shelf-Bay of Fund
 
 __Figure 2__ Comparison of species niche -Temperature and Depth- between Aquamaps (global) and regional data sources (option 1 segments).
 
-![](/output/storts_range_plot.tiff)
+![](/output/storts_range_plot.png)
 
 __Figure 3__ Comparison of species niche -Temperature and Depth- between Aquamaps (glbal) and regional data sources (option 2 range bars)
