@@ -11,4 +11,4 @@ __Figure 2__ Comparison of species niche -Temperature and Depth- between Aquamap
 
 ![](/output/storts_range_plot.png)
 
-__Figure 3__ Comparison of species niche -Temperature and Depth- between Aquamaps (glbal) and regional data sources (option 2 range bars)
+__Figure 3__ Comparison of species niche -Temperature and Depth- between Aquamaps (global) and regional data sources (option 2 range bars)
