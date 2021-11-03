@@ -94,7 +94,7 @@ dat <- read.csv("data/species_niche_formatted.csv")
       #to do the same thing
     #Also, there are a few peices of code in here that will be good for 
     #you to learn (e.g., black and white colour scale)
-df<-read.csv("Species list-Shaylyn_reformatted.csv")
+df<-read.csv("data/Species list-Shaylyn_reformatted.csv")
 head(df) #see reformatting and new column names
 
 require(ggplot2) # can use "library()" or "require()"... both work
