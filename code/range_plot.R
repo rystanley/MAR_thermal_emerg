@@ -171,8 +171,7 @@ tiff("output/Depth-TempRanges.tiff",width=168,height=168,units="mm",compression=
 grid.arrange(p.depth,p.temp,ncol=1) # note that the original had a '&' in the file name and github won't track the change. I am actually not sure why
 dev.off() #apparently tiff won't show up in figures at main page of repository because github doesnt like tiffs, alas, Ill save as jpeg just for GitHub
 
-c.plot<-grid.arrange(p.depth,p.temp,ncol=1)
-ggsave("output/storts_range_plot.png",c.plot,width=8,height=9,units="in",dpi=300)
+ggsave("output/storts_range_plot.png",grid.arrange(p.depth,p.temp,ncol=1),width=8,height=9,units="in",dpi=300)
 
 ##Final notes: 
 ##It's often a good idea to stick with black and grey 
