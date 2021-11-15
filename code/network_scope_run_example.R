@@ -76,7 +76,8 @@ species_niche <- read.csv("data/species_niche_final.csv")
 ##now lets view the output
   
   wolffish_network <- st_read("output/species_networks/Anarhichas_lupus_network_trim.shp")%>%
-                      mutate(species="Atlantic wolffish")
+                      mutate(species="Atlantic wolffish")%>%
+                      st_transform(latlong)
     
   wolffish_points <- read.csv("output/robis_extractions/Anarhichas_lupus_obis_overlaps.csv")%>%
                      filter(!is.na(X),!is.na(Y))%>%
@@ -84,7 +85,8 @@ species_niche <- read.csv("data/species_niche_final.csv")
                     mutate(species="Atlantic wolffish")
   
   winter_network <- st_read("output/species_networks/Leucoraja_ocellata_network_trim.shp")%>%
-                    mutate(species="Winter skate")
+                    mutate(species="Winter skate")%>%
+                    st_transform(latlong)
   
   winter_points <- read.csv("output/robis_extractions/Leucoraja_ocellata_obis_overlaps.csv")%>%
                   filter(!is.na(X),!is.na(Y))%>%
@@ -104,6 +106,10 @@ species_niche <- read.csv("data/species_niche_final.csv")
     coord_sf(expand=0)+# this just gets rid of a plotting buffer that ggplot defaults to
     theme_bw()+
     facet_wrap(~species,ncol=2)
+  
+  ggsave("inst/comparison_trim_plot.jpg",p1,height=6,width=8,units="in",dpi=300)
+  
+  
   
   ws_plot <- ggplot()+
     geom_sf(data=basemap)+ #this is the land
