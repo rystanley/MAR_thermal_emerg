@@ -94,29 +94,22 @@ species_niche <- read.csv("data/species_niche_final.csv")
                   mutate(species="Winter skate")
   
   
-  networks <- rbind(wolffish_network,winter_network)
+  networks <- rbind(wolffish_network,winter_network)%>%mutate(legend="Niche adjusted network") #this is a dummy variable so that ggplot will include a mention on the plot
   obis_points <- rbind(wolffish_points,winter_points)
   
   
   p1 <- ggplot()+
     geom_sf(data=basemap)+ #this is the land
-    geom_sf(data=network)+ #plot the original network
-    geom_sf(data=networks,fill="coral")+ #add the buffered polygons on the original network
-    geom_sf(data=obis_points,size=0.5)+ #add the points on top of the shapes
+    geom_sf(data=network,fill="cornflowerblue")+ #plot the original network
+    geom_sf(data=networks,aes(fill=legend))+ #add the buffered polygons on the original network
+    geom_sf(data=obis_points,size=0.25)+ #add the points on top of the shapes
     coord_sf(expand=0)+# this just gets rid of a plotting buffer that ggplot defaults to
+    #scale_fill_manual(values="coral")+
     theme_bw()+
-    facet_wrap(~species,ncol=2)
+    theme(legend.position="bottom",
+          strip.background = element_rect(fill="white"))+
+    facet_wrap(~species,ncol=2)+
+    labs(fill="")
+    
   
   ggsave("inst/comparison_trim_plot.jpg",p1,height=6,width=8,units="in",dpi=300)
-  
-  
-  
-  ws_plot <- ggplot()+
-    geom_sf(data=basemap)+ #this is the land
-    geom_sf(data=network)+ #plot the original network
-    geom_sf(data=wolffish_network,fill="coral")+ #add the buffered polygons on the original network
-    geom_sf(data=wolffish_points,size=0.5)+ #add the points on top of the shapes
-    coord_sf(expand=0)+# this just gets rid of a plotting buffer that ggplot defaults to
-    theme_bw()
-
-
