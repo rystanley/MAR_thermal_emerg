@@ -1,0 +1,31 @@
+ComName,SciName,LwrTemp10,UprTemp90,TempRef,LwrDepth10,UprDepth90,RefDepth
+American lobster,Homarus americanus,0,22,Shackell,4,50,Aquamaps
+American plaice,Hippoglossoides platessoides,-1,11.4,Shackell and Aquamaps,59.7,350.5,OBIS
+(ESS/WSS) Atlantic cod,Gadus morhua,4.15,13,Aquamaps and Shackell,20,339,Aquamaps and OBIS
+Atlantic halibut,Hippoglossus hippoglossus,2.23,10.87,Aquamaps ,58.5,864,OBIS and Aquamaps
+Atlantic wolffish,Anarhichas lupus,2.01,10.1,Aquamaps ,1,500,Aquamaps
+Basking shark,Cetorhinus maximus,8.71,21.14,Aquamaps ,0,834,Aquamaps
+Blue whale,Balaenoptera musculus,-1.3,27.88,Aquamaps ,1000,4000,Aquamaps
+Copepod (1),Calanus glacialis,-1.5,6,Aquamaps ,7.5,210,OBIS
+Copepod (2),Calanus finmarchicus,0.06,13.9,Aquamaps ,7.5,1221,OBIS and Aquamaps
+Common shortfin squid,Illex illecebrosus,5.51,18.07,Aquamaps ,57.6,434,OBIS and Aquamaps
+Cusk,Brosme brosme,5.55,11.9,Aquamaps ,18,549,Aquamaps
+(ESS/WSS)haddock,Melanogrammus aeglefinus,1,13,Shackell,10,220,Aquamaps and OBIS
+Little skate,Leucoraja erinacea,8.47,17.04,Aquamaps,32,152,OBIS and Aquamaps
+Loggerhead turtle,Caretta caretta,15.31,27.9,Aquamaps,0,250,Aquamaps and OBIS
+Monkfish,Lophius americanus,6.42,18.33,Aquamaps,60.55,352,OBIS and Aquamaps
+North Atlantic Right whale,Eubalaena glacialis,7.94,23.94,Aquamaps,0,200,OBIS and Aquamaps
+Northern Bottlenose whale,Hyperoodon ampullatus,3.57,19.32,Aquamaps,1000,2000,Aquamaps
+Northern shrimp,Pandalus borealis,0,14,Shackell and Aquamaps,50,500,Aquamaps
+(ESS/WSS)pollock,Pollachius virens,7.13,12.26,Aquamaps,46,244.5,OBIS
+Porbeagle shark,Lamna nasus,8.03,22.18,Aquamaps,0,1592,Aquamaps and OBIS
+Redfish species (1),Sebastes fasciatus,3,11.92,Shackell and Aquamaps,63,366,OBIS and Aquamaps
+Redfish species (2),Sebastes mentella,0.53,5.9,Aquamaps,127,791,OBIS and Aquamaps
+Smooth skate,Malacoraja senta,4.19,11.38,Aquamaps,84,426,OBIS and Aquamaps
+Snow crab,Chionoecetes opilio,-1,9.28,Shackell and Aquamaps,77.5,373,OBIS
+Spiny dogfish,Squalus acanthias,8.19,19.45,Aquamaps,39,300,OBIS and Aquamaps
+Thorny skate,Amblyraja radiata,0.37,11.22,Aquamaps,25,440,Aquamaps
+White hake,Urophycis tenuis,5.91,15.32,Aquamaps,59,397,OBIS
+White shark,Carcharodon carcharias,12.62,26.93,Aquamaps,0,250,Aquamaps
+Winter skate,Leucoraja ocellata,6.85,15.44,Aquamaps,12,138,Aquamaps and OBIS
+Witch flounder,Glyptocephalus cynoglossus,4.31,12.76,Aquamaps,45,486,Aquamaps and OBIS
