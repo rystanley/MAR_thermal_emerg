@@ -72,6 +72,8 @@ network_adjust <- function(species,network,bathy,lower,upper,buffer=25,exlusion_
       
       message("Writing the observations to a obis observations within the sites (+ buffer) to a geometric file")
       
+      if(!dir.exists("output/robis_extractions/")){dir.create("output/robis_extractions/")}
+      
       st_write(dat, paste0("output/robis_extractions/",gsub(" ","_",species),"_obis_overlaps.csv"), layer_options = "GEOMETRY=AS_XY",append=FALSE) #will overwrite existing files
       
       
