@@ -1,5 +1,5 @@
 #Function to clip polygons based on the depth ranges## e
-network_adjust <- function(species,network,bathy,lower,upper,buffer=25,exlusion_trim=TRUE,dsn = "output/species_networks/",return_points=FALSE){
+network_adjust <- function(species,network,bathy,lower,upper,buffer=25,exclusion_trim=TRUE,dsn = "output/species_networks/",return_points=FALSE){
   
   #this is a function that will trim the polygons based on the depth range included and will also do a check for whether the species has been observed by OBIS in that location
   
@@ -44,7 +44,7 @@ network_adjust <- function(species,network,bathy,lower,upper,buffer=25,exlusion_
   if(exclusion_trim){ # only do the obis check if you want to subset the network for the depth-based trimming (boundary modification)
   
   search_extent <- network%>%
-                   st_union()%>%
+                   st_combine()%>%
                    st_boundary()%>%
                    st_convex_hull()%>%
                    st_transform(latlong)%>% # this is the extent of the network
@@ -134,9 +134,13 @@ network_adjust <- function(species,network,bathy,lower,upper,buffer=25,exlusion_
   if(!exclusion_trim){network_trim <- network}
     
   #For loop that will do the trim based on the bathymetric layer (derived from GEBCO)
+  names_select <- c(names(network_trim)[1:length(network_trim)-1],"include",names(network_trim)[length(network_trim)])
   
-  network_trim <- network_trim%>%mutate(include=TRUE) #this is so we can exclude those sites that happen to have observations within the buffered area but are outside of the depth range 
+  network_trim <- network_trim%>%
+                  mutate(include=TRUE)%>%#this is so we can exclude those sites that happen to have observations within the buffered area but are outside of the depth range 
+                  dplyr::select(all_of(names_select))
   
+  network_trimmed <- NULL #this is a dataframe that will grow for each loop                
   for(i in 1:nrow(network_trim)){
     
     #Progress message I find this helps for for loops that are slow so you know if it is still working and if there is a specific site that is taking a while. (bigger sites == more time)
@@ -169,7 +173,7 @@ network_adjust <- function(species,network,bathy,lower,upper,buffer=25,exlusion_
         st_as_sf(as_points=FALSE,merge=TRUE)%>%
         st_make_valid()%>%
         st_cast("MULTIPOLYGON")%>%
-        st_union()%>%
+        st_combine()%>%
         suppressMessages()%>% #these just print things that we don't really need. 
         suppressWarnings() 
       
@@ -181,31 +185,41 @@ network_adjust <- function(species,network,bathy,lower,upper,buffer=25,exlusion_
       b5 <- st_as_stars(b4)%>%
         st_as_sf(as_points=FALSE,merge=TRUE)%>%
         st_cast("POLYGON")%>%
-        st_union()%>%
+        st_combine()%>%
         st_make_valid()%>%
+        st_intersection(network_trim[i,]%>%st_make_valid())%>% #this trims it all back to the same as the polygon.
         suppressMessages()%>% #these just print things that we don't really need. 
         suppressWarnings() 
       
       #copy over the new polygon in the sf dataset
-      st_geometry(network_trim[i,]) <- st_geometry(b5)
-      
+      #st_geometry(network_trim[i,]) <- st_geometry(b5)# this is was causing errors with the sf update
+      network_trimmed <- rbind(network_trimmed,b5%>% # this is slow but something changed in the sf package that makes it so we can no longer do this with on line of code and the st_geometry call :(
+                                           st_as_sf()%>%
+                                           st_transform(latlong)%>%
+                                           cbind(.,network_trim[i,]%>%data.frame()%>%dplyr::select(-geometry))%>%
+                                           rename(geometry=x)%>%
+                                           dplyr::select(all_of(names(network_trim))))
+   
     }else{network_trim[i,"include"] <- FALSE} #end of the depth check logical 
     
   }#end of site loop
   
-  network_trim <- network_trim%>%filter(include) #keep only those that have an obis observation (if that was selected as a filter criteria) and have the depth range required
+  network_trimmed <- network_trimmed%>%filter(include) #keep only those that have an obis observation (if that was selected as a filter criteria) and have the depth range required
         
 
 ##write the outputs ---------------
     
     #add in the counts from OBIS (note that these are inclusive of the buffer) in case they come in valuable later. 
-    output <- network_trim%>%
+    output <- network_trimmed%>%
               left_join(.,network_buffered%>%data.frame()%>%dplyr::select(NAME,count))%>%
               rename(obis_count=count)%>%
               mutate(area=as.numeric(st_area(geometry)/1000/1000))%>%#calculation of the area that has habitat for that species (new polygons)
               dplyr::select(NAME,STATUS,TYPE,area,obis_count,geometry)
     
-    st_write(network_trim%>%st_transform(network_projection),paste0(dsn,gsub(" ","_",species),"_network_trim.shp"),delete_dsn=TRUE)#save to the new directory -- this will overwrite the file that is there. 
+  #recast to the native projection
+  delete_dsn_logic <- file.exists(paste0(dsn,gsub(" ","_",species),"_network_trim.shp")) #this just checks whether an overwrite is needed (delete_dsn variable) and prevents a message saying it couldn't delete something that doesn't exist
+  
+    st_write(network_trimmed%>%st_transform(network_projection),paste0(dsn,gsub(" ","_",species),"_network_trim.shp"),delete_dsn=delete_dsn_logic)%>%suppressMessages() #save to the new directory -- this will overwrite the file that is there. 
   
 }
 
