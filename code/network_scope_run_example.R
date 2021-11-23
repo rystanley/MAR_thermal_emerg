@@ -60,7 +60,7 @@ species_niche <- read.csv("data/species_niche_final.csv")
                  lower=-1, #note these are 'hard' coded in. Ideally you would use the data in 'species_niche' to populate these inputs
                  upper=-500,
                  buffer=25, #set a buffer to the default of 25km
-                 exlusion_trim=TRUE,
+                 exclusion_trim=TRUE,
                  dsn = "output/species_networks/",
                  return_points = TRUE)
   
@@ -70,7 +70,7 @@ species_niche <- read.csv("data/species_niche_final.csv")
                  lower=-12, #note these are 'hard' coded in. Ideally you would use the data in 'species_niche' to populate these inputs
                  upper=-138,
                  buffer=25, #set a buffer to the default of 25km
-                 exlusion_trim=TRUE,
+                 exclusion_trim=TRUE,
                  dsn = "output/species_networks/",
                  return_points = TRUE)
   
