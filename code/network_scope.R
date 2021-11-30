@@ -33,7 +33,7 @@ network_adjust <- function(species,network,bathy,lower,upper,buffer=25,exclusion
   #convert network to the projection of the bathy - this is needed becausae they need to be the same projection and it takes way longer to convert they bathy raster
   network <- network%>%st_transform(bathy_projection)%>%suppressMessages()%>%suppressWarnings()# these just give a default response that isn't of interest for the scale of analysis we are doing. 
   
-  #set up the output directory. If there is a problem wiht the file structure it will catch here instead of after it processes the shape files and bathymetry data
+  #set up the output directory. If there is a problem with the file structure it will catch here instead of after it processes the shape files and bathymetry data
   
   if(substring(dsn,nchar(dsn),nchar(dsn))!="/"){dsn=paste0(dsn,"/")} #just a check to make sure the file path was entered correctly and fix it if not
   
@@ -62,20 +62,28 @@ network_adjust <- function(species,network,bathy,lower,upper,buffer=25,exclusion
     
     #format as an 'sf' dataframe
     dat <- temp%>%
-            dplyr::select(decimalLatitude,decimalLongitude)%>%
+            dplyr::select(decimalLatitude,decimalLongitude,date_year)%>% ## add the year
             st_as_sf(coords=c("decimalLongitude","decimalLatitude"),crs=latlong)%>%
             st_intersection(.,search_extent)%>% #the time this takes scales exponentially with time
             #st_join(.,search_extent,join=st_within)%>%
             suppressMessages()
     
-    if(return_points){ #if you want the subsetted data used to confirm the presence of a species within 25km of a site. 
+    if(return_points){ #if you want the sub-setted data used to confirm the presence of a species within 25km of a site. 
       
       message("Writing the observations to a obis observations within the sites (+ buffer) to a geometric file")
       
       if(!dir.exists("output/robis_extractions/")){dir.create("output/robis_extractions/")}
       
-      st_write(dat, paste0("output/robis_extractions/",gsub(" ","_",species),"_obis_overlaps.csv"), layer_options = "GEOMETRY=AS_XY",append=FALSE) #will overwrite existing files
+      #data.frame for the csv output
+      temp_out <- dat%>%
+                  rename(year=date_year)%>%
+                  mutate(long=st_coordinates(.)[,1],
+                         lat=st_coordinates(.)[,2],
+                         species=species)%>%
+                  data.frame()%>%
+                  dplyr::select(species,long,lat,year)
       
+      write.csv(temp_out, paste0("output/robis_extractions/",gsub(" ","_",species),"_obis_overlaps.csv"), row.names = FALSE) #will overwrite existing files
       
     }
      
