@@ -1,5 +1,5 @@
 #Function to clip polygons based on the depth ranges## e
-network_adjust <- function(species,network,bathy,lower,upper,buffer=25,exclusion_trim=TRUE,dsn = "output/species_networks/",return_points=FALSE){
+network_adjust <- function(species,network,bathy,lower,upper,buffer=25,exclusion_trim=TRUE,dsn = "output/species_networks/",return_points=FALSE,update_obis=FALSE,year_start=2000,year_end=2021){
   
   #this is a function that will trim the polygons based on the depth range included and will also do a check for whether the species has been observed by OBIS in that location
   
@@ -12,7 +12,9 @@ network_adjust <- function(species,network,bathy,lower,upper,buffer=25,exclusion
   #exclusion_trim - logical (default = TRUE) that decides whether the depth-based trimming should be applied to only those sites with obis observations within the focal sites (+ buffer)
   #dsn - this is the destination folder - by default it will create and go to "output/species_networks/" ** keep in mind that this code will overwrite the shape file each time. So if you want a different buffer, for example, create a unique dsn folder to go to. 
   #return_points - this is a logical (default = FALSE) to return the points that overlapped with the buffered polygons
-  
+  #update_obis - logical (default=FALSE) stating whether you want to update obis to return a different year range. If true then the year_start and year_end will be the grouping variables
+  #year_start - the year to start the search (default=2000)
+  #year_end - the year to end the search range. If 2021 it will be inclusive of nov-01 (default=2021)
   
   ## required libraries
   require(sf)
@@ -22,7 +24,7 @@ network_adjust <- function(species,network,bathy,lower,upper,buffer=25,exclusion
   require(robis)
   require(ggplot2)
   
-  #turn off the sf use of s2 objects, which for some reason seems to propogate errors. 
+  #turn off the sf use of s2 objects, which for some reason seems to propagate errors. 
   sf::sf_use_s2(FALSE)
   
   #projections to use
@@ -33,7 +35,7 @@ network_adjust <- function(species,network,bathy,lower,upper,buffer=25,exclusion
   network_projection <- st_crs(network)
   bathy_projection <- proj4string(bathy)
   
-  #convert network to the projection of the bathy - this is needed becausae they need to be the same projection and it takes way longer to convert they bathy raster
+  #convert network to the projection of the bathy - this is needed because they need to be the same projection and it takes way longer to convert they bathy raster
   network <- network%>%st_transform(bathy_projection)%>%suppressMessages()%>%suppressWarnings()# these just give a default response that isn't of interest for the scale of analysis we are doing. 
   
   #set up the output directory. If there is a problem with the file structure it will catch here instead of after it processes the shape files and bathymetry data
@@ -57,15 +59,34 @@ network_adjust <- function(species,network,bathy,lower,upper,buffer=25,exclusion
       #plot it to see what this code is doing
         #ggplot()+geom_sf(data=search_extent)+geom_sf(data=network)
   
+  if(update_obis){
+    
+    #progress message to note the start of the obis extraction
+    message(paste0("Running obis extraction for ",species,"."))
+    
+    start <- paste0(year_start,"-01-01")
+    if(year_end == 2021) {end <- "2021-09-01"} else {end <- paste0(year_end,"11-01")}
+    
+    temp <- occurrence(i, #'i' is iteratively assigned the value of each species 
+                       geometry=search_extent%>%st_as_text(), #this is the text based syntax required of robis for the polygon
+                       startdate = start,enddate = end)%>% #all observations as of September for the past 2 decades
+      mutate(scientific=i)# this will make sure you know what the 'input' was. 
+    
+    save(temp,file=paste0("output/robis_extractions/",name,"_",year_start,"_",year_end,".RData")) #save the output for future use. 
+    
+  }
+  
+  if(!update_obis){
     #progress message to note the start of the obis check
     message(paste0("Running the obis check for ",species,"."))
     
     #this uses the data that were already extracted using the function code/robis_extract.R
     load(paste0("output/robis_extractions/",gsub(" ","_",species),".RData"))
     
+  }
     #format as an 'sf' dataframe
     dat <- temp%>%
-            dplyr::select(decimalLatitude,decimalLongitude,date_year)%>% ## add the year
+            dplyr::select(decimalLatitude,decimalLongitude,date_year,depth)%>% ## add the year
             st_as_sf(coords=c("decimalLongitude","decimalLatitude"),crs=latlong)%>%
             st_intersection(.,search_extent)%>% #the time this takes scales exponentially with time
             #st_join(.,search_extent,join=st_within)%>%
@@ -84,7 +105,7 @@ network_adjust <- function(species,network,bathy,lower,upper,buffer=25,exclusion
                          lat=st_coordinates(.)[,2],
                          species=species)%>%
                   data.frame()%>%
-                  dplyr::select(species,long,lat,year)
+                  dplyr::select(species,long,lat,year,depth)
       
       write.csv(temp_out, paste0("output/robis_extractions/",gsub(" ","_",species),"_obis_overlaps.csv"), row.names = FALSE) #will overwrite existing files
       
