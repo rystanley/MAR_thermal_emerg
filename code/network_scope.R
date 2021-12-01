@@ -130,14 +130,20 @@ network_adjust <- function(species,network,bathy,lower,upper,buffer=25,exclusion
   
 ### Depth based trimming  -----------
     
+  if(sum(count) ==0){message(paste0(species, " has not been observed in any network sites + ",buffer,"km."," A revised network will not be returned."))}
+  
+  if(sum(count) != 0){
+  
     #progress message to note the start of the obis check
     message(paste0("Trimming the shape files for ",species," based on the shallow boundary of ",lower, "m and deep boundary of ",upper,"m"))
   
   #convert network to the bathymetric projection and remove sites that don't have any obis observations (if exclusion_trim == TRUE)
   
+  
+  
   if(exclusion_trim){
     
-  obis_sites <- network_buffered%>%filter(count>0)%>%pull(NAME) # This doesn't seem to work when put direclty into the network_trim piping 
+  obis_sites <- network_buffered%>%filter(count>0)%>%pull(NAME) # This doesn't seem to work when put directly into the network_trim piping 
     
   network_trim <- network%>%
                   filter(NAME %in% obis_sites)%>%
@@ -241,6 +247,7 @@ network_adjust <- function(species,network,bathy,lower,upper,buffer=25,exclusion
   #write the shape file
   st_write(output,paste0(dsn,gsub(" ","_",species),"_network_trim.shp"),delete_dsn=delete_dsn_logic)%>%suppressMessages() #save to the new directory -- this will overwrite the file that is there. 
   
+  }# end of the catch if statement for species that haven't been observed within any buffered polygons
 }
 
 
