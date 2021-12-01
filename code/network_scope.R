@@ -22,6 +22,9 @@ network_adjust <- function(species,network,bathy,lower,upper,buffer=25,exclusion
   require(robis)
   require(ggplot2)
   
+  #turn off the sf use of s2 objects, which for some reason seems to propogate errors. 
+  sf::sf_use_s2(FALSE)
+  
   #projections to use
   planar <- "+proj=utm +zone=20 +datum=NAD83 +units=km +no_defs +ellps=GRS80 +towgs84=0,0,0" #UTM in 'km'
   latlong <- "+proj=longlat +datum=NAD83 +no_defs +ellps=GRS80 +towgs84=0,0,0"
@@ -93,7 +96,8 @@ network_adjust <- function(species,network,bathy,lower,upper,buffer=25,exclusion
                             st_transform(planar)%>%
                             st_buffer(buffer)%>%
                             st_transform(latlong)%>%
-                            st_as_sf()
+                            st_as_sf()%>%
+                            st_make_valid()
         
       }else{network_buffered=network%>%st_transform(latlong)}
     
@@ -107,7 +111,7 @@ network_adjust <- function(species,network,bathy,lower,upper,buffer=25,exclusion
     #progress message
     message(paste0("Running intersection for ",nrow(network)," sites with ",nrow(dat)," obis observations."))
     
-    count <- NULL #start off with nothing then for each i loop grow it using concantination 'c(..)'
+    count <- NULL #start off with nothing then for each i loop grow it using concatenation 'c(..)'
     
     for(i in 1:nrow(network_buffered)){count <- c(count,lengths(st_intersects(network_buffered[i,],dat))%>%suppressMessages())}
       
@@ -222,12 +226,20 @@ network_adjust <- function(species,network,bathy,lower,upper,buffer=25,exclusion
               left_join(.,network_buffered%>%data.frame()%>%dplyr::select(NAME,count))%>%
               rename(obis_count=count)%>%
               mutate(area=as.numeric(st_area(geometry)/1000/1000))%>%#calculation of the area that has habitat for that species (new polygons)
-              dplyr::select(NAME,STATUS,TYPE,area,obis_count,geometry)
+              dplyr::select(NAME,STATUS,TYPE,area,obis_count,geometry)%>%
+              group_by(NAME)%>%
+              summarise(geometry=st_collection_extract(geometry)%>%st_cast("POLYGON"))%>% #in some cases the polygons care coming out as Geometry collections (have no idea why -- dam you sf) but this will collect it all and transform to a polygon that can be saved
+              st_make_valid()%>%
+              ungroup()%>%
+              st_transform(network_projection)%>%
+              suppressWarnings()%>% #messages that some polygons are already in the right format so they are not converted. 
+              suppressMessages()# there are messages about the grouping variable (not useful)
     
   #recast to the native projection
   delete_dsn_logic <- file.exists(paste0(dsn,gsub(" ","_",species),"_network_trim.shp")) #this just checks whether an overwrite is needed (delete_dsn variable) and prevents a message saying it couldn't delete something that doesn't exist
   
-    st_write(network_trimmed%>%st_transform(network_projection),paste0(dsn,gsub(" ","_",species),"_network_trim.shp"),delete_dsn=delete_dsn_logic)%>%suppressMessages() #save to the new directory -- this will overwrite the file that is there. 
+  #write the shape file
+  st_write(output,paste0(dsn,gsub(" ","_",species),"_network_trim.shp"),delete_dsn=delete_dsn_logic)%>%suppressMessages() #save to the new directory -- this will overwrite the file that is there. 
   
 }
 
