@@ -16,30 +16,32 @@ bdata<-brick(data$datout,xmn=-83,xmx=-41,ymn=38,ymx=85,crs="+proj=longlat +datum
 latlong <- "+proj=longlat +datum=NAD83 +no_defs +ellps=GRS80 +towgs84=0,0,0"
 cmip_proj <- bdata@crs #projection of the CMIP
 
-#load the polygons of the network and convert it to the projection of the bathymetry data we will use
-network_initial <- read_sf("data/shapefiles/networksites_proposed_OEM_MPA_v2.shp")%>%
-  st_transform(latlong)%>%
-  filter(NAME != "Bras d’Or Lakes EBSA") # given this is a very esturarine system, I am not sure we want to include for things maybe other than lobster
+#this part can be removed in a function where the 'network' is the network from the depth-constrained polygons
 
-#some sites have two separate polygons entered as individual identities. This will merge them and then bring back in the other columns using left_join() - otherwise lost in group_by
-network <- network_initial%>%
-  group_by(NAME)%>%
-  summarise(geometry=st_combine(geometry)%>%st_make_valid(),
-            area=as.numeric(st_area(geometry)/1000/1000))%>%
-  ungroup()%>%
-  st_make_valid()%>% #why sf now requires this so much is beyond me
-  left_join(.,network_initial%>%
-              data.frame()%>%
-              dplyr::select(-geometry)%>%
-              distinct(NAME,.keep_all=TRUE))%>%
-  mutate(species=NA,network="Draft Network")%>% #this is for later plotting
-  dplyr::select(NAME,STATUS,TYPE,network,species,geometry)
+      #load the polygons of the network and convert it to the projection of the bathymetry data we will use
+      network_initial <- read_sf("data/shapefiles/networksites_proposed_OEM_MPA_v2.shp")%>%
+        st_transform(latlong)%>%
+        filter(NAME != "Bras d’Or Lakes EBSA") # given this is a very esturarine system, I am not sure we want to include for things maybe other than lobster
+      
+      #some sites have two separate polygons entered as individual identities. This will merge them and then bring back in the other columns using left_join() - otherwise lost in group_by
+      network <- network_initial%>%
+        group_by(NAME)%>%
+        summarise(geometry=st_combine(geometry)%>%st_make_valid(),
+                  area=as.numeric(st_area(geometry)/1000/1000))%>%
+        ungroup()%>%
+        st_make_valid()%>% #why sf now requires this so much is beyond me
+        left_join(.,network_initial%>%
+                    data.frame()%>%
+                    dplyr::select(-geometry)%>%
+                    distinct(NAME,.keep_all=TRUE))%>%
+        mutate(species=NA,network="Draft Network")%>% #this is for later plotting
+        dplyr::select(NAME,STATUS,TYPE,network,species,geometry)
 
 #create filters and mask extents that can be applied to the rasterbrik
 network_sp <- network%>%st_transform(cmip_proj)%>%as_Spatial()
 network_extent <- extent(network_sp)
 
-#make a new mask that covers cells within and partially within a polygon
+#make a new mask that covers cells within and partially within a polygon - idea from here -https://gis.stackexchange.com/questions/255025/r-raster-masking-a-raster-by-polygon-also-remove-cells-partially-covered
 network_raster_mask <- rasterize(network_sp,crop(bdata[[1]],network_extent,snap="out"),getCover=TRUE) 
 network_raster_mask[network_raster_mask == 0] <- NA
 
