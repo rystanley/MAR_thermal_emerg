@@ -6,6 +6,7 @@ library(rgdal)
 library(ggplot2)
 require(R.matlab) #to open Dan's MatLab files in R
 
+
 ### Time of thermal emergence + 2100 ###############
 ####################################################
 
