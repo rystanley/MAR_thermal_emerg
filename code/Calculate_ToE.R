@@ -12,14 +12,51 @@ require(R.matlab) #to open Dan's MatLab files in R
 
 ### STEP 1: Create a time series of maximum monthly average per year for each model/emissions scenario ###
 #create a file path to your climate projection files. Keep in the folders (2.6,8.5) Dan had them in
-pn<-('C:/Users/StortiniC/Desktop/Shaylyn/Climate Projections/Diff var/')  #I put all 2.6 and 8.5 files into a new folder called "All"
+pn<-('C:/Users/StortiniC/Desktop/Shaylyn/Climate Projections/All_datout/')  #I put all 2.6 and 8.5 files into a new folder called "All"
 fls<-list.files(pn, full.names=T) ##climate projections for RCP 2.6; run again for the 4.5 folder
 l<-list()
 
+networkcrops<-('output/species_networks/') #put all cropped networks here with species name as the first part of the file name
+network<-list.files(networkcrops,full.names=T)
+
 for(i in 1:length(fls)){
-  #pathname <- file.path(pn, paste(fls[i]))
   data <- readMat(fls[i])
-  bdata<-brick(data$outt,xmn=-83,xmx=-41,ymn=38,ymx=85,crs="+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0")
+  bdata<-brick(data$datout,xmn=-83,xmx=-41,ymn=38,ymx=85,crs="+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0")
+  latlong <- "+proj=longlat +datum=NAD83 +no_defs +ellps=GRS80 +towgs84=0,0,0"
+  cmip_proj <- bdata@crs #projection of the CMIP
+  
+  l<-list()
+  for (j in 1:length(network)){
+  #create filters and mask extents that can be applied to the rasterbrick
+  network_sp <- read_sf(network[j])%>%st_transform(cmip_proj)%>%as_Spatial()
+  network_extent <- extent(network_sp)
+  
+  #make a new mask that covers cells within and partially within a polygon - idea from here -https://gis.stackexchange.com/questions/255025/r-raster-masking-a-raster-by-polygon-also-remove-cells-partially-covered
+  network_raster_mask <- rasterize(network_sp,crop(bdata[[1]],network_extent,snap="out"),getCover=TRUE) 
+  network_raster_mask[network_raster_mask == 0] <- NA
+  
+  #process the raster brick
+  bdata_processed <- bdata%>%
+    crop(.,network_extent,snap="out")%>%
+    mask(.,network_raster_mask)
+  
+  df <- as.data.frame(bdata_processed,xy=TRUE,long=TRUE,centroids=TRUE)%>%
+    filter(!is.na(value))%>%
+    mutate(month=rep(rep(1:12,each=length(layer)/86/12),86),
+           year=rep(2015:2100,each=length(layer)/86),
+           model=substr(gsub('.mat','',paste(fls[i])),63,66),#create a column for model name
+           emiss.scen=substr(gsub('.mat','',paste(fls[i])),67,77),
+           species=)
+  l[[j]]<-df}
+  filenames=
+  save(df,file=paste0("output/cmip_networks/",substr(gsub('.mat','',paste(fls[i])),63,66),"_",substr(gsub('.mat','',paste(fls[i])),67,77),".RData"))
+  rm(l,df)
+  }
+require(data.table)
+monthly.temps1<-data.frame(rbindlist(l))
+
+  
+  
   #Note, if you run bdata, you'll find it has 1032 layers, which represents 1032 months
   #1032 months/12 months per year gives you 86 years.
   #We know the end year is 2100; 2100-86 is 2014, add 1 because we are counting the year 2100, 
@@ -36,6 +73,7 @@ for(i in 1:length(fls)){
 require(data.table)
 monthly.temps1<-data.frame(rbindlist(l))
 #Error: cannot allocate vector of 994.7Mb....
+
 
 ##files with different variable names, so have to run them separately.
 pn<-('C:/Users/StortiniC/Desktop/Shaylyn/Climate Projections/All_datout/')  #I put all 2.6 and 8.5 files into a new folder called "All"

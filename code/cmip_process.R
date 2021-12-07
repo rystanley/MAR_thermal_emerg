@@ -8,8 +8,9 @@ library(raster)
 library(stars)
 
 #load raster 
-data <- readMat("data/Projections/AWI_SSP1_RCP2.6_SST_0.25deg_regrid.mat")
-bdata<-stack() #need to learn how to do this
+pn<-('C:/Users/StortiniC/Desktop/Shaylyn/Climate Projections/All_datout/')  #I put all 2.6 and 8.5 files into a new folder called "All"
+fls<-list.files(pn, full.names=T)
+data <- readMat(fls[1])
 bdata<-brick(data$datout,xmn=-83,xmx=-41,ymn=38,ymx=85,crs="+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0") #this works but then need to turn into dataframe before cropping
 
 #projections
@@ -58,6 +59,8 @@ bdata_processed <- bdata%>%
 df <- as.data.frame(bdata_processed,xy=TRUE,long=TRUE,centroids=TRUE)%>%
       filter(!is.na(value))%>%
       mutate(month=rep(rep(1:12,each=length(layer)/86/12),86),
-             year=rep(2015:2100,each=length(layer)/86))
+             year=rep(2015:2100,each=length(layer)/86),
+             model=substr(gsub('.mat','',paste(fls[1])),63,66),#create a column for model name
+             emiss.scen=substr(gsub('.mat','',paste(fls[1])),67,77))
 
 
