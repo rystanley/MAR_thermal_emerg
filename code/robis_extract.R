@@ -7,6 +7,11 @@
   library(dplyr)
   library(robis)
   library(rnaturalearth)
+  library(raster)
+  library(stars)
+  library(ggspatial)
+
+st_use_s2(FALSE)
 
 #load data ----------
   target_species <- read.csv("data/input_data_ryan.csv")
@@ -114,8 +119,36 @@
   #save the summarized outputs and coordinates. Note this will only overwrite if the file is not there already. 
     if(!file.exists("output/depth_extracts_coordinates.RData")) {save(depth_extracts,file="output/depth_extracts_coordinates.RData")}
     if(!file.exists("output/depth_ranges_output.csv")){write.csv(depth_ranges,file="output/depth_ranges_output.csv",row.names=FALSE)}
+   
+  #Make a map of the depth range extractions
+    load("output/depth_extracts_coordinates.RData")
     
-
+    depth_df <- do.call("rbind",depth_extracts)%>% #depth_extracts is a list for each species, so it needs to be pulled apart and rbind'ed. do.call is your friend. 
+                  rename(long=decimalLongitude,lat=decimalLatitude)%>%
+                  filter(!is.na(depth))%>% #keep just the ones with depth observations. 
+                  dplyr::select(long,lat)#this is a data.frame of lat and long that can be used for the raster calculation (which is fast)
+    
+    depth_grid <- raster(extent(nw_atlantic%>%st_as_sf()),res=0.25,crs=latlong) # a raster grid to make the layer of observation counts
+    
+    depth_count <- rasterize(depth_df,depth_grid,fun="count")#how many obs per 0.25 degree grid cell
+    values(depth_count) <- log10(values(depth_count)) #scale to log10 because of the crazy amount of lobster values
+    
+    depth_count_stars <- st_as_stars(depth_count) #convert the raster to a ggplot'able stars object
+    
+    depth_plot <- ggplot()+
+      geom_stars(data=depth_count_stars)+
+      geom_sf(data=bioregion,fill=NA,col="grey40",lwd=1.2)+
+      geom_sf(data=basemap_full,fill="darkolivegreen3")+
+      theme_bw()+
+      scale_fill_viridis_b(na.value="white",option="inferno",labels=c(expression(10^1),expression(10^2),expression(10^3),expression(10^4)))+
+      coord_sf(expand=0)+
+      labs(fill='# of observations',x="",y="")+
+      theme(legend.position = "bottom")+
+      annotation_scale(location="br")+
+      annotation_north_arrow(location="tr",height = unit(0.6,"in"),width=unit(0.6,"in"));depth_plot
+    
+    ggsave("output/depth_plot.png",depth_plot,height=8,width=6,units="in",dpi=300)      
+   
 ### DEPRICATED CODE ----------------
 
 #if you want to do this in dplyr (a bit faster but more risky because the data from each obis extraction isn't saved)
