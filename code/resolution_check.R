@@ -5,6 +5,9 @@ library(sf)
 library(ggplot2)
 library(dplyr)
 library(rnaturalearth)
+library(raster)
+library(stars)
+library(ggspatial)
 
 sf_use_s2(FALSE)
 
@@ -73,11 +76,11 @@ p2 <- ggplot()+
   geom_sf(data=draft_network,fill=NA,lwd=0.8)+
   theme_bw()+
   theme(panel.grid=element_blank())+
-  coord_sf(expand=0)
+  coord_sf(expand=0)+
+  annotation_scale(location="br")+ #location is 'bottom right'
+  annotation_north_arrow(location="tl",height = unit(0.3,"in"),width=unit(0.3,"in")) #location is top left 'tl'
 
 ggsave("output/Fig1_ex.png",p2,width=6,height=6,dpi=600,units="in")
-
-
 
 
 #count the number of grid cells occupied by each site
