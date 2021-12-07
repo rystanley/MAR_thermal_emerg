@@ -7,7 +7,6 @@
   library(dplyr)
   library(robis)
   library(rnaturalearth)
-  library(fasterize)
   library(raster)
   library(stars)
   library(ggspatial)
