@@ -1,6 +1,5 @@
 require(devtools)
 require(raster)# package for raster manipulation
-library(ncdf4) # package for netcdf manipulation
 library(sp)
 library(rgdal)
 library(ggplot2)
@@ -56,24 +55,6 @@ monthly.temps1<-data.frame(rbindlist(l2))
 monthly.temps1<-as.data.frame(df)
 write.csv(monthly.temps1, "MonthlyT_networkcells.csv")
 
-  
-  
-  #Note, if you run bdata, you'll find it has 1032 layers, which represents 1032 months
-  #1032 months/12 months per year gives you 86 years.
-  #We know the end year is 2100; 2100-86 is 2014, add 1 because we are counting the year 2100, 
-  #so 2015 is our starting year.
-  #note that x and y are longitude and latitude (these are cells of data in geographic space, with values corresponding to temperature, and stacked layers of cells corresponding to months)
-  df<-as.data.frame(bdata,xy=TRUE,long=TRUE,centroids=TRUE) #turn the 3-dimensional stack of rasters into a 2-d dataframe with month (i.e., the name of the layers in the raster brick) as a column
-  df$cont.month<-substr(df$layer,7,8) #take the last two characters of the layer names to get the month number (from 1 to 1032)
-  df$month<-rep(rep(1:12,each=31584),86) #add a column for the actual month in a year (1 to 12, for 86 years)
-  df$year<-rep(2015:2100, each=379008) #column for year
-  df$model<-substr(gsub('.mat','',paste(fls[i])),56,59)#create a column for model name
-  df$emiss.scen<-substr(gsub('.mat','',paste(fls[i])),60,71)#create a column for emissions scenario
-  l[[i]]<-df
-}
-require(data.table)
-monthly.temps1<-data.frame(rbindlist(l))
-#Error: cannot allocate vector of 994.7Mb....
 
 
 ##files with different variable names, so have to run them separately.
