@@ -26,7 +26,6 @@ for(i in 1:length(fls)){
   latlong <- "+proj=longlat +datum=NAD83 +no_defs +ellps=GRS80 +towgs84=0,0,0"
   cmip_proj <- bdata@crs #projection of the CMIP
   l<-list()
-  l2<-list()
   for (j in 28:length(network)){
   #create filters and mask extents that can be applied to the rasterbrick
   network_sp <- read_sf(network[j])%>%
