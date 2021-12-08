@@ -132,9 +132,7 @@ network<-list.files('output/species_networks/', pattern="*.shp", full.names=T, r
             filter(!is.na(value))%>%
             mutate(month=rep(rep(1:12,each=length(layer)/86/12),86),
                    year=rep(2015:2100,each=length(layer)/86),
-                   species=gsub('_network_trim.shp','',network[j]),
-                   species=gsub("output/species_networks/","",species),
-                   species=gsub("_"," ",species),
+                   species=spec,
                    mod=mod,
                    climate_proj=climate_proj)
           
