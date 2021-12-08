@@ -40,7 +40,10 @@ network<-list.files('output/species_networks/', pattern="*.shp", full.names=T, r
         
         #now create the raster masks for each species and save it in a big list that can be loaded later (if  you are re-running the code)
           # or if you are running this live then the next extraction will apply these masks in sequence.
+        
         out_masks<-list()
+        out_networks <- list()
+        
         for (j in 1:length(network)){
           
           spec <- network[j]%>%
@@ -55,19 +58,26 @@ network<-list.files('output/species_networks/', pattern="*.shp", full.names=T, r
         
         network_sp <- read_sf(network[j])%>%
           st_transform(cmip_proj)%>%as_Spatial()
+        
         network_extent <- extent(network_sp)
         
         #make a new mask that covers cells within and partially within a polygon - idea from here -https://gis.stackexchange.com/questions/255025/r-raster-masking-a-raster-by-polygon-also-remove-cells-partially-covered
         network_raster_mask <- rasterize(network_sp,crop(bdata[[1]],network_extent,snap="out"),getCover=TRUE) 
         network_raster_mask[network_raster_mask == 0] <- NA
         
+        #save the outptus
         out_masks[[paste0(spec,collapse=" ")]] <- network_raster_mask
+        out_networks[[paste0(spec,collapse=" ")]] <- network_sp
+        
+        rm(network_raster_mask,network_sp,spec)
         
         }
         
         save(out_masks,file="data/raster_masks.RData") #save this a list object that can be pulled in sequentially in the next bit of cod
+        save(out_networks,file="data/network_sp.RData") #conversion of these complex adjusted sites to SP takes time so why do it twice?
         
-  }else{load("data/raster_masks.RData")}
+      }else{load("data/raster_masks.RData")
+            load("data/network_sp.Rdata")}
 
 #Now do the data extractions ----------
     for(i in 1:length(fls)){
@@ -99,9 +109,18 @@ network<-list.files('output/species_networks/', pattern="*.shp", full.names=T, r
           cmip_extracts<-list()
           
           for (j in 1:length(network)){
+            
+            spec <- gsub('_network_trim.shp','',network[j])%>%
+                    gsub("output/species_networks/","",.)%>%
+                    gsub("_"," ",.)
+            
+            #progress message
+            message(paste0("Extracting ",spec))
         
             #load the species raster mask from the previous step
             network_raster_mask <- out_masks[[j]]
+        
+            network_sp <- out_networks[[j]]%>%spTransform(.,cmip_proj)
             network_extent <- extent(network_sp)
           
           #process the raster brick
@@ -113,7 +132,9 @@ network<-list.files('output/species_networks/', pattern="*.shp", full.names=T, r
             filter(!is.na(value))%>%
             mutate(month=rep(rep(1:12,each=length(layer)/86/12),86),
                    year=rep(2015:2100,each=length(layer)/86),
-                   species=substr(gsub('.shp','',paste(network[j])),25,40),
+                   species=gsub('_network_trim.shp','',network[j]),
+                   species=gsub("output/species_networks/","",species),
+                   species=gsub("_"," ",species),
                    mod=mod,
                    climate_proj=climate_proj)
           
