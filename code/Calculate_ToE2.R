@@ -65,7 +65,7 @@ network<-list.files('output/species_networks/', pattern="*.shp", full.names=T, r
         
         }
         
-        save(out_masks,"data/climate_projections/raster_masks.RData") #save this a list object that can be pulled in sequentially in the next bit of cod
+        save(out_masks,file="data/climate_projections/raster_masks.RData") #save this a list object that can be pulled in sequentially in the next bit of cod
         
   }else{load("data/climate_projections/raster_masks.RData")}
 
@@ -97,15 +97,17 @@ network<-list.files('output/species_networks/', pattern="*.shp", full.names=T, r
         
         #loop through the network to extract the data. 
           cmip_extracts<-list()
+          
           for (j in 1:length(network)){
         
             #load the species raster mask from the previous step
-            network_raster_mask <- out_masks[j]
+            network_raster_mask <- out_masks[[j]]
+            network_extent <- extent(network_sp)
           
           #process the raster brick
           bdata_processed <- bdata%>%
             crop(.,network_extent,snap="out")%>%
-            mask(.,network_raster_mask)
+            raster::mask(.,network_raster_mask)
           
           df <- as.data.frame(bdata_processed,xy=TRUE,long=TRUE,centroids=TRUE)%>%
             filter(!is.na(value))%>%
@@ -115,15 +117,20 @@ network<-list.files('output/species_networks/', pattern="*.shp", full.names=T, r
                    mod=mod,
                    climate_proj=climate_proj)
           
-          cmip_extracts[j]<-df
+          cmip_extracts[[j]]<-df
           
           } #end of loop for the species networks
           
-          cmip_out <- do.call("rbind",cmip_extracts)%>%
-                      data.frame()
-       
-          #write the proposal
-          write.csv(cmip_out,file=paste0("output/climate_extracts_",mod,"_",climate_proj,".RData")) 
+          if(!dir.exists("output/climate_extracts/")){dir.create("output/climate_extracts/")}
+          
+          save(cmip_extracts,file=paste0("output/climate_extracts/climate_extracts_",mod,"_",climate_proj,".RData"))
+          
+          #if you want to do csvs but they will be enormous
+          # cmip_out <- do.call("rbind",cmip_extracts)%>%
+          #             data.frame()
+          # 
+          # #write the proposal
+          # write.csv(cmip_out,file=paste0("output/climate_extracts/climate_extracts_",mod,"_",climate_proj,".csv")) 
              
     } #end loop through the projections
         
