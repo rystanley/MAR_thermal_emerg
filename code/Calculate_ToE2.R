@@ -65,9 +65,9 @@ network<-list.files('output/species_networks/', pattern="*.shp", full.names=T, r
         
         }
         
-        save(out_masks,file="data/climate_projections/raster_masks.RData") #save this a list object that can be pulled in sequentially in the next bit of cod
+        save(out_masks,file="data/raster_masks.RData") #save this a list object that can be pulled in sequentially in the next bit of cod
         
-  }else{load("data/climate_projections/raster_masks.RData")}
+  }else{load("data/raster_masks.RData")}
 
 #Now do the data extractions ----------
     for(i in 1:length(fls)){
