@@ -108,7 +108,7 @@ network<-list.files('output/species_networks/', pattern="*.shp", full.names=T, r
         #loop through the network to extract the data. 
           cmip_extracts<-list()
           
-          for (j in 1:length(network)){
+          for (j in 19:length(network)){
             
             spec <- gsub('_network_trim.shp','',network[j])%>%
                     gsub("output/species_networks/","",.)%>%
@@ -128,15 +128,29 @@ network<-list.files('output/species_networks/', pattern="*.shp", full.names=T, r
             crop(.,network_extent,snap="out")%>%
             raster::mask(.,network_raster_mask)
           
-          df <- as.data.frame(bdata_processed,xy=TRUE,long=TRUE,centroids=TRUE)%>%
+          #for some reason some of the overlays have no data when overlayed on the cmip - this is an issue for Lamna nasus and model GFDL
+          df <- as.data.frame(bdata_processed,xy=TRUE,long=TRUE,centroids=TRUE)
+          
+          if(!sum(is.na(df$value))==length(df$value)){ 
+            df <- df%>%
             filter(!is.na(value))%>%
             mutate(month=rep(rep(1:12,each=length(layer)/86/12),86),
                    year=rep(2015:2100,each=length(layer)/86),
                    species=spec,
                    mod=mod,
                    climate_proj=climate_proj)
+          }else{
+            df <- df%>%
+              slice(1)%>% #this is just maintain an entry
+              mutate(month=NA,
+                     year=NA,
+                     species=spec,
+                     mod=mod,
+                     climate_proj=climate_proj)
+          }
           
-          cmip_extracts[[j]]<-df
+          
+            cmip_extracts[[j]]<-df
           
           } #end of loop for the species networks
           
