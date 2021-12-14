@@ -34,18 +34,24 @@
                        filter(NAME != "Bras d’Or Lakes EBSA") # given this is a very esturarine system, I am not sure we want to include for things maybe other than lobster
            
   #some sites have two separate polygons entered as individual identities. This will merge them and then bring back in the other columns using left_join() - otherwise lost in group_by
-    network <- network_initial%>%
-               group_by(NAME)%>%
-               summarise(geometry=st_combine(geometry)%>%st_make_valid(),
-                         area=as.numeric(st_area(geometry)/1000/1000))%>%
-               ungroup()%>%
-               st_make_valid()%>% #why sf now requires this so much is beyond me
-      left_join(.,network_initial%>%
-                  data.frame()%>%
-                  dplyr::select(-geometry)%>%
-                  distinct(NAME,.keep_all=TRUE))%>%
-      mutate(species=NA,network="Draft Network")%>% #this is for later plotting
-      dplyr::select(NAME,STATUS,TYPE,network,species,geometry)
+    network <- rbind(network_initial%>%
+                     filter(NAME == "Western Emerald Bank Conservation Area")%>%
+                     st_combine()%>%
+                     st_as_sf()%>%
+                     mutate(area=as.numeric(st_area(.)/1000/1000),
+                            NAME="Western Emerald Bank Conservation Area")%>%
+                     dplyr::rename(geometry=x)%>%
+                     dplyr::select(NAME,area,geometry),
+                     network_initial%>%
+                     filter(NAME !="Western Emerald Bank Conservation Area")%>%
+                     dplyr::rename(area=AreaKM2)%>%
+                     dplyr::select(NAME,area,geometry))%>%
+              left_join(.,network_initial%>%
+                          data.frame()%>%
+                          dplyr::select(-geometry)%>%
+                          distinct(NAME,.keep_all=TRUE))%>%
+              mutate(species=NA,network="Draft Network")%>% #this is for later plotting
+              dplyr::select(NAME,STATUS,TYPE,network,species,geometry)
   
   #create a basemap for plotting (this code can be used each time you make a plot)
     basemap <- rbind(ne_states(country = "Canada",returnclass = "sf")%>%
@@ -61,12 +67,17 @@
       st_intersection(.,network%>%st_transform(latlong)%>%st_bbox()%>%st_as_sfc()%>%st_as_sf())# this will trim the polygon to the extent of our focal area of interest using a bounding box
   
   #read in the species niche data (last version sent by Shaylyn)
-    species_niche <- read.csv("data/species_niche_final.csv")
+    species_niche_all <- read.csv("data/species_niche_final.csv")
+    
+    #Porbeagle shark - Lamna nasus - has very few observaitons. So the OBIS check doesn't really work well. 
+    #so we need to take it out and do a network adjust that doesn't seach obis. 
+    porbeagle <- species_niche_all[species_niche_all$SciName == "Lamna nasus",]
+    species_niche <- species_niche_all[!species_niche_all$SciName == "Lamna nasus",]
 
 #now create the species niche networks -----
 
 #loop this function to create each niche iteratively 
-for(i in 28:nrow(species_niche)){
+for(i in 1:nrow(species_niche)){
   
   network_adjust(species=species_niche[i,"SciName"],
                  network=network,# given this is a very estuarine system, I am not sure we want to include for things maybe other than lobster
@@ -79,3 +90,16 @@ for(i in 28:nrow(species_niche)){
                  return_points = TRUE)
   
 }
+    
+
+#now run it for porbeagle
+    network_adjust(species=porbeagle[1,"SciName"],
+                   network=network,# given this is a very estuarine system, I am not sure we want to include for things maybe other than lobster
+                   bathy=bathy,
+                   lower=porbeagle[1,"LwrDepth10"]*-1, #have to be in negative numbers to work with the code
+                   upper=porbeagle[1,"UprDepth90"]*-1,
+                   buffer=25, #set a buffer to the default of 25km
+                   exclusion_trim=FALSE, #this means we are not going to constrain the network based on obis observaitons. 
+                   dsn = "output/species_networks/",
+                   return_points = TRUE)
+    
