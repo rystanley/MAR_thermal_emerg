@@ -7,3 +7,4 @@ data/gebco_nw_atlantic.tif
 output/species_networks/
 data/climate_projections/
 data/network_sp.RData
+output/maxt_timeseries
