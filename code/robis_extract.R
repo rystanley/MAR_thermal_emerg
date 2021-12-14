@@ -148,6 +148,19 @@ st_use_s2(FALSE)
       annotation_north_arrow(location="tr",height = unit(0.6,"in"),width=unit(0.6,"in"));depth_plot
     
     ggsave("output/depth_plot.png",depth_plot,height=8,width=6,units="in",dpi=300)      
+    
+    
+## There is an issue with Lamna Nasus which has very, very few observations in the nw atlantic and only one observation within our bioregion and within 25km of a site (Fundy Isles)
+    load("output/robis_extractions/Lamna_nasus.RData")
+    temp <- temp%>%st_as_sf(coords=c("decimalLongitude","decimalLatitude"),crs=latlong)
+    
+    newbasemap <- basemap_atlantic%>%st_transform(latlong)%>%st_intersection(plotlims)
+    
+    ggplot()+
+      geom_sf(data=newbasemap)+
+      geom_sf(data=temp)+
+      theme_bw()+
+      coord_sf(expand=0)
    
 ### DEPRICATED CODE ----------------
 
