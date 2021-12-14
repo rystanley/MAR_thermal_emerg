@@ -181,25 +181,31 @@ for(i in 1:length(ces)){
   l[[i]]<-dvel}
 require(data.table)
 max<-data.frame(rbindlist(l))
+max$sci.name<-gsub("output/species_networks/","",max$species, fixed=FALSE)
+max$sci.name<-gsub("_"," ",max$sci.name)
 
 ## Now merge with species list to get upper thermal limit for each species
 spp<-read.csv("data/species_niche_final.csv")
 names(spp)
-spp$species=spp$SciName
+spp$sci.name=spp$SciName
+names(spp)
 spp<-spp[,c(4,9)]
-df<-merge(max,spp,by="species")
+df<-merge(max,spp,by="sci.name")
+names(df)
+df<-df[,-4] #remove old species names
+write.csv(df,"output/maxt_timeseries/maxt_timeseries.csv")
 
 ##############################################################
-findToE<-function(maxT,ProjTS,yearsProj,runLength=2){
+findToE<-function(d){
   
   ##IF SPECIES DOES NOT EMERGE FROM ITS NICHE BY END OF PROJECTION, SET TO THIS
-  ToEFirst<-max(yearsProj)+1
+  ToEFirst<-max(d$year)+1
   
-  emYears<-which(ProjTS>maxT)
+  emYears<-which(d$maxT>d$UprTemp90)
   
   if(length(emYears)>0){
     
-    x<-rep(0,length(yearsProj)) # create binary vector showing emergent (1) or non-emergent (0) years
+    x<-rep(0,length(d$year)) # create binary vector showing emergent (1) or non-emergent (0) years
     x[emYears]<-1
     
     #calculate the year when the temperature emerges for a period of at least 'runLength' years
@@ -207,10 +213,10 @@ findToE<-function(maxT,ProjTS,yearsProj,runLength=2){
     idx <- c(which(diffs), length(x)) # get the indexes, and then get the difference in subsequent indexes
     runs<-diff(c(0, idx))# calculate the length of the runs
     x2<-x[-which(c(NA,diff(x))==0)] # determine whether each run is a run of 1's or 0's
-    yearsRunStart<-yearsProj[-which(c(NA,diff(x))==0)] # find the start year of each run
+    yearsRunStart<-d$year[-which(c(NA,diff(x))==0)] # find the start year of each run
     runsTab<-data.frame(year=yearsRunStart,val=x2,run=runs) # store all this in a table
     runsTab<-runsTab[runsTab$val==1,] # remove runs of 0's
-    runStart<-which(runsTab$run>=runLength)
+    runStart<-which(runsTab$run>=2) #find where temp>maxtolerance for 2 years in a row
     if(length(runStart)>0){
       ToEFirst<-min(runsTab$year[runStart]) #find the first year where there is a run of 1's equal to or greater than runLength
     }
@@ -220,7 +226,15 @@ findToE<-function(maxT,ProjTS,yearsProj,runLength=2){
 }
 
 
+## Get ToE for each model in each cell
+ToEs<-ddply(df,.(x,y,sci.name,mod,climate_proj),.fun=findToE,.progress='text')
+head(ToEs)
+ToEs$ToE<-ToEs$V1
+names(ToEs)
+ToEs<-ToEs[,-6]
+write.csv(ToEs,"output/ToEs/ToEs_cells_allmodels.csv")
 
+##Need to create code to spatially join points to site polygons to extract site names
 network <- read_sf("data/shapefiles/networksites_proposed_OEM_MPA_v2.shp")%>%mutate(network="Draft Network")
 
 
