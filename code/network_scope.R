@@ -117,8 +117,7 @@ network_adjust <- function(species,network,bathy,lower,upper,buffer=25,exclusion
                             st_transform(planar)%>%
                             st_buffer(buffer)%>%
                             st_transform(latlong)%>%
-                            st_as_sf()%>%
-                            st_make_valid()
+                            st_as_sf()
         
       }else{network_buffered=network%>%st_transform(latlong)}
     
@@ -146,7 +145,7 @@ network_adjust <- function(species,network,bathy,lower,upper,buffer=25,exclusion
         #   theme_bw()
         # 
   
-  } # end if exclusion trim 
+  }else{count <- 1} # end if exclusion trim and since !exclusion_trim means the count is not generated we add a one here to make the intercept operable. 
   
   
 ### Depth based trimming  -----------
@@ -210,7 +209,7 @@ network_adjust <- function(species,network,bathy,lower,upper,buffer=25,exclusion
       
       b3 <- st_as_stars(b2)%>%
         st_as_sf(as_points=FALSE,merge=TRUE)%>%
-        st_make_valid()%>%
+        #st_make_valid()%>%
         st_cast("MULTIPOLYGON")%>%
         st_combine()%>%
         suppressMessages()%>% #these just print things that we don't really need. 
@@ -225,7 +224,6 @@ network_adjust <- function(species,network,bathy,lower,upper,buffer=25,exclusion
         st_as_sf(as_points=FALSE,merge=TRUE)%>%
         st_cast("POLYGON")%>%
         st_combine()%>%
-        st_make_valid()%>%
         st_intersection(network_trim[i,]%>%st_make_valid())%>% #this trims it all back to the same as the polygon.
         suppressMessages()%>% #these just print things that we don't really need. 
         suppressWarnings() 
@@ -245,19 +243,22 @@ network_adjust <- function(species,network,bathy,lower,upper,buffer=25,exclusion
   
   network_trimmed <- network_trimmed%>%filter(include) #keep only those that have an obis observation (if that was selected as a filter criteria) and have the depth range required
         
-
+  if(!exclusion_trim){network_buffered <- network_trim%>%mutate(count=NA)}
+  
 ##write the outputs ---------------
     
     #add in the counts from OBIS (note that these are inclusive of the buffer) in case they come in valuable later. 
     output <- network_trimmed%>%
               left_join(.,network_buffered%>%data.frame()%>%dplyr::select(NAME,count))%>%
-              rename(obis_count=count)%>%
+              dplyr::rename(obis_count=count)%>%
               mutate(area=as.numeric(st_area(geometry)/1000/1000))%>%#calculation of the area that has habitat for that species (new polygons)
               dplyr::select(NAME,STATUS,TYPE,area,obis_count,geometry)%>%
-              group_by(NAME)%>%
-              summarise(geometry=st_collection_extract(geometry)%>%st_cast("POLYGON"))%>% #in some cases the polygons care coming out as Geometry collections (have no idea why -- dam you sf) but this will collect it all and transform to a polygon that can be saved
-              st_make_valid()%>%
-              ungroup()%>%
+              # group_by(NAME)%>%
+              # summarise(geometry=st_collection_extract(geometry)%>%st_cast("MULTIPOLYGON"),
+              #           geometry=st_combine(geometry))%>% #in some cases the polygons are coming out as Geometry collections (have no idea why -- dam you sf) but this will collect it all and transform to a polygon that can be saved
+              # st_as_sf()%>%
+              # #st_make_valid()%>%
+              # ungroup()%>%
               st_transform(network_projection)%>%
               suppressWarnings()%>% #messages that some polygons are already in the right format so they are not converted. 
               suppressMessages()# there are messages about the grouping variable (not useful)
