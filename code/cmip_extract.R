@@ -1,6 +1,5 @@
 #Code to estimate time of thermal emergence
 
-
 #load libraries -------
 library(devtools)
 library(raster)# package for raster manipulation
@@ -80,8 +79,8 @@ for (j in 1:length(network)){
 save(out_masks,file="data/raster_masks.RData") #save this a list object that can be pulled in sequentially in the next bit of cod
 save(out_networks,file="data/network_sp.RData") #conversion of these complex adjusted sites to SP takes time so why do it twice?
 
-# }else{load("data/raster_masks.RData")
-#       load("data/network_sp.RData")}
+}else{load("data/raster_masks.RData")
+      load("data/network_sp.RData")}
 
 
 #Now do the data extractions ----------
