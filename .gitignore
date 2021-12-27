@@ -9,3 +9,4 @@ data/climate_projections/
 data/network_sp.RData
 output/maxt_timeseries
 output/climate_extracts
+maxt_timeseries.csv
