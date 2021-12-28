@@ -69,6 +69,9 @@ head(ToEs)
 ToEs$ToE<-ToEs$V1 #name the output "ToE" instead of V1
 names(ToEs)
 ToEs<-ToEs[,-10] #remove column names V1 (replaced with ToE)
+
+#save final output
+if(!dir.exists("output/ToEs/")){dir.create("output/ToEs/")
 write.csv(ToEs,"output/ToEs/ToEs_cells_allspp&models.csv")
 
 
