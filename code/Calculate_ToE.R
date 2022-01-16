@@ -74,4 +74,3 @@ ToEs<-ToEs[,-10] #remove column names V1 (replaced with ToE)
 if(!dir.exists("output/ToEs/")){dir.create("output/ToEs/")}
 write.csv(ToEs,"output/ToEs/ToEs_cells_allspp&models.csv")
 
-
