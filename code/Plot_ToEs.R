@@ -107,3 +107,14 @@ p2<-ggplot(data=df2,aes(toe,climate_proj),group=mod, fill=mod)+
   ylab("Emissions scenario")
 
 ggsave("output/StAnnsB_Cod_models.jpg",p2,height=5,width=5,units="in",dpi=300)
+
+
+### Investigate time series from RCPs/models
+maxt<-read.csv("output/maxt_timeseries/maxt_timeseries.csv")
+maxt.sable<-maxt[maxt$NAME=="Sable Island Bank",]
+p3<-ggplot(data=maxt.sable[maxt.sable$climate_proj=="8-5",], aes(year,maxT),group=mod)+
+  geom_line(aes(colour=mod))+
+  ylim(12,28)
+ggsave("output/maxt_timeseries_85models.jpg",p3,height=4,width=8,units="in",dpi=300)
+
+

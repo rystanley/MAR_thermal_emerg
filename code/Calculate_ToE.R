@@ -32,6 +32,17 @@ df<-merge(max,spp,by="species")
 names(df)
 write.csv(df,"output/maxt_timeseries/maxt_timeseries.csv")
 
+### 3-year smooth
+maxt<-read.csv("output/maxt_timeseries/maxt_timeseries.csv")
+library(dplyr)
+library(zoo)
+maxt<-maxt[,-1]
+df<-maxt%>%
+  arrange(NAME,species,mod,climate_proj) %>%
+  mutate(maxT_3y=rollapply(maxT,3,mean,fill=NA))%>%
+  ungroup()%>%
+  data.frame()
+
 ##############################################################
 findToE<-function(d){
   
@@ -72,5 +83,5 @@ ToEs<-ToEs[,-10] #remove column names V1 (replaced with ToE)
 
 #save final output
 if(!dir.exists("output/ToEs/")){dir.create("output/ToEs/")}
-write.csv(ToEs,"output/ToEs/ToEs_cells_allspp&models.csv")
+write.csv(ToEs,"output/ToEs/ToEs_cells_allspp&models_3yma.csv")
 
