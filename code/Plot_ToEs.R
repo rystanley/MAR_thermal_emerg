@@ -87,11 +87,10 @@ p1 <- ggplot()+
 ggsave("output/cod_toes_rcp26.jpg",p1,height=8,width=5,units="in",dpi=300)
 
 
-##Plot average across all species into boxplot to compare RCPs
-toe2<-toe[!toe$mod%in%c("HAD"),]
-df2 <- toe%>%
-  filter(species=="Amblyraja radiata")%>%
-  filter(NAME=="Fundian Channel-Browns Bank" )%>%
+##compare RCPs and models for individual species and sites
+df2 <- df%>%
+  filter(species=="Gadus morhua")%>%
+  filter(NAME=="St Anns Bank Marine Protected Area")%>%
   group_by(mod,climate_proj)%>%
   summarise(toe=mean(ToE), toe.sd=sd(ToE))%>%
   ungroup()%>%
@@ -107,4 +106,4 @@ p2<-ggplot(data=df2,aes(toe,climate_proj),group=mod, fill=mod)+
   geom_vline(xintercept =2022)+
   ylab("Emissions scenario")
 
-ggsave("output/sitetoes_models.jpg",p2,height=5,width=5,units="in",dpi=300)
+ggsave("output/StAnnsB_Cod_models.jpg",p2,height=5,width=5,units="in",dpi=300)
