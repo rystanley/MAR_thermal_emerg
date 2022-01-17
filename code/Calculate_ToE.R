@@ -49,7 +49,7 @@ findToE<-function(d){
   ##IF SPECIES DOES NOT EMERGE FROM ITS NICHE BY END OF PROJECTION, SET TO THIS
   ToEFirst<-max(d$year)+1
   
-  emYears<-which(d$maxT>d$UprTemp90)
+  emYears<-which(d$maxT_3y>d$UprTemp90)
   
   if(length(emYears)>0){
     
