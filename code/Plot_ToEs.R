@@ -54,7 +54,7 @@ basemap <- rbind(ne_states(country = "Canada",returnclass = "sf")%>%
 
 # call in ToEs
 df<-read.csv("output/ToEs/ToEs_cells_allspp&models.csv")
-df2 <- toe%>%
+df2 <- df%>%
   filter(species=="Gadus morhua")%>%
   group_by(climate_proj,NAME)%>%
   summarise(toe=mean(ToE), toe.sd=sd(ToE))%>%
@@ -84,5 +84,27 @@ p1 <- ggplot()+
   #facet_wrap(~species,nrow=2)+
   labs(fill="")
 
-ggsave("output/cod_toes2_rcp26.jpg",p1,height=8,width=5,units="in",dpi=300)
+ggsave("output/cod_toes_rcp26.jpg",p1,height=8,width=5,units="in",dpi=300)
 
+
+##Plot average across all species into boxplot to compare RCPs
+toe2<-toe[!toe$mod%in%c("HAD"),]
+df2 <- toe%>%
+  filter(species=="Amblyraja radiata")%>%
+  filter(NAME=="Fundian Channel-Browns Bank" )%>%
+  group_by(mod,climate_proj)%>%
+  summarise(toe=mean(ToE), toe.sd=sd(ToE))%>%
+  ungroup()%>%
+  data.frame()
+p2<-ggplot(data=df2,aes(toe,climate_proj),fill=climate_proj)+
+  geom_boxplot()+
+  geom_vline(xintercept =2022)+
+  ylab("Emissions scenario")
+p2<-ggplot(data=df2,aes(toe,climate_proj),group=mod, fill=mod)+
+  geom_point(aes(colour=mod))+
+  scale_colour_manual(values=c("blue","black",
+                "red","orange","pink"))+ 
+  geom_vline(xintercept =2022)+
+  ylab("Emissions scenario")
+
+ggsave("output/sitetoes_models.jpg",p2,height=5,width=5,units="in",dpi=300)
