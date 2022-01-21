@@ -53,7 +53,7 @@ basemap <- rbind(ne_states(country = "Canada",returnclass = "sf")%>%
   st_intersection(.,network%>%st_transform(latlong)%>%st_bbox()%>%st_as_sfc()%>%st_as_sf())# this will trim the polygon to the extent of our focal area of interest using a bounding box
 
 # call in ToEs
-df<-read.csv("output/ToEs/ToEs_cells_allspp&models.csv")
+df<-read.csv("output/ToEs/ToEs_cells_allspp&models_3yma.csv")
 df2 <- df%>%
   filter(species=="Gadus morhua")%>%
   group_by(climate_proj,NAME)%>%
@@ -71,8 +71,7 @@ cod_toes85<-merge(network,df85,by="NAME")
 #assemble the plot
 p1 <- ggplot()+
   geom_sf(data=basemap,fill="darkolivegreen3")+ #this is the land
-  geom_sf(data=cod_toes26,aes(fill=toe))+ #plot the original network
-  #geom_sf(data=cod_toes26,aes(fill=toe))+ #add the buffered polygons on the original network
+  geom_sf(data=cod_toes26,aes(fill=toe))+ #add the buffered polygons on the original network
   coord_sf(expand=0)+# this just gets rid of a plotting buffer that ggplot defaults to
   theme_bw()+
   scale_fill_gradient(low = "red", high = "blue",limits=c(2015,2100))+
@@ -84,7 +83,22 @@ p1 <- ggplot()+
   #facet_wrap(~species,nrow=2)+
   labs(fill="")
 
-ggsave("output/cod_toes_rcp26.jpg",p1,height=8,width=5,units="in",dpi=300)
+ggsave("output/cod_toes_RCP26.jpg",p1,height=8,width=5,units="in",dpi=300)
+
+##Identify example sites
+SIB<-cod_toes85[cod_toes85$NAME=="Sable Island Bank",]
+FCBB<-cod_toes85[cod_toes85$NAME=="Fundian Channel-Browns Bank",]
+p1 <- ggplot()+
+  geom_sf(data=basemap,fill="darkolivegreen3")+ #this is the land
+  #geom_sf(data=cod_toes26,aes(fill=toe))+ #add the buffered polygons on the original network
+  geom_sf(data=cod_toes26)+
+  geom_sf(data=SIB,fill="red")+
+  geom_sf(data=FCBB,fill="red")+#plot the original network
+  coord_sf(expand=0)+# this just gets rid of a plotting buffer that ggplot defaults to
+  theme_bw()+
+  labs(fill="")
+
+ggsave("output/TwoSites.jpg",p1,height=8,width=5,units="in",dpi=300)
 
 
 ##compare RCPs and models for individual species and sites
@@ -107,14 +121,5 @@ p2<-ggplot(data=df2,aes(toe,climate_proj),group=mod, fill=mod)+
   ylab("Emissions scenario")
 
 ggsave("output/StAnnsB_Cod_models.jpg",p2,height=5,width=5,units="in",dpi=300)
-
-
-### Investigate time series from RCPs/models
-maxt<-read.csv("output/maxt_timeseries/maxt_timeseries.csv")
-maxt.sable<-maxt[maxt$NAME=="Sable Island Bank",]
-p3<-ggplot(data=maxt.sable[maxt.sable$climate_proj=="8-5",], aes(year,maxT),group=mod)+
-  geom_line(aes(colour=mod))+
-  ylim(12,28)
-ggsave("output/maxt_timeseries_85models.jpg",p3,height=4,width=8,units="in",dpi=300)
 
 
