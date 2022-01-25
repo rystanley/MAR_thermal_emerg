@@ -53,11 +53,16 @@ basemap <- rbind(ne_states(country = "Canada",returnclass = "sf")%>%
   st_intersection(.,network%>%st_transform(latlong)%>%st_bbox()%>%st_as_sfc()%>%st_as_sf())# this will trim the polygon to the extent of our focal area of interest using a bounding box
 
 # call in ToEs
-df<-read.csv("output/ToEs/ToEs_cells_allspp&models_3yma.csv")
+df<-read.csv("output/ToEs/ToEs_cells_allspp&models_r3.csv")
 df2 <- df%>%
   filter(species=="Gadus morhua")%>%
-  group_by(climate_proj,NAME)%>%
+  group_by(mod,climate_proj,NAME)%>%
   summarise(toe=mean(ToE), toe.sd=sd(ToE))%>%
+  ungroup()%>%
+  data.frame()
+df3 <- df2%>%
+  group_by(climate_proj,NAME)%>%
+  summarise(toe=mean(toe), toe.sd=sd(toe))%>%
   ungroup()%>%
   data.frame()
 df26<-df2[df2$climate_proj=="2-6",]
@@ -71,7 +76,8 @@ cod_toes85<-merge(network,df85,by="NAME")
 #assemble the plot
 p1 <- ggplot()+
   geom_sf(data=basemap,fill="darkolivegreen3")+ #this is the land
-  geom_sf(data=cod_toes26,aes(fill=toe))+ #add the buffered polygons on the original network
+  geom_sf(data=cod_toes26[cod_toes26$mod=="HAD",],
+          aes(fill=toe))+ #add the buffered polygons on the original network
   coord_sf(expand=0)+# this just gets rid of a plotting buffer that ggplot defaults to
   theme_bw()+
   scale_fill_gradient(low = "red", high = "blue",limits=c(2015,2100))+

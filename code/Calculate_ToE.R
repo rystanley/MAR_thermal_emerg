@@ -34,29 +34,23 @@ write.csv(df,"output/maxt_timeseries/maxt_timeseries.csv")
 ### 3-year smooth
 maxt<-read.csv("output/maxt_timeseries/maxt_timeseries.csv")
 library(dplyr)
-library(zoo)
 library(data.table)
 maxt<-maxt[,-1]
-df<- maxt %>%
-  dplyr::group_by(NAME,cell_area,species,mod,climate_proj) %>% 
-  dplyr::arrange(year) %>%
-  dplyr::mutate(maxT_3yma = zoo::rollmean(maxT, k=3,fill=NA))%>%
-  ungroup()%>%
-  data.frame()
 
-df2<- df %>%
+df2<- maxt %>%
   dplyr::group_by(NAME,species,mod,climate_proj,year) %>% 
   #dplyr::arrange(NAME,species,mod,climate_proj,year) %>%
-  dplyr::mutate(maxT=mean(maxT_3yma),maxT_sd=sd(maxT_3yma))%>%
+  dplyr::mutate(maxT=mean(maxT),maxT_sd=sd(maxT))%>%
   ungroup()%>%
   data.frame()
 
 ### Investigate time series from RCPs/models
-df2<-df[df$NAME=="Sable Island Bank"&df$species=="Gadus morhua",]
-p3<-ggplot(data=df2[df2$climate_proj=="2-6",], aes(year,maxT),group=mod)+
+df3<-df2[df2$NAME=="Sable Island Bank"&df2$species=="Gadus morhua",]
+require(ggplot2)
+p3<-ggplot(data=df3[df3$climate_proj=="8-5",], aes(year,maxT),group=mod)+
   geom_line(aes(colour=mod))+
   ylim(12,28)
-ggsave("output/maxt_timeseries_85models.jpg",p3,height=4,width=8,units="in",dpi=300)
+ggsave("output/Sable_maxt_timeseries_85models.jpg",p3,height=4,width=8,units="in",dpi=300)
 
 
 ##############################################################
@@ -65,7 +59,7 @@ findToE<-function(d){
   ##IF SPECIES DOES NOT EMERGE FROM ITS NICHE BY END OF PROJECTION, SET TO THIS
   ToEFirst<-max(d$year)+1
   
-  emYears<-which(d$maxT_3y>d$UprTemp90)
+  emYears<-which(d$maxT>d$UprTemp90)
   
   if(length(emYears)>0){
     
@@ -80,7 +74,7 @@ findToE<-function(d){
     yearsRunStart<-d$year[-which(c(NA,diff(x))==0)] # find the start year of each run
     runsTab<-data.frame(year=yearsRunStart,val=x2,run=runs) # store all this in a table
     runsTab<-runsTab[runsTab$val==1,] # remove runs of 0's
-    runStart<-which(runsTab$run>=2) #find where temp>maxtolerance for 2 years in a row
+    runStart<-which(runsTab$run>=3) #find where temp>maxtolerance for 3 years in a row
     if(length(runStart)>0){
       ToEFirst<-min(runsTab$year[runStart]) #find the first year where there is a run of 1's equal to or greater than runLength
     }
@@ -91,7 +85,7 @@ findToE<-function(d){
 
 
 ## Get ToE for each model in each cell
-ToEs<-ddply(df,.(species,NAME,STATUS,TYPE,obis_count,site_area,cell_area,mod,climate_proj),.fun=findToE,.progress='text')
+ToEs<-ddply(maxt,.(species,NAME,mod,climate_proj),.fun=findToE,.progress='text')
 head(ToEs)
 ToEs$ToE<-ToEs$V1 #name the output "ToE" instead of V1
 names(ToEs)
@@ -99,5 +93,5 @@ ToEs<-ToEs[,-10] #remove column names V1 (replaced with ToE)
 
 #save final output
 if(!dir.exists("output/ToEs/")){dir.create("output/ToEs/")}
-write.csv(ToEs,"output/ToEs/ToEs_cells_allspp&models_3yma.csv")
+write.csv(ToEs,"output/ToEs/ToEs_cells_allspp&models_r3.csv")
 
