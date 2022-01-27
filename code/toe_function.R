@@ -2,6 +2,10 @@
 
 calculate_toe <- function(x,lag=3,func=function(x){mean(x,na.rm=T)},niche=NULL){
   
+  require(dplyr)
+  require(tidyr)
+  require(RcppRoll)
+  
   if(is.null(niche)){niche<-read.csv("data/species_niche_final.csv")} ## note that this is hard coded. So the function will only work if the working directory is set to the root of mar_thermal_emerg
   
   
