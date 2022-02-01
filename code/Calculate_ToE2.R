@@ -20,6 +20,7 @@ if(!dir.exists("output/toe_summaries/")){dir.create("output/toe_summaries/")}
 
 #calculate the summary outputs
 toe_summaries <- NULL
+timeseries<-NULL
     
   for(i in extract_fls){
       
@@ -50,17 +51,15 @@ toe_summaries <- NULL
       
       #combine the outputs for one data.frame
       toe_summaries <- rbind(toe_summaries,toe_output)
+      timeseries<-rbind(timeseries,dat2)
       
-      rm(dat,dat2,mod,proj,toe_output) #clean up the loop so that nothing is accidentally repeated (though this technically can't happen)
+      rm(dat,mod,climate_proj,toe_output) #clean up the loop so that nothing is accidentally repeated (though this technically can't happen)
       
-  } #end i loop
+  } #end i loop, takes around 
 
 #save for fast loading
 save(toe_summaries,file=paste0("output/toe_summaries/all_toe_summaries.RData"))
-
-
-
-
+save(timeseries,file=paste0("output/timeseries.RData"))
 
 
 

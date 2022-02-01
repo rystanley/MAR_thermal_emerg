@@ -53,9 +53,9 @@ basemap <- rbind(ne_states(country = "Canada",returnclass = "sf")%>%
   st_intersection(.,network%>%st_transform(latlong)%>%st_bbox()%>%st_as_sfc()%>%st_as_sf())# this will trim the polygon to the extent of our focal area of interest using a bounding box
 
 # call in ToEs
-df<-read.csv("output/ToEs/ToEs_cells_allspp&models_r3.csv")
-df2 <- df%>%
-  filter(species=="Gadus morhua")%>%
+df<-load("output/toe_summaries/all_toe_summaries.RData")
+df2 <- toe_summaries%>%
+  filter(species=="Amblyraja radiata")%>%
   group_by(mod,climate_proj,NAME)%>%
   summarise(toe=mean(ToE), toe.sd=sd(ToE))%>%
   ungroup()%>%
@@ -65,8 +65,8 @@ df3 <- df2%>%
   summarise(toe=mean(toe), toe.sd=sd(toe))%>%
   ungroup()%>%
   data.frame()
-df26<-df2[df2$climate_proj=="2-6",]
-df85<-df2[df2$climate_proj=="8-5",]
+df26<-df3[df3$climate_proj=="2-6",]
+df85<-df3[df3$climate_proj=="8-5",]
 
 #merge with network polygons
 require(sp) #need this package to merge dataframe to shapefile
@@ -76,7 +76,7 @@ cod_toes85<-merge(network,df85,by="NAME")
 #assemble the plot
 p1 <- ggplot()+
   geom_sf(data=basemap,fill="darkolivegreen3")+ #this is the land
-  geom_sf(data=cod_toes26[cod_toes26$mod=="HAD",],
+  geom_sf(data=cod_toes26,
           aes(fill=toe))+ #add the buffered polygons on the original network
   coord_sf(expand=0)+# this just gets rid of a plotting buffer that ggplot defaults to
   theme_bw()+
@@ -89,9 +89,10 @@ p1 <- ggplot()+
   #facet_wrap(~species,nrow=2)+
   labs(fill="")
 
-ggsave("output/cod_toes_RCP26.jpg",p1,height=8,width=5,units="in",dpi=300)
+ggsave("output/thornyskate_toes_RCP85.jpg",p1,height=8,width=5,units="in",dpi=300)
 
-##Identify example sites
+
+#####Identify example sites####
 SIB<-cod_toes85[cod_toes85$NAME=="Sable Island Bank",]
 FCBB<-cod_toes85[cod_toes85$NAME=="Fundian Channel-Browns Bank",]
 p1 <- ggplot()+
@@ -108,9 +109,11 @@ ggsave("output/TwoSites.jpg",p1,height=8,width=5,units="in",dpi=300)
 
 
 ##compare RCPs and models for individual species and sites
-df2 <- df%>%
-  filter(species=="Gadus morhua")%>%
-  filter(NAME=="St Anns Bank Marine Protected Area")%>%
+unique(toe_summaries$NAME)
+unique(toe_summaries$species)
+df2 <- toe_summaries%>%
+  filter(species=="Chionoecetes opilio")%>%
+  filter(NAME=="Sable Island Bank")%>%
   group_by(mod,climate_proj)%>%
   summarise(toe=mean(ToE), toe.sd=sd(ToE))%>%
   ungroup()%>%
@@ -119,13 +122,34 @@ p2<-ggplot(data=df2,aes(toe,climate_proj),fill=climate_proj)+
   geom_boxplot()+
   geom_vline(xintercept =2022)+
   ylab("Emissions scenario")
-p2<-ggplot(data=df2,aes(toe,climate_proj),group=mod, fill=mod)+
+p3<-ggplot(data=df2,aes(toe,climate_proj),group=mod, fill=mod)+
   geom_point(aes(colour=mod))+
   scale_colour_manual(values=c("blue","black",
                 "red","orange","pink"))+ 
   geom_vline(xintercept =2022)+
   ylab("Emissions scenario")
 
-ggsave("output/StAnnsB_Cod_models.jpg",p2,height=5,width=5,units="in",dpi=300)
+ggsave("output/Sable_snowcrab_rcps.jpg",p2,height=5,width=5,units="in",dpi=300)
+ggsave("output/Sable_snowcrab_models.jpg",p3,height=5,width=5,units="in",dpi=300)
+
+
+######## PLOT TIMESERIES #############
+ts1<-load("output/timeseries.Rdata")
+df2<- timeseries %>%
+  dplyr::group_by(NAME,mod,climate_proj,year) %>%
+  dplyr::mutate(meanT=mean(temp),meanT_sd=sd(temp))%>%
+  dplyr::select(NAME,mod,climate_proj,year,meanT)%>%
+  ungroup()%>%
+  distinct()%>%
+  data.frame()
+
+### Investigate time series from RCPs/models
+df3<-df2[df2$NAME=="Fundian Channel-Browns Bank",]
+df3$year<-as.numeric(df3$year)
+require(ggplot2)
+p3<-ggplot(data=df3[df3$climate_proj=="2-6",], aes(year,meanT),group=mod)+
+  geom_line(aes(colour=mod))+
+  ylim(7,20)
+ggsave("output/Fundian_meant_timeseries_26models.jpg",p3,height=4,width=8,units="in",dpi=300)
 
 
