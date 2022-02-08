@@ -11,3 +11,4 @@ output/maxt_timeseries
 output/climate_extracts
 maxt_timeseries.csv
 output/timeseries.RData
+output/sensitivity_analyses/sensitivity_analysis.pdf
