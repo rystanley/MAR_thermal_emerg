@@ -53,16 +53,17 @@ basemap <- rbind(ne_states(country = "Canada",returnclass = "sf")%>%
   st_intersection(.,network%>%st_transform(latlong)%>%st_bbox()%>%st_as_sfc()%>%st_as_sf())# this will trim the polygon to the extent of our focal area of interest using a bounding box
 
 # call in ToEs
-df<-load("output/toe_summaries/all_toe_summaries.RData")
+load("output/toe_summaries/all_toe_summaries.RData")
 df2 <- toe_summaries%>%
-  filter(species=="Amblyraja radiata")%>%
-  group_by(mod,climate_proj,NAME)%>%
-  summarise(toe=mean(ToE), toe.sd=sd(ToE))%>%
+  filter(mod=="AWI")%>%
+  group_by(climate_proj,NAME,species)%>%
+  summarise(toe=weighted.mean(ToE,cell_area), toe.sd=sd(ToE))%>%
   ungroup()%>%
   data.frame()
 df3 <- df2%>%
-  group_by(climate_proj,NAME)%>%
-  summarise(toe=mean(toe), toe.sd=sd(toe))%>%
+  group_by(climate_proj,NAME,species)%>%
+  summarise(toe=min(toe))%>%
+  slice(which.min(toe))%>%
   ungroup()%>%
   data.frame()
 df26<-df3[df3$climate_proj=="2-6",]
@@ -152,4 +153,5 @@ p3<-ggplot(data=df3[df3$climate_proj=="2-6",], aes(year,meanT),group=mod)+
   ylim(7,20)
 ggsave("output/Fundian_meant_timeseries_26models.jpg",p3,height=4,width=8,units="in",dpi=300)
 
-
+############## Matrix of species' ToEs #####################
+centroids<-read.csv("")

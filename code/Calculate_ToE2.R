@@ -61,8 +61,15 @@ timeseries<-NULL
 save(toe_summaries,file=paste0("output/toe_summaries/all_toe_summaries.RData"))
 save(timeseries,file=paste0("output/timeseries.RData"))
 
-
-
+load("output/timeseries.RData")
+require(dplyr)
+meant.network<-timeseries%>%
+  filter(species=="Amblyraja radiata")%>%
+  group_by(mod,climate_proj,year)%>%
+  summarise(mean.temp=weighted.mean(temp,cell_area), temp.sd=sd(temp))%>%
+  ungroup()%>%
+  data.frame()
+write.csv(meant.network,"meant_network.csv")
 
 
 # ## some diagnostic tests
