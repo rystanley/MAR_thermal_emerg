@@ -4,6 +4,7 @@ library(tidyr)
 library(sf)
 library(ggplot2)
 library(rnaturalearth)
+library(scales)
 
 sf_use_s2(FALSE)
 
@@ -173,156 +174,183 @@ ggplot(habitat_loss_ave%>%filter(var=="prop_lost"),aes(x=ToE,y=mean,col=climate_
   theme_bw()
 
 
-## Species by site 'emergence' based on a threshold of habitat loss 
+## Species by site 'emergence' based on a threshold of habitat loss summary data -----------
 
-#total area in each site that is occupied by each species
-agg_site_area <- toe_dat%>%
-                    group_by(climate_proj,mod,species,NAME)%>% #slightly different for each mod and projection 
-                    summarise(total_area=sum(cell_area))%>%
-                    ungroup()%>%
-                    data.frame()
+    #total area in each site that is occupied by each species
+      agg_site_area <- toe_dat%>%
+                          group_by(climate_proj,mod,species,NAME)%>% #slightly different for each mod and projection 
+                          summarise(total_area=sum(cell_area))%>%
+                          ungroup()%>%
+                          data.frame()
+      
+      habitat_loss_site <- toe_dat%>%
+                           mutate(ToE = ifelse(is.na(ToE),2500,ToE))%>% #2500 is a placeholder for 'NA' or 'not emerged'
+                           group_by(climate_proj,mod,species,NAME,ToE)%>%
+                           summarise(area_lost=sum(cell_area))%>%
+                           ungroup()%>%
+                           left_join(agg_site_area)%>% # add in the total area within each site. 
+                           mutate(prop_area=area_lost/total_area)%>%
+                           arrange(climate_proj,mod,species,NAME,ToE)%>% #make sure everything is ordered so that ToE's are sequential
+                           group_by(climate_proj,mod,species,NAME)%>%
+                           mutate(cum_sum=cumsum(prop_area))%>%
+                           ungroup()%>%
+                           data.frame()
 
-habitat_loss_site <- toe_dat%>%
-                     mutate(ToE = ifelse(is.na(ToE),2500,ToE))%>% #2500 is a placeholder for 'NA' or 'not emerged'
-                     group_by(climate_proj,mod,species,NAME,ToE)%>%
-                     summarise(area_lost=sum(cell_area))%>%
-                     ungroup()%>%
-                     left_join(agg_site_area)%>% # add in the total area within each site. 
-                     mutate(prop_area=area_lost/total_area)%>%
-                     arrange(climate_proj,mod,species,NAME,ToE)%>% #make sure everything is ordered so that ToE's are sequential
-                     group_by(climate_proj,mod,species,NAME)%>%
-                     mutate(cum_sum=cumsum(prop_area))%>%
-                     ungroup()%>%
-                     data.frame()
+## evaluate the total amount of species lost (no remaining habitat) by 2100 aggregated by general area --------------
+
+      species_lost_site <- habitat_loss_site%>%
+                            filter(ToE != 2500, #these are species that did not emerge
+                                   mod!="GFDL", #no GFDL for 2-6
+                                   !species%in%c("Sebastes mentella","Calanus glacialis"),
+                                   cum_sum==1)%>%
+                            group_by(climate_proj,mod,NAME)%>%
+                            summarise(count=n())%>%
+                            ungroup()%>%
+                            
+                            left_join(.,species_count)%>%
+                            mutate(prop_lost = count/n_species)%>%
+                            data.frame()
+      
+      #species lost by 2100
+        species_lost_site_format <- species_lost_site%>%
+                                    select(climate_proj,mod,NAME,prop_lost)%>%
+                                    spread(mod,prop_lost)%>% #this just reformats the data so that models are represented as columns
+                                    rowwise()%>%
+                                    mutate(mean=mean(c(AWI,HAD,IPSL),na.rm=T),
+                                           sd=sd(c(AWI,HAD,IPSL),na.rm=T),
+                                           comp = pmax(AWI,HAD,IPSL,na.rm=T))%>% #which model has the most lost
+                                    data.frame()%>%
+                                    left_join(.,network_cents%>%select(NAME,long,region))
+        
+        #plot data
+        plotdata_comp <- species_lost_site_format%>%
+                          mutate(NAME = factor(NAME,levels=species_lost_site_format%>%filter(climate_proj == "8-5")%>%arrange(comp)%>%pull(NAME)),
+                                 facet_lab = ifelse(climate_proj == "2-6","RCP 2.6","RCP 8.5"))
+      
+        #plot
+        p_comp <- ggplot(data=plotdata_comp,aes(x=comp,y=NAME,fill=region))+
+                  geom_bar(stat="identity",col="black")+
+                  facet_wrap(~facet_lab,ncol=2)+
+                  theme_bw()+
+                  labs(x="Lost species",y="",fill="")+
+                  scale_x_continuous(labels=percent)+
+                    theme(legend.position = "bottom");p_comp
+
+        #save the plot
+        ggsave("output/species_lost_2100.png",p_comp,width=9,height=6,units="in",dpi=300)    
                       
 
-loss_thresholds <- c(0.25,0.5,0.75,1)
+#benchmark years for the analysis to assess the impact of climate change on different species and sites. 
+benchmark_years <- c(2025,2050,2075,2100)
 
 
-                    
-                     
-
-
-
-### First year of emergence among models, species, among sites --------
-
-first_year <- toe_dat%>%
-              filter(!species %in% c("Sebastes mentella","Calanus glacialis"))%>% # these are all gone on day one of our analysis based on their thermal limits. 
-              group_by(climate_proj,NAME)%>%
-              summarise(first_year = ifelse(sum(is.na(ToE))==length(ToE),NA,min(ToE,na.rm=T)))%>%
-              ungroup()%>%
-              data.frame()%>%
-              left_join(.,network_cents) #merge with the lat and long to see if there is a relationship with the position
-              
-
-ggplot(data=first_year,aes(y=long,x=first_year,col=region))+
-  geom_point()+
-  theme_bw()+
-  facet_wrap(~climate_proj,nrow=2)
-
-
-### By
-
-habitat_loss%>%
-  filter(species=="Amblyraja radiata",climate_proj=="2-6",ToE == 2050)
+species_lost_benchmark <- NULL
+for(i in benchmark_years){
   
-habitat_loss_ave%>%
-  filter(species=="Amblyraja radiata",climate_proj=="2-6",ToE == 2050)
-
-
-
-
-#calculate the total area within each site for each species, model and climate projection
-step1 <- toe_summaries2%>%
-          group_by(climate_proj,mod,species,NAME)%>%
-          summarise(niche_area=sum(cell_area),
-                    site_area=unique(site_area))%>%
-          ungroup()%>%
-          data.frame()
-
-#get the niche area for the entire network for each species, model and climate projection
-step2 <- step1%>%
-            group_by(climate_proj,mod,species)%>%
-            summarise(niche_area=sum(niche_area))%>%
+  species_lost_benchmark <- rbind(species_lost_benchmark,
+            
+            habitat_loss_site%>%
+            filter(ToE != 2500, #these are species that did not emerge
+                   mod!="GFDL", #no GFDL for 2-6
+                   !species%in%c("Sebastes mentella","Calanus glacialis"),
+                   cum_sum==1,
+                   ToE<=i)%>%
+            group_by(climate_proj,mod,NAME)%>%
+            summarise(count=n())%>%
             ungroup()%>%
+            
+            left_join(.,species_count)%>%
+            mutate(prop_lost = count/n_species,
+                   benchmark=i)%>%
             data.frame()
-
-years <- 2015:2100
-climate_proj <- unique(step1$climate_proj)
-          
-for (i in years){
-  
-  
-  
-  
-  
+            
+  )#end of loop growing dataframe
 }
 
-          
+plot_benchmark_formatted <- species_lost_benchmark%>%
+                            group_by(climate_proj,NAME,benchmark)%>%
+                            summarise(comp=max(prop_lost,na.rm=T),
+                                      mean=mean(prop_lost,na.rm=T),
+                                      sd=sd(prop_lost,na.rm=T))%>%
+                            ungroup()%>%
+                            mutate(facet_lab = ifelse(climate_proj == "2-6","RCP 2.6","RCP 8.5"))
 
-## Summmaries of the first TOE within the sites
+plot_benchmark_formatted <- plot_benchmark_formatted%>%
+                            mutate(NAME = factor(NAME,levels=plot_benchmark_formatted%>%filter(climate_proj == "8-5",benchmark==2100)%>%arrange(comp)%>%pull(NAME)))
 
-sum_toe <- toe_summaries2%>%
-            group_by(climate_proj,mod,species,NAME)%>%
-            summarise(first_year=min(ToE,na.rm=T),
-                   mean_year=mean(ToE,na.rm=T),
-                   mean_weighted=weighted.mean(ToE,cell_area,na.rm=T),
-                   last_year=max(ToE,na.rm=T))%>%
-            ungroup()%>%
-            data.frame()%>%
-            mutate(first_year=replace(first_year,is.infinite(first_year),NA), #clean up inf values for unemerged cells
-                  mean_year=replace(mean_year,is.infinite(mean_year),NA),
-                  mean_weighted=replace(mean_weighted,is.infinite(mean_weighted),NA),
-                  last_year=replace(last_year,is.infinite(last_year),NA))%>%
-            suppressWarnings()%>%#these are just for the NA calculations
-            suppressMessages() # this is for the grouping auto message
-            
+benchmark_plot <-  ggplot(,aes(x=comp,y=NAME,fill=factor(benchmark)))+
+              geom_bar(data=plot_benchmark_formatted%>%filter(benchmark==2100),stat="identity",col="black")+
+              geom_bar(data=plot_benchmark_formatted%>%filter(benchmark==2075),stat="identity",col="black")+
+              geom_bar(data=plot_benchmark_formatted%>%filter(benchmark==2050),stat="identity",col="black")+
+              geom_bar(data=plot_benchmark_formatted%>%filter(benchmark==2025),stat="identity",col="black")+
+              facet_wrap(~facet_lab,ncol=2)+
+              theme_bw()+
+              labs(x="Lost species",y="",fill="")+
+              scale_x_continuous(labels=percent)+
+              theme(legend.position = "bottom")+
+              scale_fill_viridis(discrete=T); benchmark_plot
 
-sum_mod_toe <- sum_toe%>%
-                group_by(climate_proj,species,NAME)%>% #average among models
-                summarise(mean_first=mean(first_year,na.rm=T), #earliest projected
-                          mean_year=mean(mean_year,na.rm=T), #mean projected
-                          mean_weighted=mean(mean_weighted,na.rm=T), #mean (weighted) projected
-                          mean_last=mean(last_year,na.rm=T))%>% #max projected
-                ungroup()%>%
-                data.frame()%>%
-                  mutate(mean_first=replace(mean_first,is.infinite(mean_first),NA), #clean up inf values for unemerged cells
-                         mean_year=replace(mean_year,is.infinite(mean_year),NA),
-                         mean_weighted=replace(mean_weighted,is.infinite(mean_weighted),NA),
-                         mean_last=replace(mean_last,is.infinite(mean_last),NA))%>%
-                  suppressWarnings()%>%#these are just for the NA calculations
-                  suppressMessages() # this is for the grouping auto message
-
-#data for a plot
-
-#factor levels -- arrange by first to last ToE within species and among projections and sites
-tt=sum_mod_toe%>%
-  group_by(species)%>%
-  summarise(min=min(mean_year,na.rm=T))%>%
-  ungroup()%>%
-  arrange(min)
-
-p1_data <- sum_mod_toe%>%
-           filter(!is.na(mean_first),!is.na(mean_year),!is.na(mean_weighted),!is.na(mean_last))%>%
-           mutate(species_factor = factor(species,levels = ))
+ggsave("output/benchmark_species_lost.png",benchmark_plot,width=9,height=6,units="in",dpi=300)
 
 
-p1_da
+           
+                     
+
+#Now evaluate how much each species has lots at each of the benchmark years (similar to the plot for the % of species lost)
+
+total_area <- toe_dat%>%
+              filter(climate_proj == )
+
+species_area_lost_benchmark <- NULL
+for(i in benchmark_years){
+  
+  species_area_lost_benchmark <- rbind(species_area_lost_benchmark,
+                                  
+                                  habitat_loss_site%>%
+                                    filter(ToE != 2500, #these are species that did not emerge
+                                           mod!="GFDL", #no GFDL for 2-6
+                                           !species%in%c("Sebastes mentella","Calanus glacialis"),
+                                           ToE<=i)%>%
+                                    group_by(climate_proj,mod,species)%>%
+                                    mutate(sum_area = cumsum(area_lost))%>%
+                                    summarise(area_lost = max(sum_area,na.rm=T))%>%
+                                    ungroup()%>%
+                                    data.frame()%>%
+                                    left_join(.,agg_network_area)%>% # the total area for each species across the hole network ~ mod, climate_proj
+                                    mutate(prop_lost = area_lost/total_area,
+                                           benchmark=i)%>%
+                                    data.frame()
+                                  
+  )#end of loop growing dataframe
+}
 
 
-sum_network_toe <- sum_mod_toe%>%
-                   group_by(species)%>%
-                    summarise(mean_first=mean(mean_first,na.rm=T),
-                              mean_year=mean(mean_year,na.rm=T),
-                              mean_weighted=mean(mean_weighted,na.rm=T),
-                              mean_last=max(mean_last,na.rm=T))%>%
-                    ungroup()%>%
-                    data.frame()
+plot_area_benchmark_formatted <- species_area_lost_benchmark%>%
+                                group_by(climate_proj,species,benchmark)%>%
+                                summarise(comp=max(prop_lost,na.rm=T),
+                                          mean=mean(prop_lost,na.rm=T),
+                                          sd=sd(prop_lost,na.rm=T))%>%
+                                ungroup()%>%
+                                mutate(facet_lab = ifelse(climate_proj == "2-6","RCP 2.6","RCP 8.5"))
 
-sum_toe_spatial <- sum_toe%>%
-                   left_join(.,network%>%
-                               filter(NAME %in% unique(sum_toe$NAME))%>% #some sites aren't considered as they are outside of all the species ranges (depth, Bras d'Or, or have never been observed within the buffered distance of a site)
-                               dplyr::select(NAME,geometry))
+plot_area_benchmark_formatted <- plot_area_benchmark_formatted%>%
+                                 mutate(species = factor(species,levels=plot_area_benchmark_formatted%>%filter(climate_proj == "8-5",benchmark==2100)%>%arrange(comp)%>%pull(species)))
+
+benchmark_area_plot <-  ggplot(,aes(x=comp,y=species,fill=factor(benchmark)))+
+                        geom_bar(data=plot_area_benchmark_formatted%>%filter(benchmark==2100),stat="identity",col="black")+
+                        geom_bar(data=plot_area_benchmark_formatted%>%filter(benchmark==2075),stat="identity",col="black")+
+                        geom_bar(data=plot_area_benchmark_formatted%>%filter(benchmark==2050),stat="identity",col="black")+
+                        geom_bar(data=plot_area_benchmark_formatted%>%filter(benchmark==2025),stat="identity",col="black")+
+                        facet_wrap(~facet_lab,ncol=2)+
+                        theme_bw()+
+                        labs(x="Lost habitat extent",y="",fill="")+
+                        scale_x_continuous(labels=percent)+
+                        theme(legend.position = "bottom")+
+                        scale_fill_viridis(discrete=T); benchmark_area_plot
+
+ggsave("output/benchmark_species_area_lost.png",benchmark_area_plot,width=9,height=6,units="in",dpi=300)
+
+
 
 
 
