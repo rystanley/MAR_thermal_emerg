@@ -90,6 +90,14 @@ toe_dat <- toe_summaries%>%
                               data.frame()%>%
                               dplyr::select(NAME,long,lat))
 
+## how many species per site
+species_count <- toe_dat%>%
+                 group_by(NAME)%>%
+                 summarise(n_species = length(unique(species)))%>%
+                 ungroup()%>%
+                 data.frame()%>%
+                 arrange(-n_species)
+
 
 ## calculate the time-series of area lost for each species network wide --------
 
@@ -142,23 +150,84 @@ for(i in species){
 
 #first average among CMIP models
 habitat_loss_ave <- habitat_loss%>%
-                    group_by(climate_proj,species,ToE)%>%
-                    summarise(area_lost_sd = sd(area_lost), #note we do 'sd' first because the mean takes on the same name
-                              area_lost = mean(area_lost),
-                              cum_lost_sd = sd(cum_lost),
-                              cum_lost = mean(cum_lost),
-                              prop_lost_sd = sd(prop_lost),
-                              prop_lost = mean(prop_lost))%>%
+                    gather(key = "var",value="value",c("area_lost","cum_lost","prop_lost"))%>%
+                    filter(!(climate_proj == "2-6"& mod=="GFDL"))%>% #there is no 'GFDL model for RCP 2.6' but during the left_join above it gets assigned a value of NA
+                    group_by(climate_proj,species,ToE,var)%>% #this will average the models but note that some models have a 0 in the early years so they pull down the average
+                    summarise(mean=mean(value,na.rm=T),
+                              sd=sd(value,na.rm=T))%>%
                     ungroup()%>%
                     data.frame()
-                              
 
-ggplot(habitat_loss_ave%>%filter(species=="Gadus morhua"),aes(x=ToE,y=prop_lost,col=climate_proj))+
+
+                              
+focal_sp <- c("Amblyraja radiata","Gadus morhua","Homarus americanus")
+
+ggplot(habitat_loss_ave%>%filter(species%in%focal_sp,var=="prop_lost"),aes(x=ToE,y=mean,col=climate_proj))+
+  geom_line()+
+  facet_grid(species~climate_proj)+
+  theme_bw()
+
+ggplot(habitat_loss_ave%>%filter(var=="prop_lost"),aes(x=ToE,y=mean,col=climate_proj,group=species))+
   geom_line()+
   facet_wrap(~climate_proj,ncol=2)+
   theme_bw()
 
 
+## Species by site 'emergence' based on a threshold of habitat loss 
+
+#total area in each site that is occupied by each species
+agg_site_area <- toe_dat%>%
+                    group_by(climate_proj,mod,species,NAME)%>% #slightly different for each mod and projection 
+                    summarise(total_area=sum(cell_area))%>%
+                    ungroup()%>%
+                    data.frame()
+
+habitat_loss_site <- toe_dat%>%
+                     mutate(ToE = ifelse(is.na(ToE),2500,ToE))%>% #2500 is a placeholder for 'NA' or 'not emerged'
+                     group_by(climate_proj,mod,species,NAME,ToE)%>%
+                     summarise(area_lost=sum(cell_area))%>%
+                     ungroup()%>%
+                     left_join(agg_site_area)%>% # add in the total area within each site. 
+                     mutate(prop_area=area_lost/total_area)%>%
+                     arrange(climate_proj,mod,species,NAME,ToE)%>% #make sure everything is ordered so that ToE's are sequential
+                     group_by(climate_proj,mod,species,NAME)%>%
+                     mutate(cum_sum=cumsum(prop_area))%>%
+                     ungroup()%>%
+                     data.frame()
+                      
+
+loss_thresholds <- c(0.25,0.5,0.75,1)
+
+
+                    
+                     
+
+
+
+### First year of emergence among models, species, among sites --------
+
+first_year <- toe_dat%>%
+              filter(!species %in% c("Sebastes mentella","Calanus glacialis"))%>% # these are all gone on day one of our analysis based on their thermal limits. 
+              group_by(climate_proj,NAME)%>%
+              summarise(first_year = ifelse(sum(is.na(ToE))==length(ToE),NA,min(ToE,na.rm=T)))%>%
+              ungroup()%>%
+              data.frame()%>%
+              left_join(.,network_cents) #merge with the lat and long to see if there is a relationship with the position
+              
+
+ggplot(data=first_year,aes(y=long,x=first_year,col=region))+
+  geom_point()+
+  theme_bw()+
+  facet_wrap(~climate_proj,nrow=2)
+
+
+### By
+
+habitat_loss%>%
+  filter(species=="Amblyraja radiata",climate_proj=="2-6",ToE == 2050)
+  
+habitat_loss_ave%>%
+  filter(species=="Amblyraja radiata",climate_proj=="2-6",ToE == 2050)
 
 
 
