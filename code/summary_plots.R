@@ -159,19 +159,48 @@ habitat_loss_ave <- habitat_loss%>%
                     ungroup()%>%
                     data.frame()
 
+#format for the plot
+network_loss_plot_df <- habitat_loss_ave%>%
+                        filter(var=="prop_lost",
+                               !species %in% c("Sebastes mentella","Calanus glacialis"))%>%
+                        mutate(facet_lab = ifelse(climate_proj == "2-6","RCP 2.6","RCP 8.5"),
+                               benchmark = case_when(ToE<=2025 ~ 2025,
+                                                     ToE>2025 & ToE<=2050 ~2050,
+                                                     ToE>2050 & ToE<=2075 ~ 2075,
+                                                     ToE>2075 ~ 2100))
 
-                              
-focal_sp <- c("Amblyraja radiata","Gadus morhua","Homarus americanus")
+#take the mean of mean models among species
+network_loss_mean <- habitat_loss_ave%>%
+                     filter(!species %in% c("Sebastes mentella","Calanus glacialis"))%>%
+                     group_by(climate_proj,ToE,var)%>%
+                     summarise(sd=sd(mean,na.rm=T),
+                               mean=mean(mean,na.rm=T))%>%
+                     ungroup()%>%
+                     data.frame()%>%
+                     filter(var=="prop_lost")%>%
+                      mutate(facet_lab = ifelse(climate_proj == "2-6","RCP 2.6","RCP 8.5"),
+                             benchmark = case_when(ToE<=2025 ~ 2025,
+                                                   ToE>2025 & ToE<=2050 ~2050,
+                                                   ToE>2050 & ToE<=2075 ~ 2075,
+                                                   ToE>2075 ~ 2100))
 
-ggplot(habitat_loss_ave%>%filter(species%in%focal_sp,var=="prop_lost"),aes(x=ToE,y=mean,col=climate_proj))+
-  geom_line()+
-  facet_grid(species~climate_proj)+
-  theme_bw()
+focal_loss_years <- c(2025,2050,2075)
 
-ggplot(habitat_loss_ave%>%filter(var=="prop_lost"),aes(x=ToE,y=mean,col=climate_proj,group=species))+
-  geom_line()+
-  facet_wrap(~climate_proj,ncol=2)+
-  theme_bw()
+network_loss_plot <- ggplot()+
+                      geom_line(data=network_loss_plot_df,aes(x=ToE,y=mean,group=species),col="grey80",lty=2,lwd=0.5)+
+                      geom_line(data=network_loss_mean,lwd=2,aes(x=ToE,y=mean,col=factor(benchmark)))+
+                      geom_segment(data=network_loss_mean%>%filter(ToE %in% focal_loss_years),
+                                   aes(x=-Inf,xend=ToE,y=mean,yend=mean,col=factor(benchmark)),lwd=1.25)+
+                      geom_segment(data=network_loss_mean%>%filter(ToE %in% focal_loss_years),
+                                   aes(x=ToE,xend=ToE,y=-Inf,yend=mean,col=factor(benchmark)),lwd=1.25)+
+                      facet_wrap(~facet_lab,ncol=2)+
+                      theme_bw()+
+                      labs(x="",y="Propotion of habitat")+
+                      scale_y_continuous(labels=percent)+
+                      theme(legend.position = "none")+
+                      scale_color_viridis(discrete = T);network_loss_plot
+
+ggsave("output/habitat_loss-models_species.png",network_loss_plot,width=8,height=6,units="in",dpi=300)
 
 
 ## Species by site 'emergence' based on a threshold of habitat loss summary data -----------
@@ -298,8 +327,6 @@ ggsave("output/benchmark_species_lost.png",benchmark_plot,width=9,height=6,units
 
 #Now evaluate how much each species has lots at each of the benchmark years (similar to the plot for the % of species lost)
 
-total_area <- toe_dat%>%
-              filter(climate_proj == )
 
 species_area_lost_benchmark <- NULL
 for(i in benchmark_years){
@@ -351,8 +378,91 @@ benchmark_area_plot <-  ggplot(,aes(x=comp,y=species,fill=factor(benchmark)))+
 ggsave("output/benchmark_species_area_lost.png",benchmark_area_plot,width=9,height=6,units="in",dpi=300)
 
 
+### Loss of habitat by MPA summary tile plot
+
+tile_df <- NULL
+for(i in benchmark_years){
+  
+  tile_df <- rbind(tile_df,
+                                       
+                   habitat_loss_site%>%
+                   filter(ToE != 2500, #these are species that did not emerge
+                          mod!="GFDL", #no GFDL for 2-6
+                          !species%in%c("Sebastes mentella","Calanus glacialis"),
+                          ToE<=i)%>%
+                   group_by(climate_proj,mod,NAME,species)%>%
+                   mutate(sum_area = cumsum(area_lost))%>%
+                   summarise(area_lost = max(sum_area,na.rm=T))%>%
+                   ungroup()%>%
+                   data.frame()%>%
+                   left_join(.,agg_site_area)%>% # the total area for each species across the hole network ~ mod, climate_proj
+                                mutate(prop_lost = area_lost/total_area,
+                                       benchmark=i)%>%
+                    data.frame()
+                                       
+  )#end of loop growing dataframe
+}
+
+##making the tile plot will result in really long site names. These need to be shortened. Lets make abbreviations. Be sure that these are in the thesis
+
+site_names <- unique(habitat_loss_site$NAME)%>%
+              gsub(" - "," ",.)%>% #clean up the odds and ends
+              gsub("-","",.)%>%
+              gsub(" and "," ",.)%>%
+              gsub("/"," ",.)%>%
+              data.frame(NAME=unique(habitat_loss_site$NAME),
+                         abbreviation=sapply(strsplit(.," "), function(x){ #Function splits, then getes the first letter of each unique word
+                           toupper(paste(substring(x, 1, 1), collapse = ""))}))%>%
+              mutate(abbreviation = ifelse(NAME =="Bird Islands","BRDI",abbreviation), #bird island and brier island get the same 'BI'
+                     abbreviation = ifelse(NAME =="Chebogue","CHEB",abbreviation))%>% # Chebogue had a boring acronym
+              select(NAME,abbreviation)%>%
+              arrange(abbreviation)
+
+tile_df_formatted <- tile_df%>%
+                     filter(mod=="AWI")%>% #worst case model
+                     select(climate_proj,mod,benchmark,NAME,species,prop_lost)%>%
+                     mutate(prop_lost = round(prop_lost,3)*100,
+                            benchmark = factor(benchmark,levels = rev(benchmark_years)),
+                            facet_lab = ifelse(climate_proj == "2-6","RCP 2.6","RCP 8.5"),
+                            species = factor(species,levels=plot_area_benchmark_formatted%>%filter(climate_proj == "8-5",benchmark==2100)%>%arrange(comp)%>%pull(species)%>%rev()))%>% #put into the xx.y % format
+                     left_join(.,site_names)%>%
+                     left_join(.,network_cents)
 
 
+#grouping order of the stations (grouped by longitude within their respective regions)
+site_order <- network_cents%>%
+              mutate(region_ord = factor(region,levels=c("Bay of Fundy","Western Scotian Shelf","Eastern Scotian Shelf")))%>% #order the regions first
+              arrange(region_ord,long)%>%
+              left_join(.,tile_df_formatted%>%distinct(NAME,.keep_all=TRUE)%>%select(NAME,abbreviation))%>%
+              pull(abbreviation)
+                       
 
+tile_df_formatted$abbreviation_ord <- factor(tile_df_formatted$abbreviation,levels=site_order)
+           
+p2_6 <- ggplot(data=tile_df_formatted%>%filter(climate_proj=="2-6"),aes(x=abbreviation_ord,y=benchmark))+
+  geom_tile(aes(fill=prop_lost),col="black")+
+  facet_grid(species~.)+
+  scale_fill_viridis()+
+  theme(strip.text.y = element_text(angle = 360),
+        legend.position = "bottom",
+        panel.spacing.y=unit(0.05, "lines"),
+        panel.background = element_rect(fill="white"),
+        axis.text.x = element_text(angle=45,vjust = 1, hjust=1))+
+  labs(x="",y="");p2_6
 
+pfacet <- ggplot(data=tile_df_formatted,aes(x=abbreviation_ord,y=benchmark))+
+            geom_tile(aes(fill=prop_lost),col="black")+
+            facet_grid(species~facet_lab)+
+            scale_fill_viridis(option = "B")+
+            theme(strip.text.y = element_text(angle = 360),
+                  legend.position = "bottom",
+                  panel.spacing.y=unit(0.05, "lines"),
+                  panel.background = element_rect(fill="white"),
+                  axis.text.x = element_text(angle=45,vjust = 1, hjust=1,size=5,colour="black"),
+                  axis.text.y = element_text(size=5,colour="black"),
+                  strip.background.x = element_rect(fill="white",colour="black"),
+                  strip.background.y = element_blank())+
+            labs(x="",y="",fill="% habitat lost");pfacet
 
+ggsave("output/tiled_species_area_lost.png",pfacet,width=9,height=6,units="in",dpi=300)
+  
