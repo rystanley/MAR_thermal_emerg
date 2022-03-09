@@ -154,4 +154,6 @@ p3<-ggplot(data=df3[df3$climate_proj=="2-6",], aes(year,meanT),group=mod)+
 ggsave("output/Fundian_meant_timeseries_26models.jpg",p3,height=4,width=8,units="in",dpi=300)
 
 ############## Matrix of species' ToEs #####################
-centroids<-read.csv("")
+require(plot.matrix)
+centroids<-read.csv("data/site_centroids.csv")
+
