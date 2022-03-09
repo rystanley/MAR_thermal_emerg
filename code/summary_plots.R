@@ -603,8 +603,8 @@ pfacet_26 <- ggplot(data=tile_df_formatted%>%mutate(prop_lost=ifelse(prop_lost==
                     axis.text.x = element_text(angle=45,vjust = 1, hjust=1,size=5,colour="black"),
                     axis.text.y = element_text(size=5,colour="black"),
                     strip.background.y = element_blank(),
-                    strip.background.x = element_blank(),
-                    strip.text.x = element_blank(),
+                    strip.background.x = element_rect(fill="white",color="black"),
+                    strip.text.x = element_text(color="black",size=6),
                     strip.text.y = element_blank())+
               labs(x="",y="",fill="% habitat lost",title = "RCP 2.6")
 
@@ -616,16 +616,16 @@ pfacet_85 <- ggplot(data=tile_df_formatted%>%mutate(prop_lost=ifelse(prop_lost==
           facet_grid(species_ord~region_ord,scales="free_x",space="free_x")+
           scale_y_discrete(breaks=c(2025,2075))+ #gets crpwded
           scale_fill_viridis(option = "B",na.value="white")+
-          theme(strip.text.y = element_text(angle = 360),
-                legend.position = "bottom",
+          theme(legend.position = "bottom",
                 panel.spacing.y=unit(0.05, "lines"),
                 panel.spacing.x=unit(0.15, "lines"),
                 panel.background = element_rect(fill="white"),
                 axis.text.x = element_text(angle=45,vjust = 1, hjust=1,size=5,colour="black"),
                 axis.text.y = element_blank(),
                 strip.background.y = element_blank(),
-                strip.background.x = element_blank(),
-                strip.text.x = element_blank())+
+                strip.background.x = element_rect(fill="white",color="black"),
+                strip.text.x = element_text(color="black",size=6),
+                strip.text.y = element_text(color="black",angle = 360))+
           labs(x="",y="",fill="% habitat lost",title = "RCP 8.5")
 
 #knit them all together using facet
