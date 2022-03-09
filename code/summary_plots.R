@@ -77,16 +77,24 @@ network <- network_base%>%
            left_join(.,network_cents)%>%
            st_transform(latlong)
 
+#show a grid that represents the ~ resolution of CMIP (from readme)
+study_grid <- bioregion%>%st_make_grid(cellsize=0.25)
+bioregion_grid <- bioregion%>%st_intersection(study_grid)
+sites_grid <- network%>%
+              st_make_valid()%>%
+              st_intersection(study_grid)
+
 #plot out the centriods on the MPAs
 p1 <- ggplot()+
-  geom_sf(data=basemap,fill="darkolivegreen3")+
-  geom_sf(data=bioregion,fill=NA)+
-  geom_sf(data=network,aes(fill=region))+
-  geom_sf(data=network_cents_sf,size=1.25)+
-  theme_bw()+
-  labs(fill="")+
-  coord_sf(expand=0)+
-  theme(legend.position="bottom")
+        geom_sf(data=basemap,fill="darkolivegreen3")+
+        geom_sf(data=bioregion,fill=NA)+
+        geom_sf(data=sites_grid,aes(fill=region))+
+        #geom_sf(data=network,aes(fill=region))+
+        geom_sf(data=network_cents_sf,size=1.25)+
+        theme_bw()+
+        labs(fill="")+
+        coord_sf(expand=0)+
+        theme(legend.position="bottom")
 
 ggsave("output/regional_centriod_plot.png",p1,width=6,height=6,units="in",dpi=300)
 
@@ -554,10 +562,6 @@ tile_df_formatted <- rbind(tile_df_formatted,
 tile_df_formatted$species_ord <- factor(tile_df_formatted$species,levels=plot_area_benchmark_formatted%>% #using the same data so we can use this again
                                                                         filter(benchmark==2100,climate_proj=="8-5")%>%
                                                                         arrange(functional_group,-comp)%>%pull(species))
-                      
-
-
-
 
 #grouping order of the stations (grouped by longitude within their respective regions)
 site_order <- network_cents%>%
@@ -574,7 +578,7 @@ tile_df_formatted$region_ord <- factor(tile_df_formatted$region,levels=c("Bay of
 pfacet <- ggplot(data=tile_df_formatted%>%mutate(prop_lost=ifelse(prop_lost==0,NA,prop_lost)),aes(x=abbreviation_ord,y=benchmark))+
           geom_tile(aes(fill=prop_lost),col="black")+
           facet_grid(species_ord~facet_lab)+
-          scale_y_discrete(breaks=c(2025,2075))+ #gets crpwded
+          scale_y_discrete(breaks=c(2025,2075))+ #gets crowded
           scale_fill_viridis(option = "B",na.value="white")+
           theme(strip.text.y = element_text(angle = 360),
                 legend.position = "bottom",
@@ -594,7 +598,7 @@ pfacet_26 <- ggplot(data=tile_df_formatted%>%mutate(prop_lost=ifelse(prop_lost==
                     aes(x=abbreviation_ord,y=benchmark))+
               geom_tile(aes(fill=prop_lost),col="black")+
               facet_grid(species_ord~region_ord,scales="free_x",space="free_x")+
-              scale_y_discrete(breaks=c(2025,2075))+ #gets crpwded
+              scale_y_discrete(breaks=c(2025,2075))+ #gets crowded
               scale_fill_viridis(option = "B",na.value="white")+
               theme(legend.position = "bottom",
                     panel.spacing.y=unit(0.05, "lines"),
@@ -609,12 +613,11 @@ pfacet_26 <- ggplot(data=tile_df_formatted%>%mutate(prop_lost=ifelse(prop_lost==
               labs(x="",y="",fill="% habitat lost",title = "RCP 2.6")
 
 
-
 pfacet_85 <- ggplot(data=tile_df_formatted%>%mutate(prop_lost=ifelse(prop_lost==0,NA,prop_lost))%>%filter(climate_proj=="8-5"),
                     aes(x=abbreviation_ord,y=benchmark))+
           geom_tile(aes(fill=prop_lost),col="black")+
           facet_grid(species_ord~region_ord,scales="free_x",space="free_x")+
-          scale_y_discrete(breaks=c(2025,2075))+ #gets crpwded
+          scale_y_discrete(breaks=c(2025,2075))+ #gets crowded
           scale_fill_viridis(option = "B",na.value="white")+
           theme(legend.position = "bottom",
                 panel.spacing.y=unit(0.05, "lines"),
@@ -635,4 +638,3 @@ combo_tile <- pfacet_26 +
               theme(legend.position = "bottom")
 
 ggsave("output/combination_tile_plot.png",combo_tile,width=12,height=6,units="in",dpi=300)
-
