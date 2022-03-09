@@ -5,14 +5,20 @@ library(sf)
 library(ggplot2)
 library(rnaturalearth)
 library(scales)
+library(patchwork)
 
 sf_use_s2(FALSE)
 
 #Projections ------------
 latlong <- "+proj=longlat +datum=NAD83 +no_defs +ellps=GRS80 +towgs84=0,0,0"
 
-#load the toe_summaries
+#load the time of emergence summaries
 load("output/toe_summaries/all_toe_summaries.RData")
+
+#load the species groupings and niche information
+groupings <- read.csv("data/species_grouping.csv")%>%select(SciName,functional_group,cosewic_status)
+niches <- read.csv("data/species_niche_final.csv")%>%
+          left_join(.,groupings)
 
 #load geographic files
 bioregion <- read_sf("data/Shapefiles/MaritimesPlanningArea.shp")%>%st_transform(latlong)
@@ -91,63 +97,124 @@ toe_dat <- toe_summaries%>%
                               data.frame()%>%
                               dplyr::select(NAME,long,lat))
 
-## how many species per site
-species_count <- toe_dat%>%
-                 group_by(NAME)%>%
-                 summarise(n_species = length(unique(species)))%>%
-                 ungroup()%>%
-                 data.frame()%>%
-                 arrange(-n_species)
+
+## create short names for draft site (used in later plotting)
+site_names <- unique(toe_dat$NAME)%>%
+              gsub(" - "," ",.)%>% #clean up the odds and ends
+              gsub("-","",.)%>%
+              gsub(" and "," ",.)%>%
+              gsub("/"," ",.)%>%
+              data.frame(NAME=unique(habitat_loss_site$NAME),
+                         abbreviation=sapply(strsplit(.," "), function(x){ #Function splits, then getes the first letter of each unique word
+                           toupper(paste(substring(x, 1, 1), collapse = ""))}))%>%
+              mutate(abbreviation = ifelse(NAME =="Bird Islands","BRDI",abbreviation), #bird island and brier island get the same 'BI'
+                     abbreviation = ifelse(NAME =="Chebogue","CHEB",abbreviation))%>% # Chebogue had a boring acronym
+              select(NAME,abbreviation)%>%
+              arrange(abbreviation)
+
+##Data prep species,site summaries ------------
+
+    ## how many species per site
+    species_count <- toe_dat%>%
+                     group_by(NAME)%>%
+                     summarise(n_species = length(unique(species)))%>%
+                     ungroup()%>%
+                     data.frame()%>%
+                     arrange(-n_species)
+    
+    ## species unique to each site
+    species_site <- toe_dat%>%
+                    group_by(NAME)%>%
+                    distinct(species)%>%
+                    ungroup()%>%
+                    data.frame()%>%
+                    arrange(species)%>%
+                    mutate(id=paste(species,NAME,sep="-"))
+    
+    ## species dummy data frame
+    sd1<- niches%>%
+               filter(!SciName %in% c("Sebastes mentella","Calanus glacialis"))%>%
+               select(SciName,functional_group,cosewic_status)%>%
+               rename(species=SciName)
+    
+    sd2 <- rbind(sd1,sd1,sd1,sd1)%>%
+                      mutate(benchmark=rep(rep(c(2025,2050,2075,2100),each=nrow(sd1))))
+    
+    species_dummy <- rbind(sd2,sd2)%>%
+                    mutate(climate_proj = rep(c("2-6","8-5"),each=nrow(sd2)),
+                           id=paste(climate_proj,benchmark,species,sep="-"))
+                                                     
 
 
-## calculate the time-series of area lost for each species network wide --------
+## calculate the time-series of area lost for each species network wide 
+    site_df <- site_names%>%
+               left_join(.,species_count)%>%
+               left_join(.,network_cents)%>%
+               left_join(.,network%>%
+                          group_by(NAME)%>%
+                           summarise(area=round(as.numeric(st_area(geometry))/1000/1000,2))%>%
+                           data.frame()%>%
+                           select(NAME,area)%>%
+                           suppressMessages())%>%#suppress the planar coordinate warning. 
+               rename(site=NAME)%>%
+               arrange(region,long)
+    
+    write.csv(site_df,"output/site_description_table.csv",row.names=F)
+    
+    #dummy dataframe that can be used to buffer the site summaries
+    site_dummy <- rbind(site_df%>%select(site,long,abbreviation,region)%>%mutate(climate_proj="2-6"),
+                        site_df%>%select(site,long,abbreviation,region)%>%mutate(climate_proj="8-5"))%>%
+                  rename(NAME = site)%>%
+                  mutate(id = paste(NAME,climate_proj,sep="-"))
+
 
 #calculate the total area for each species in the network
-agg_network_area <- toe_dat%>%
-                  group_by(climate_proj,mod,species)%>% #slightly different for each mod and projection 
-                  summarise(total_area=sum(cell_area))%>%
-                  ungroup()%>%
-                  data.frame()%>%
-                  arrange(species)
-
-#so now we will add together grid cells that emerged in the same year
-agg_annual_toe <- toe_dat%>%
-                  group_by(climate_proj,mod,species,ToE)%>%
-                  summarise(area_lost=sum(cell_area))%>%
-                  ungroup()%>%
-                  data.frame()
+    agg_network_area <- toe_dat%>%
+                      group_by(climate_proj,mod,species)%>% #slightly different for each mod and projection 
+                      summarise(total_area=sum(cell_area))%>%
+                      ungroup()%>%
+                      data.frame()%>%
+                      arrange(species)
+    
+    #so now we will add together grid cells that emerged in the same year
+    agg_annual_toe <- toe_dat%>%
+                      group_by(climate_proj,mod,species,ToE)%>%
+                      summarise(area_lost=sum(cell_area))%>%
+                      ungroup()%>%
+                      data.frame()
                         
+
+#extract the summaries of habitat loss (e.g., when a cell becomes too warm) ----------------------------
+
 species <- unique(agg_annual_toe$species)
 years <- 2015:2100
 mods <- unique(agg_annual_toe$mod)
 projs <- unique(agg_annual_toe$climate_proj)
 
-
-#Big 'for loop' == this could probably be done using 'do' in dplyr but this doesn't take long and is easy to follow. 
-
-habitat_loss <- NULL #will grow each loop
-for(i in species){
-  message(paste0("Working on ",i))
-  for(p in projs){
-    for(m in mods){
-     
-        temp <- agg_annual_toe%>%
-                    filter(species==i,climate_proj == p,mod==m,!is.na(ToE))%>%
-                    rbind(.,data.frame(climate_proj=p,mod=m,species=i,ToE=setdiff(years,.$ToE),area_lost=0))%>% #add in the years that are missing as 0 loss years
-                    arrange(ToE)%>% #sort them
-                    mutate(cum_lost = cumsum(area_lost))%>%
-                    left_join(.,agg_network_area)%>%# add in the total area for a given mod, projection and species
-                    mutate(prop_lost = cum_lost/total_area)%>%
-                    data.frame()%>%suppressMessages()
-        
-        habitat_loss <- rbind(habitat_loss,temp)
-
-    } #end of 'm' mods loop
-  } #end of 'p' climate_proj loop
-} #end of 'i' species loop
+    #Big 'for loop' == this could probably be done using 'do' in dplyr but this doesn't take long and is easy to follow. 
+    habitat_loss <- NULL #will grow each loop
+    for(i in species){
+      message(paste0("Working on ",i))
+      for(p in projs){
+        for(m in mods){
+         
+            temp <- agg_annual_toe%>%
+                        filter(species==i,climate_proj == p,mod==m,!is.na(ToE))%>%
+                        rbind(.,data.frame(climate_proj=p,mod=m,species=i,ToE=setdiff(years,.$ToE),area_lost=0))%>% #add in the years that are missing as 0 loss years
+                        arrange(ToE)%>% #sort them
+                        mutate(cum_lost = cumsum(area_lost))%>%
+                        left_join(.,agg_network_area)%>%# add in the total area for a given mod, projection and species
+                        mutate(prop_lost = cum_lost/total_area)%>%
+                        data.frame()%>%suppressMessages()
+            
+            habitat_loss <- rbind(habitat_loss,temp)
+    
+        } #end of 'm' mods loop
+      } #end of 'p' climate_proj loop
+    } #end of 'i' species loop
 
 
-##plot the area lost summaries
+##model averaged propotion of habtiat loss per species aggregated for the network -------------------------
 
 #first average among CMIP models
 habitat_loss_ave <- habitat_loss%>%
@@ -203,7 +270,7 @@ network_loss_plot <- ggplot()+
 ggsave("output/habitat_loss-models_species.png",network_loss_plot,width=8,height=6,units="in",dpi=300)
 
 
-## Species by site 'emergence' based on a threshold of habitat loss summary data -----------
+## Species by site 'emergence' based on a threshold of habitat loss summary data -----------------------
 
     #total area in each site that is occupied by each species
       agg_site_area <- toe_dat%>%
@@ -225,7 +292,7 @@ ggsave("output/habitat_loss-models_species.png",network_loss_plot,width=8,height
                            ungroup()%>%
                            data.frame()
 
-## evaluate the total amount of species lost (no remaining habitat) by 2100 aggregated by general area --------------
+## Species loss by 2100 aggregated for the network -------------------------
 
       species_lost_site <- habitat_loss_site%>%
                             filter(ToE != 2500, #these are species that did not emerge
@@ -253,23 +320,38 @@ ggsave("output/habitat_loss-models_species.png",network_loss_plot,width=8,height
         
         #plot data
         plotdata_comp <- species_lost_site_format%>%
-                          mutate(NAME = factor(NAME,levels=species_lost_site_format%>%filter(climate_proj == "8-5")%>%arrange(comp)%>%pull(NAME)),
-                                 facet_lab = ifelse(climate_proj == "2-6","RCP 2.6","RCP 8.5"))
+                          mutate(region = factor(region,levels=c("Bay of Fundy","Western Scotian Shelf","Eastern Scotian Shelf")))%>%
+                          arrange(climate_proj,region,long)%>%
+                          mutate(id=paste(NAME,climate_proj,sep="-"),
+                                 comp=ifelse(is.na(comp),0,comp))%>%
+                          select(NAME,region,climate_proj,comp,id,long)%>%
+                          left_join(.,site_names)
+        
+        plotdata_comp <- rbind(plotdata_comp,
+                                  site_dummy%>% #add the sites that are missing and didn't loose any 
+                                  filter(id %in% setdiff(site_dummy$id,plotdata_comp%>%pull(id)))%>%
+                                  mutate(comp=0)%>%
+                                  select(NAME,region,climate_proj,comp,id,long,abbreviation))%>%
+                          arrange(climate_proj,region,long)%>%
+                          mutate(facet_lab = ifelse(climate_proj == "2-6","RCP 2.6","RCP 8.5"),
+                                 NAME = factor(NAME,levels=.[]%>%filter(climate_proj=="8-5")%>%arrange(region,comp)%>%pull(NAME)),
+                                 abbreviation = factor(abbreviation,levels=.[]%>%filter(climate_proj=="8-5")%>%arrange(region,comp)%>%pull(abbreviation)))
       
         #plot
-        p_comp <- ggplot(data=plotdata_comp,aes(x=comp,y=NAME,fill=region))+
+        p_comp <- ggplot(data=plotdata_comp,aes(x=comp,y=abbreviation,fill=region))+
                   geom_bar(stat="identity",col="black")+
                   facet_wrap(~facet_lab,ncol=2)+
                   theme_bw()+
                   labs(x="Lost species",y="",fill="")+
-                  scale_x_continuous(labels=percent)+
-                    theme(legend.position = "bottom");p_comp
+                  scale_x_continuous(labels=percent,breaks=c(0,0.25,0.5,0.75),limits = c(0,round(max(plotdata_comp$comp),1)),expand=c(0,0))+
+                    theme(legend.position = "bottom",
+                          axis.text.x=element_text(size=6));p_comp
 
         #save the plot
         ggsave("output/species_lost_2100.png",p_comp,width=9,height=6,units="in",dpi=300)    
                       
 
-#benchmark years for the analysis to assess the impact of climate change on different species and sites. 
+## Species by site loss for benchmark years  --------------------------------------
 benchmark_years <- c(2025,2050,2075,2100)
 
 
@@ -296,36 +378,61 @@ for(i in benchmark_years){
   )#end of loop growing dataframe
 }
 
+##make the data for plotting
+
+benchmark_buffer = rbind(site_dummy,site_dummy,site_dummy,site_dummy)%>%mutate(benchmark = rep(benchmark_years,each=nrow(site_dummy)),
+                                                                                comp=0,
+                                                                               id=paste(climate_proj,NAME,benchmark,sep="-"))
+
+
 plot_benchmark_formatted <- species_lost_benchmark%>%
                             group_by(climate_proj,NAME,benchmark)%>%
-                            summarise(comp=max(prop_lost,na.rm=T),
-                                      mean=mean(prop_lost,na.rm=T),
-                                      sd=sd(prop_lost,na.rm=T))%>%
+                            summarise(comp=max(prop_lost,na.rm=T))%>%
                             ungroup()%>%
-                            mutate(facet_lab = ifelse(climate_proj == "2-6","RCP 2.6","RCP 8.5"))
+                            mutate(id=paste(climate_proj,NAME,benchmark,sep="-"))%>%
+                            left_join(.,site_names)%>%
+                            left_join(.,network_cents%>%select(NAME,region))
+                            
 
-plot_benchmark_formatted <- plot_benchmark_formatted%>%
-                            mutate(NAME = factor(NAME,levels=plot_benchmark_formatted%>%filter(climate_proj == "8-5",benchmark==2100)%>%arrange(comp)%>%pull(NAME)))
+plot_benchmark_formatted <- rbind(plot_benchmark_formatted,
+                                  benchmark_buffer%>%
+                                    filter(id %in% setdiff(benchmark_buffer$id,plot_benchmark_formatted$id))%>%
+                                    select(climate_proj,NAME,benchmark,comp,id,abbreviation,region))%>%
+                             mutate(facet_lab = ifelse(climate_proj == "2-6","RCP 2.6","RCP 8.5"),
+                                    NAME = factor(NAME,levels=.[]%>%filter(climate_proj == "8-5",benchmark==2100)%>%arrange(region,comp)%>%pull(NAME)),
+                                    abbreviation = factor(abbreviation,levels=.[]%>%filter(climate_proj == "8-5",benchmark==2100)%>%arrange(region,comp)%>%pull(abbreviation)))%>%
+                             data.frame()
 
-benchmark_plot <-  ggplot(,aes(x=comp,y=NAME,fill=factor(benchmark)))+
-              geom_bar(data=plot_benchmark_formatted%>%filter(benchmark==2100),stat="identity",col="black")+
-              geom_bar(data=plot_benchmark_formatted%>%filter(benchmark==2075),stat="identity",col="black")+
-              geom_bar(data=plot_benchmark_formatted%>%filter(benchmark==2050),stat="identity",col="black")+
-              geom_bar(data=plot_benchmark_formatted%>%filter(benchmark==2025),stat="identity",col="black")+
-              facet_wrap(~facet_lab,ncol=2)+
-              theme_bw()+
-              labs(x="Lost species",y="",fill="")+
-              scale_x_continuous(labels=percent)+
-              theme(legend.position = "bottom")+
-              scale_fill_viridis(discrete=T); benchmark_plot
+# old way 
+# plot_benchmark_formatted <- species_lost_benchmark%>%
+#                             group_by(climate_proj,NAME,benchmark)%>%
+#                             summarise(comp=max(prop_lost,na.rm=T),
+#                                       mean=mean(prop_lost,na.rm=T),
+#                                       sd=sd(prop_lost,na.rm=T))%>%
+#                             ungroup()%>%
+#                             mutate(facet_lab = ifelse(climate_proj == "2-6","RCP 2.6","RCP 8.5"))
+# 
+# plot_benchmark_formatted <- plot_benchmark_formatted%>%
+#                             mutate(NAME = factor(NAME,levels=plot_benchmark_formatted%>%filter(climate_proj == "8-5",benchmark==2100)%>%arrange(comp)%>%pull(NAME)))
+
+benchmark_plot <-  ggplot(,aes(x=comp,y=abbreviation,fill=factor(benchmark)))+
+                    geom_bar(data=plot_benchmark_formatted%>%filter(benchmark==2100),stat="identity",col="black")+
+                    geom_bar(data=plot_benchmark_formatted%>%filter(benchmark==2075),stat="identity",col="black")+
+                    geom_bar(data=plot_benchmark_formatted%>%filter(benchmark==2050),stat="identity",col="black")+
+                    geom_bar(data=plot_benchmark_formatted%>%filter(benchmark==2025),stat="identity",col="black")+
+                    facet_grid(region~facet_lab,space="free_y",scales="free_y")+
+                    theme_bw()+
+                    labs(x="Lost species",y="",fill="")+
+                    scale_x_continuous(labels=percent,breaks=c(0,0.25,0.5,0.75),limits = c(0,round(max(plot_benchmark_formatted$comp),1)),expand=c(0,0))+
+                    theme(legend.position = "bottom",
+                          strip.text.y = element_text(size=6),
+                          axis.text.x = element_text(size=6))+
+                    scale_fill_viridis(discrete=T); benchmark_plot
 
 ggsave("output/benchmark_species_lost.png",benchmark_plot,width=9,height=6,units="in",dpi=300)
-
-
-           
                      
 
-#Now evaluate how much each species has lots at each of the benchmark years (similar to the plot for the % of species lost)
+##Species area loss plot --------------------------------------
 
 
 species_area_lost_benchmark <- NULL
@@ -354,31 +461,57 @@ for(i in benchmark_years){
 
 plot_area_benchmark_formatted <- species_area_lost_benchmark%>%
                                 group_by(climate_proj,species,benchmark)%>%
-                                summarise(comp=max(prop_lost,na.rm=T),
-                                          mean=mean(prop_lost,na.rm=T),
-                                          sd=sd(prop_lost,na.rm=T))%>%
+                                summarise(comp=max(prop_lost,na.rm=T))%>%
                                 ungroup()%>%
-                                mutate(facet_lab = ifelse(climate_proj == "2-6","RCP 2.6","RCP 8.5"))
+                                mutate(id = paste(climate_proj,benchmark,species,sep="-"))
 
-plot_area_benchmark_formatted <- plot_area_benchmark_formatted%>%
-                                 mutate(species = factor(species,levels=plot_area_benchmark_formatted%>%filter(climate_proj == "8-5",benchmark==2100)%>%arrange(comp)%>%pull(species)))
+plot_area_benchmark_formatted <- rbind(plot_area_benchmark_formatted,
+                                       species_dummy%>%
+                                         filter(id %in% setdiff(species_dummy$id,plot_area_benchmark_formatted$id))%>%
+                                         mutate(comp=0)%>%
+                                         select(names(plot_area_benchmark_formatted)))%>%
+                                 left_join(.,niches%>%rename(species=SciName)%>%select(species,functional_group))%>%
+                                mutate(facet_lab = ifelse(climate_proj == "2-6","RCP 2.6","RCP 8.5"),
+                                       functional_group = factor(functional_group,levels=rev(c("Mammals/Reptiles","Copepod","Benthic Invertebrates",
+                                                                                           "Pelagic Fish/Cepholopods","Benthic fish"))))%>%
+                                data.frame()
+
+#set plotting levels
+plot_area_benchmark_formatted$species <- factor(plot_area_benchmark_formatted$species,
+                                                levels=plot_area_benchmark_formatted%>%
+                                                        filter(benchmark==2100,climate_proj=="8-5")%>%
+                                                        arrange(functional_group,comp)%>%pull(species))  
 
 benchmark_area_plot <-  ggplot(,aes(x=comp,y=species,fill=factor(benchmark)))+
                         geom_bar(data=plot_area_benchmark_formatted%>%filter(benchmark==2100),stat="identity",col="black")+
                         geom_bar(data=plot_area_benchmark_formatted%>%filter(benchmark==2075),stat="identity",col="black")+
                         geom_bar(data=plot_area_benchmark_formatted%>%filter(benchmark==2050),stat="identity",col="black")+
                         geom_bar(data=plot_area_benchmark_formatted%>%filter(benchmark==2025),stat="identity",col="black")+
-                        facet_wrap(~facet_lab,ncol=2)+
+                        facet_grid(functional_group~facet_lab,scales="free_y",space="free_y")+
                         theme_bw()+
                         labs(x="Lost habitat extent",y="",fill="")+
-                        scale_x_continuous(labels=percent)+
-                        theme(legend.position = "bottom")+
-                        scale_fill_viridis(discrete=T); benchmark_area_plot
+                       scale_x_continuous(labels=percent,breaks=c(0,0.25,0.5,0.75,1),
+                                          expand=c(0,0.01))+
+                        theme(legend.position = "bottom",
+                              strip.background.y = element_blank(),
+                              strip.text.y = element_blank())+
+                         scale_fill_viridis(discrete=T); benchmark_area_plot
 
 ggsave("output/benchmark_species_area_lost.png",benchmark_area_plot,width=9,height=6,units="in",dpi=300)
 
+### Loss of habitat by MPA summary tile plot --------------------------------------
 
-### Loss of habitat by MPA summary tile plot
+#this is so we can fill in the blanks
+tb1 <- rbind(species_site%>%mutate(prop_lost=0,benchmark=2025),
+             species_site%>%mutate(prop_lost=0,benchmark=2050),
+             species_site%>%mutate(prop_lost=0,benchmark=2075),
+             species_site%>%mutate(prop_lost=0,benchmark=2100))%>%
+        filter(!species%in%c("Sebastes mentella","Calanus glacialis"))
+
+tile_buffer <- rbind(tb1,tb1)%>%
+                mutate(climate_proj = rep(c("2-6","8-5"),each=nrow(tb1)),
+                       id=paste(climate_proj,benchmark,species,NAME,sep="-"))%>% #unique ID we can use to pad the actual data extracted below
+                select(climate_proj,NAME,species,prop_lost,benchmark,id)
 
 tile_df <- NULL
 for(i in benchmark_years){
@@ -403,30 +536,27 @@ for(i in benchmark_years){
   )#end of loop growing dataframe
 }
 
-##making the tile plot will result in really long site names. These need to be shortened. Lets make abbreviations. Be sure that these are in the thesis
-
-site_names <- unique(habitat_loss_site$NAME)%>%
-              gsub(" - "," ",.)%>% #clean up the odds and ends
-              gsub("-","",.)%>%
-              gsub(" and "," ",.)%>%
-              gsub("/"," ",.)%>%
-              data.frame(NAME=unique(habitat_loss_site$NAME),
-                         abbreviation=sapply(strsplit(.," "), function(x){ #Function splits, then getes the first letter of each unique word
-                           toupper(paste(substring(x, 1, 1), collapse = ""))}))%>%
-              mutate(abbreviation = ifelse(NAME =="Bird Islands","BRDI",abbreviation), #bird island and brier island get the same 'BI'
-                     abbreviation = ifelse(NAME =="Chebogue","CHEB",abbreviation))%>% # Chebogue had a boring acronym
-              select(NAME,abbreviation)%>%
-              arrange(abbreviation)
 
 tile_df_formatted <- tile_df%>%
-                     filter(mod=="AWI")%>% #worst case model
-                     select(climate_proj,mod,benchmark,NAME,species,prop_lost)%>%
-                     mutate(prop_lost = round(prop_lost,3)*100,
+                     filter(mod=="AWI")%>% #just focusing on this model
+                     mutate(id=paste(climate_proj,benchmark,species,NAME,sep="-"))%>%
+                     select(names(tile_buffer))
+
+tile_df_formatted <- rbind(tile_df_formatted,
+                           tile_buffer%>%filter(id %in% setdiff(tile_buffer$id,tile_df_formatted$id)))%>%#pad the dataframe
+                     mutate(prop_lost = round(prop_lost,3)*100, #put into the xx.y % format
                             benchmark = factor(benchmark,levels = rev(benchmark_years)),
-                            facet_lab = ifelse(climate_proj == "2-6","RCP 2.6","RCP 8.5"),
-                            species = factor(species,levels=plot_area_benchmark_formatted%>%filter(climate_proj == "8-5",benchmark==2100)%>%arrange(comp)%>%pull(species)%>%rev()))%>% #put into the xx.y % format
-                     left_join(.,site_names)%>%
-                     left_join(.,network_cents)
+                            facet_lab = ifelse(climate_proj == "2-6","RCP 2.6","RCP 8.5"))%>% 
+                    left_join(.,site_names)%>%
+                    left_join(.,network_cents)
+
+
+tile_df_formatted$species_ord <- factor(tile_df_formatted$species,levels=plot_area_benchmark_formatted%>% #using the same data so we can use this again
+                                                                        filter(benchmark==2100,climate_proj=="8-5")%>%
+                                                                        arrange(functional_group,-comp)%>%pull(species))
+                      
+
+
 
 
 #grouping order of the stations (grouped by longitude within their respective regions)
@@ -438,31 +568,71 @@ site_order <- network_cents%>%
                        
 
 tile_df_formatted$abbreviation_ord <- factor(tile_df_formatted$abbreviation,levels=site_order)
-           
-p2_6 <- ggplot(data=tile_df_formatted%>%filter(climate_proj=="2-6"),aes(x=abbreviation_ord,y=benchmark))+
-  geom_tile(aes(fill=prop_lost),col="black")+
-  facet_grid(species~.)+
-  scale_fill_viridis()+
-  theme(strip.text.y = element_text(angle = 360),
-        legend.position = "bottom",
-        panel.spacing.y=unit(0.05, "lines"),
-        panel.background = element_rect(fill="white"),
-        axis.text.x = element_text(angle=45,vjust = 1, hjust=1))+
-  labs(x="",y="");p2_6
+tile_df_formatted$region_ord <- factor(tile_df_formatted$region,levels=c("Bay of Fundy","Western Scotian Shelf","Eastern Scotian Shelf"))
+    
 
-pfacet <- ggplot(data=tile_df_formatted,aes(x=abbreviation_ord,y=benchmark))+
-            geom_tile(aes(fill=prop_lost),col="black")+
-            facet_grid(species~facet_lab)+
-            scale_fill_viridis(option = "B")+
-            theme(strip.text.y = element_text(angle = 360),
-                  legend.position = "bottom",
-                  panel.spacing.y=unit(0.05, "lines"),
-                  panel.background = element_rect(fill="white"),
-                  axis.text.x = element_text(angle=45,vjust = 1, hjust=1,size=5,colour="black"),
-                  axis.text.y = element_text(size=5,colour="black"),
-                  strip.background.x = element_rect(fill="white",colour="black"),
-                  strip.background.y = element_blank())+
-            labs(x="",y="",fill="% habitat lost");pfacet
+pfacet <- ggplot(data=tile_df_formatted%>%mutate(prop_lost=ifelse(prop_lost==0,NA,prop_lost)),aes(x=abbreviation_ord,y=benchmark))+
+          geom_tile(aes(fill=prop_lost),col="black")+
+          facet_grid(species_ord~facet_lab)+
+          scale_y_discrete(breaks=c(2025,2075))+ #gets crpwded
+          scale_fill_viridis(option = "B",na.value="white")+
+          theme(strip.text.y = element_text(angle = 360),
+                legend.position = "bottom",
+                panel.spacing.y=unit(0.05, "lines"),
+                panel.background = element_rect(fill="white"),
+                axis.text.x = element_text(angle=45,vjust = 1, hjust=1,size=5,colour="black"),
+                axis.text.y = element_text(size=5,colour="black"),
+                strip.background.x = element_rect(fill="white",colour="black"),
+                strip.background.y = element_blank())+
+          labs(x="",y="",fill="% habitat lost");pfacet
 
-ggsave("output/tiled_species_area_lost.png",pfacet,width=9,height=6,units="in",dpi=300)
-  
+ggsave("output/tiled_species_area_lost.png",pfacet,width=12,height=6,units="in",dpi=300)
+
+#make a facet fancy
+
+pfacet_26 <- ggplot(data=tile_df_formatted%>%mutate(prop_lost=ifelse(prop_lost==0,NA,prop_lost))%>%filter(climate_proj=="2-6"),
+                    aes(x=abbreviation_ord,y=benchmark))+
+              geom_tile(aes(fill=prop_lost),col="black")+
+              facet_grid(species_ord~region_ord,scales="free_x",space="free_x")+
+              scale_y_discrete(breaks=c(2025,2075))+ #gets crpwded
+              scale_fill_viridis(option = "B",na.value="white")+
+              theme(legend.position = "bottom",
+                    panel.spacing.y=unit(0.05, "lines"),
+                    panel.spacing.x=unit(0.15, "lines"),
+                    panel.background = element_rect(fill="white"),
+                    axis.text.x = element_text(angle=45,vjust = 1, hjust=1,size=5,colour="black"),
+                    axis.text.y = element_text(size=5,colour="black"),
+                    strip.background.y = element_blank(),
+                    strip.background.x = element_blank(),
+                    strip.text.x = element_blank(),
+                    strip.text.y = element_blank())+
+              labs(x="",y="",fill="% habitat lost",title = "RCP 2.6")
+
+
+
+pfacet_85 <- ggplot(data=tile_df_formatted%>%mutate(prop_lost=ifelse(prop_lost==0,NA,prop_lost))%>%filter(climate_proj=="8-5"),
+                    aes(x=abbreviation_ord,y=benchmark))+
+          geom_tile(aes(fill=prop_lost),col="black")+
+          facet_grid(species_ord~region_ord,scales="free_x",space="free_x")+
+          scale_y_discrete(breaks=c(2025,2075))+ #gets crpwded
+          scale_fill_viridis(option = "B",na.value="white")+
+          theme(strip.text.y = element_text(angle = 360),
+                legend.position = "bottom",
+                panel.spacing.y=unit(0.05, "lines"),
+                panel.spacing.x=unit(0.15, "lines"),
+                panel.background = element_rect(fill="white"),
+                axis.text.x = element_text(angle=45,vjust = 1, hjust=1,size=5,colour="black"),
+                axis.text.y = element_blank(),
+                strip.background.y = element_blank(),
+                strip.background.x = element_blank(),
+                strip.text.x = element_blank())+
+          labs(x="",y="",fill="% habitat lost",title = "RCP 8.5")
+
+#knit them all together using facet
+combo_tile <- pfacet_26 + 
+              pfacet_85 + 
+              plot_layout(ncol=2,guides = "collect") & ## the '&' here comes from the help file. Not sure exactly what it is doing or how it works, but it does. 
+              theme(legend.position = "bottom")
+
+ggsave("output/combination_tile_plot.png",combo_tile,width=12,height=6,units="in",dpi=300)
+
