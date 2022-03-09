@@ -6,6 +6,7 @@ library(ggplot2)
 library(rnaturalearth)
 library(scales)
 library(patchwork)
+library(ggspatial)
 
 sf_use_s2(FALSE)
 
@@ -89,12 +90,13 @@ p1 <- ggplot()+
         geom_sf(data=basemap,fill="darkolivegreen3")+
         geom_sf(data=bioregion,fill=NA)+
         geom_sf(data=sites_grid,aes(fill=region))+
-        #geom_sf(data=network,aes(fill=region))+
         geom_sf(data=network_cents_sf,size=1.25)+
         theme_bw()+
         labs(fill="")+
         coord_sf(expand=0)+
-        theme(legend.position="bottom")
+        theme(legend.position="bottom")+
+        annotation_scale(location="br")+ #location is 'bottom right'
+        annotation_north_arrow(location="tl",height = unit(0.3,"in"),width=unit(0.3,"in")) 
 
 ggsave("output/regional_centriod_plot.png",p1,width=6,height=6,units="in",dpi=300)
 
@@ -411,18 +413,6 @@ plot_benchmark_formatted <- rbind(plot_benchmark_formatted,
                                     abbreviation = factor(abbreviation,levels=.[]%>%filter(climate_proj == "8-5",benchmark==2100)%>%arrange(region,comp)%>%pull(abbreviation)))%>%
                              data.frame()
 
-# old way 
-# plot_benchmark_formatted <- species_lost_benchmark%>%
-#                             group_by(climate_proj,NAME,benchmark)%>%
-#                             summarise(comp=max(prop_lost,na.rm=T),
-#                                       mean=mean(prop_lost,na.rm=T),
-#                                       sd=sd(prop_lost,na.rm=T))%>%
-#                             ungroup()%>%
-#                             mutate(facet_lab = ifelse(climate_proj == "2-6","RCP 2.6","RCP 8.5"))
-# 
-# plot_benchmark_formatted <- plot_benchmark_formatted%>%
-#                             mutate(NAME = factor(NAME,levels=plot_benchmark_formatted%>%filter(climate_proj == "8-5",benchmark==2100)%>%arrange(comp)%>%pull(NAME)))
-
 benchmark_plot <-  ggplot(,aes(x=comp,y=abbreviation,fill=factor(benchmark)))+
                     geom_bar(data=plot_benchmark_formatted%>%filter(benchmark==2100),stat="identity",col="black")+
                     geom_bar(data=plot_benchmark_formatted%>%filter(benchmark==2075),stat="identity",col="black")+
@@ -438,6 +428,14 @@ benchmark_plot <-  ggplot(,aes(x=comp,y=abbreviation,fill=factor(benchmark)))+
                     scale_fill_viridis(discrete=T); benchmark_plot
 
 ggsave("output/benchmark_species_lost.png",benchmark_plot,width=9,height=6,units="in",dpi=300)
+
+#create dataframe for Shaylyn to make maps from 
+
+species_lost_df <- plot_benchmark_formatted%>%
+                   select(-id)%>%
+                   spread(benchmark,comp)
+
+save(species_lost_df,file="data/species_lost_df.RData")
                      
 
 ##Species area loss plot --------------------------------------
