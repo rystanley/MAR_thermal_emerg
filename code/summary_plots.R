@@ -7,6 +7,7 @@ library(rnaturalearth)
 library(scales)
 library(patchwork)
 library(ggspatial)
+library(viridis)
 
 sf_use_s2(FALSE)
 
@@ -520,7 +521,9 @@ benchmark_area_plot <-  ggplot(,aes(x=comp,y=species,fill=factor(benchmark)))+
                                           expand=c(0,0.01))+
                         theme(legend.position = "bottom",
                               strip.background.y = element_blank(),
-                              strip.text.y = element_blank())+
+                              strip.text.y = element_blank(),
+                              axis.text.x = element_text(size=6,colour="black"),
+                              panel.spacing.x = unit(4, "mm"))+
                          scale_fill_viridis(discrete=T); benchmark_area_plot
 
 ggsave("output/benchmark_species_area_lost.png",benchmark_area_plot,width=9,height=6,units="in",dpi=300)
