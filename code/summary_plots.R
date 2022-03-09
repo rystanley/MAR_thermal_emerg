@@ -78,27 +78,6 @@ network <- network_base%>%
            left_join(.,network_cents)%>%
            st_transform(latlong)
 
-#show a grid that represents the ~ resolution of CMIP (from readme)
-study_grid <- bioregion%>%st_make_grid(cellsize=0.25)
-bioregion_grid <- bioregion%>%st_intersection(study_grid)
-sites_grid <- network%>%
-              st_make_valid()%>%
-              st_intersection(study_grid)
-
-#plot out the centriods on the MPAs
-p1 <- ggplot()+
-        geom_sf(data=basemap,fill="darkolivegreen3")+
-        geom_sf(data=bioregion,fill=NA)+
-        geom_sf(data=sites_grid,aes(fill=region))+
-        geom_sf(data=network_cents_sf,size=1.25)+
-        theme_bw()+
-        labs(fill="")+
-        coord_sf(expand=0)+
-        theme(legend.position="bottom")+
-        annotation_scale(location="br")+ #location is 'bottom right'
-        annotation_north_arrow(location="tl",height = unit(0.3,"in"),width=unit(0.3,"in")) 
-
-ggsave("output/regional_centriod_plot.png",p1,width=6,height=6,units="in",dpi=300)
 
 #add the network centriod data to the toe_summaries data file. 
 toe_dat <- toe_summaries%>%
@@ -121,6 +100,47 @@ site_names <- unique(toe_dat$NAME)%>%
                      abbreviation = ifelse(NAME =="Chebogue","CHEB",abbreviation))%>% # Chebogue had a boring acronym
               select(NAME,abbreviation)%>%
               arrange(abbreviation)
+
+#plot out the centriods on the MPAs ------
+
+#add the abbreviation names 
+network_cents_sf <- network_cents_sf%>%
+                    left_join(.,site_names)
+
+#show a grid that represents the ~ resolution of CMIP (from readme)
+study_grid <- bioregion%>%st_make_grid(cellsize=0.25)
+bioregion_grid <- bioregion%>%st_intersection(study_grid)
+sites_grid <- network%>%
+  st_make_valid()%>%
+  st_intersection(study_grid)
+
+
+p1 <- ggplot()+
+  geom_sf(data=basemap,fill="darkolivegreen3")+
+  geom_sf(data=bioregion,fill=NA)+
+  geom_sf(data=sites_grid,aes(fill=region))+
+  geom_sf(data=network_cents_sf,size=1.25)+
+  geom_sf_label(data=network_cents_sf,aes(labels=abbreviation))+
+  theme_bw()+
+  labs(fill="")+
+  coord_sf(expand=0)+
+  theme(legend.position="bottom")+
+  annotation_scale(location="br")+ #location is 'bottom right'
+  annotation_north_arrow(location="tl",height = unit(0.3,"in"),width=unit(0.3,"in")) 
+
+ggsave("output/regional_centriod_plot.png",p1,width=6,height=6,units="in",dpi=300)
+
+#quick and dirty plot to add labels. 
+p1_labs <- ggplot()+
+        geom_sf(data=basemap,fill="darkolivegreen3")+
+        geom_sf(data=network_cents_sf,size=1.25)+
+        geom_sf_label(data=network_cents_sf,aes(label=abbreviation),label.size = 0.1)+ #this type of thing is notoriously hard to do. there is a package you can try with the function geom_sf_label_repel() https://yutannihilation.github.io/ggsflabel/reference/geom_sf_label.html
+        theme_bw()+
+        labs(fill="")+
+        coord_sf(expand=0)+
+        theme(legend.position="bottom")
+
+ggsave("output/sites_with_labs.png",p1_labs,width=6,height=6,units="in",dpi=300)
 
 ##Data prep species,site summaries ------------
 
