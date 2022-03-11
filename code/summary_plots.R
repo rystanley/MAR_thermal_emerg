@@ -60,7 +60,7 @@ fundy_sites <- c("Brier Island","Chignecto Bay","Head Harbour, West Isles and Th
 
 eastern_SS <- network_cents%>%filter(long>-61)%>%pull(NAME)
 
-western_SS <- setdiff(network$NAME,c(fundy_sites,eastern_SS))
+western_SS <- setdiff(network_base$NAME,c(fundy_sites,eastern_SS))
 
 #add the grouping to network cents
 network_cents <- network_cents%>%
@@ -94,7 +94,7 @@ site_names <- unique(toe_dat$NAME)%>%
               gsub("-","",.)%>%
               gsub(" and "," ",.)%>%
               gsub("/"," ",.)%>%
-              data.frame(NAME=unique(habitat_loss_site$NAME),
+              data.frame(NAME=unique(toe_dat$NAME),
                          abbreviation=sapply(strsplit(.," "), function(x){ #Function splits, then getes the first letter of each unique word
                            toupper(paste(substring(x, 1, 1), collapse = ""))}))%>%
               mutate(abbreviation = ifelse(NAME =="Bird Islands","BRDI",abbreviation), #bird island and brier island get the same 'BI'
@@ -121,15 +121,15 @@ p1 <- ggplot()+
   geom_sf(data=bioregion,fill=NA)+
   geom_sf(data=sites_grid,aes(fill=region))+
   geom_sf(data=network_cents_sf,size=1.25)+
-  geom_sf_label(data=network_cents_sf,aes(labels=abbreviation))+
   theme_bw()+
+  theme(panel.grid = element_blank())+
   labs(fill="")+
   coord_sf(expand=0)+
   theme(legend.position="bottom")+
   annotation_scale(location="br")+ #location is 'bottom right'
   annotation_north_arrow(location="tl",height = unit(0.3,"in"),width=unit(0.3,"in")) 
 
-ggsave("output/regional_centriod_plot.png",p1,width=6,height=6,units="in",dpi=300)
+ggsave("output/regional_centriod_plot.png",p1,width=8,height=8,units="in",dpi=300)
 
 #quick and dirty plot to add labels. 
 p1_labs <- ggplot()+
