@@ -7,83 +7,97 @@ library(tidyr)
 library(patchwork)
 
 #load data ----
-dat <- read.csv("data/species_niche_formatted.csv")
+groupings <- read.csv("data/species_grouping.csv")%>%select(SciName,functional_group,cosewic_status)%>%rename(scientific_name=SciName)
+
+niches <- read.csv("data/species_niche_formatted.csv")%>%
+  dplyr::select(- functional_group)%>%
+  left_join(.,groupings)%>%
+  mutate(functional_group = factor(functional_group,levels=rev(c("Mammals/Reptiles","Copepod","Benthic Invertebrates",
+                                                                 "Pelagic Fish/Cepholopods","Benthic fish"))))
+
+  #filter(!SciName %in% c("Sebastes mentella","Calanus glacialis"))
 
 #make depth plot -----
 
     #Assign the order so that it plots with the species with the deeptest depth first down the the shallowest possible depth among the ranges
-    depth_order <- dat%>%
+    depth_order <- niches%>%
                     filter(var=="depth")%>%
-                    group_by(scientific_name)%>%
+                    group_by(scientific_name,functional_group)%>%
                     summarise(max=max(upper,na.rm=T))%>% # highest estimated depth among datasets
                     ungroup()%>%
-                    arrange(max)%>% # too many here
-                    select(scientific_name)
+                    arrange(functional_group,max)%>%
+                    pull(scientific_name)
     
     #Subset the data for just depth and order the scientific names (which will be the y axis after cord_flip) to be the order in depth_order
-    depth_data <- dat%>%
+    depth_data <- niches%>%
                   filter(var=="depth")%>%
-                  mutate(scientific_name=factor(scientific_name,levels=depth_order$scientific_name))
+                  mutate(scientific_name=factor(scientific_name,levels=depth_order))
     
     #construct the plot
     depth_plot <- ggplot(data=depth_data,aes(group=interaction(scientific_name,type),col=type,
                                                y=upper,ymin=lower,ymax=upper,x=scientific_name))+
       geom_linerange(position = position_dodge(0.7))+ #line spanning the range
-      geom_point(aes(y=lower),position = position_dodge(0.7))+ #point at the lower point
-      geom_point(position = position_dodge(0.7))+ #point at the upper point
+      geom_point(aes(y=lower),position = position_dodge(0.7),size=2)+ #point at the lower point
+      geom_point(position = position_dodge(0.7),size=2)+ #point at the upper point
+      facet_grid(functional_group~.,scales="free",space="free")+
       theme_bw()+
-      labs(y="Estimated depth range (m)",x="",col="")+
+      labs(y="Estimated depth range (m)",x="",col="",title="Depth Niche")+
       coord_flip()+ #this will invert the x and y axes. I do this because syntactically it is easier to start with the data ranges on the y axis
-      theme(legend.position = c(0.8,0.1),
-            panel.grid = element_blank())
-    
-    #View plot
-    depth_plot
-  
+      theme(legend.position = c(0.90,0.88),
+            legend.background = element_rect(colour = "black"),
+            legend.title = element_blank(),
+            strip.background.y = element_blank(),
+            strip.text.y = element_blank(),
+            axis.text.x = element_text(size=12,colour="black"),
+            axis.text.y = element_text(colour="black"),
+            panel.spacing.x = unit(4, "mm"));depth_plot
+ 
 #Make the temperature plot ------
 
     #Assign the order so that it plots with the species with the highest temp first down the the lowest possible temp among the ranges
-    temp_order <- dat%>%
-                  filter(var=="temp")%>%
-                  group_by(scientific_name)%>%
-                  summarise(max=max(upper,na.rm=T))%>% # highest estimated depth among datasets
-                  ungroup()%>%
-                  arrange(max)%>% # too many here
-                  select(scientific_name)
+    temp_order <- niches%>%
+                    filter(var=="temp")%>%
+                    group_by(scientific_name,functional_group)%>%
+                    summarise(max=max(upper,na.rm=T))%>% # highest estimated depth among datasets
+                    ungroup()%>%
+                    arrange(functional_group,max)%>%
+                    pull(scientific_name)
     
     #Subset the data for just temperature and order the scientific names (which will be the y axis after cord_flip) to be the order in temp_order
-    temp_data <- dat%>%
+    temp_data <-niches%>%
                 filter(var=="temp")%>%
-                mutate(scientific_name=factor(scientific_name,levels=temp_order$scientific_name))
+                mutate(scientific_name=factor(scientific_name,levels=temp_order))
     
     #construct the plot
     temp_plot <- ggplot(data=temp_data,aes(group=interaction(scientific_name,type),col=type,
                                              y=upper,ymin=lower,ymax=upper,x=scientific_name))+
                   geom_linerange(position = position_dodge(0.7))+
-                  geom_point(aes(y=lower),position = position_dodge(0.7))+
-                  geom_point(position = position_dodge(0.7))+
+                  geom_point(aes(y=lower),position = position_dodge(0.7),size=2)+
+                  geom_point(position = position_dodge(0.7),size=2)+
+                  facet_grid(functional_group~.,scales="free",space="free")+
                   theme_bw()+
-                  labs(y=expression("Estimated temperature range " ( degree*C)),x="",col="")+
+                  labs(y=expression("Estimated temperature range " ( degree*C)),x="",col="",title="Temperature Niche")+
                   coord_flip()+
-                  theme(legend.position = c(0.8,0.1),
-                        panel.grid = element_blank())
+                  theme(legend.position = "none",
+                        strip.background.y = element_blank(),
+                        strip.text.y = element_blank(),
+                        axis.text.x = element_text(size=12,colour="black"),
+                        axis.text.y = element_text(colour="black"),
+                        panel.spacing.x = unit(4, "mm"));temp_plot
     
-    #View the plot
-    temp_plot()
-
+ 
 #Now lets combine the plots together using patchwork. This makes the whole process more simple because the plot order and axis scaling is independant among plots. This also alows you to build on the existing plots
     alt_depth_plot <- depth_plot+
-                      scale_y_continuous(position="left")+ #because the original plot is flipped we have to make the plot have a differnet y axis which is flipped in its basis formulation
-                      theme(legend.position = c(0.9,0.15))
-    
-    alt_temp_plot <- temp_plot+theme(legend.position = c(0.9,0.15))
+                      scale_y_continuous(position="left") #because the original plot is flipped we have to make the plot have a differnet y axis which is flipped in its basis formulation
+                      
+    alt_temp_plot <- temp_plot
     
     combo_plot <- alt_depth_plot + alt_temp_plot + plot_layout(nrow=2)
 
 ## save the plots -----
     ggsave("output/depth_comparison.png",depth_plot,width=6,height=6,units="in",dpi=300)
     ggsave("output/temp_comparison.png",temp_plot,width=6,height=6,units="in",dpi=300)
-    ggsave("output/combination_comparison.png",combo_plot,width=8,height=9,units="in",dpi=300)
+    ggsave("output/combination_comparison.png",combo_plot,width=8,height=9,units="in",dpi=600)
 
     #End.
     
