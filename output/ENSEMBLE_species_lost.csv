@@ -1,0 +1,274 @@
+"NAME","long","abbreviation","region","climate_proj","max","min","facet_lab","2025","2050","2075","2100"
+"Big Glace Bay",-59.9299217815252,"BGB","Eastern Scotian Shelf","2-6",0.333333333333333,0.333333333333333,"RCP 2.6",NA,0.333333333333333,0.333333333333333,0.333333333333333
+"Bird Islands",-60.3841298405562,"BRDI","Eastern Scotian Shelf","2-6",0.25,0.25,"RCP 2.6",NA,0.25,0.25,0.25
+"Brier Island",-66.4830041915504,"BI","Bay of Fundy","2-6",0.08,0.04,"RCP 2.6",0.04,NA,NA,NA
+"Brier Island",-66.4830041915504,"BI","Bay of Fundy","2-6",0.24,0.08,"RCP 2.6",NA,0.08,NA,NA
+"Brier Island",-66.4830041915504,"BI","Bay of Fundy","2-6",0.32,0.12,"RCP 2.6",NA,NA,0.2,0.2
+"Canso Ledges - Sugar Harbour Islands",-60.9839773096852,"CLSHI","Eastern Scotian Shelf","2-6",0.1,0.05,"RCP 2.6",NA,0.05,NA,NA
+"Canso Ledges - Sugar Harbour Islands",-60.9839773096852,"CLSHI","Eastern Scotian Shelf","2-6",0.15,0.05,"RCP 2.6",NA,NA,0.05,0.05
+"Central Scotian Slope, Rise and Abyss",-62.2224459202933,"CSSRA","Western Scotian Shelf","2-6",0.266666666666667,0.0666666666666667,"RCP 2.6",0.133333333333333,NA,NA,NA
+"Central Scotian Slope, Rise and Abyss",-62.2224459202933,"CSSRA","Western Scotian Shelf","2-6",0.333333333333333,0.133333333333333,"RCP 2.6",NA,0.266666666666667,0.333333333333333,NA
+"Central Scotian Slope, Rise and Abyss",-62.2224459202933,"CSSRA","Western Scotian Shelf","2-6",0.4,0.133333333333333,"RCP 2.6",NA,NA,NA,0.333333333333333
+"Chebogue",-66.0451270756522,"CHEB","Western Scotian Shelf","2-6",0.2,0.2,"RCP 2.6",NA,0.2,0.2,0.2
+"Corsair/Georges Canyons Conservation Area",-65.4125011822388,"CGCCA","Western Scotian Shelf","2-6",0.4,0.2,"RCP 2.6",NA,0.4,NA,NA
+"Corsair/Georges Canyons Conservation Area",-65.4125011822388,"CGCCA","Western Scotian Shelf","2-6",0.4,0.266666666666667,"RCP 2.6",NA,NA,0.4,NA
+"Corsair/Georges Canyons Conservation Area",-65.4125011822388,"CGCCA","Western Scotian Shelf","2-6",0.466666666666667,0.266666666666667,"RCP 2.6",NA,NA,NA,0.466666666666667
+"Eastern Canyons",-57.5858032406183,"EC","Eastern Scotian Shelf","2-6",0.08,0.04,"RCP 2.6",NA,0.04,0.04,NA
+"Eastern Canyons",-57.5858032406183,"EC","Eastern Scotian Shelf","2-6",0.28,0.04,"RCP 2.6",NA,NA,NA,0.08
+"Eastern Shoal",-57.7247211311895,"ES","Eastern Scotian Shelf","2-6",0.105263157894737,0.0526315789473684,"RCP 2.6",NA,0.0526315789473684,0.0526315789473684,NA
+"Eastern Shoal",-57.7247211311895,"ES","Eastern Scotian Shelf","2-6",0.263157894736842,0.105263157894737,"RCP 2.6",NA,NA,NA,0.105263157894737
+"Eastern Shore Islands",-62.501492948066,"ESI","Western Scotian Shelf","2-6",0.0476190476190476,0.0476190476190476,"RCP 2.6",NA,0.0476190476190476,0.0476190476190476,NA
+"Eastern Shore Islands",-62.501492948066,"ESI","Western Scotian Shelf","2-6",0.0952380952380952,0.0476190476190476,"RCP 2.6",NA,NA,NA,0.0476190476190476
+"Emerald Basin Sponge Conservation Area",-62.6051342783411,"EBSCA","Western Scotian Shelf","2-6",0.0526315789473684,0.0526315789473684,"RCP 2.6",NA,0.0526315789473684,NA,NA
+"Emerald Basin Sponge Conservation Area",-62.6051342783411,"EBSCA","Western Scotian Shelf","2-6",0.210526315789474,0.0526315789473684,"RCP 2.6",NA,NA,0.105263157894737,0.105263157894737
+"Fundian Channel-Browns Bank",-65.9862976711695,"FCB","Western Scotian Shelf","2-6",0.037037037037037,0.037037037037037,"RCP 2.6",0.037037037037037,NA,NA,NA
+"Fundian Channel-Browns Bank",-65.9862976711695,"FCB","Western Scotian Shelf","2-6",0.148148148148148,0.0740740740740741,"RCP 2.6",NA,0.148148148148148,NA,NA
+"Fundian Channel-Browns Bank",-65.9862976711695,"FCB","Western Scotian Shelf","2-6",0.296296296296296,0.037037037037037,"RCP 2.6",NA,NA,0.222222222222222,0.222222222222222
+"Georges Bank",-66.6726824737281,"GB","Western Scotian Shelf","2-6",0.166666666666667,0.0416666666666667,"RCP 2.6",0.0416666666666667,NA,NA,NA
+"Georges Bank",-66.6726824737281,"GB","Western Scotian Shelf","2-6",0.416666666666667,0.125,"RCP 2.6",NA,0.25,NA,NA
+"Georges Bank",-66.6726824737281,"GB","Western Scotian Shelf","2-6",0.416666666666667,0.166666666666667,"RCP 2.6",NA,NA,0.25,NA
+"Georges Bank",-66.6726824737281,"GB","Western Scotian Shelf","2-6",0.5,0.166666666666667,"RCP 2.6",NA,NA,NA,0.375
+"Head Harbour, West Isles and The Passages",-66.9344221223068,"HHWITP","Bay of Fundy","2-6",0.217391304347826,0.0434782608695652,"RCP 2.6",0.0434782608695652,NA,NA,NA
+"Head Harbour, West Isles and The Passages",-66.9344221223068,"HHWITP","Bay of Fundy","2-6",0.304347826086957,0.0434782608695652,"RCP 2.6",NA,0.217391304347826,NA,NA
+"Head Harbour, West Isles and The Passages",-66.9344221223068,"HHWITP","Bay of Fundy","2-6",0.347826086956522,0.0869565217391304,"RCP 2.6",NA,NA,0.217391304347826,NA
+"Head Harbour, West Isles and The Passages",-66.9344221223068,"HHWITP","Bay of Fundy","2-6",0.347826086956522,0.217391304347826,"RCP 2.6",NA,NA,NA,0.217391304347826
+"Horse Mussel Reefs",-65.4052959199078,"HMR","Bay of Fundy","2-6",0.238095238095238,0.0476190476190476,"RCP 2.6",0.0476190476190476,NA,NA,NA
+"Horse Mussel Reefs",-65.4052959199078,"HMR","Bay of Fundy","2-6",0.285714285714286,0.0476190476190476,"RCP 2.6",NA,0.0476190476190476,NA,NA
+"Horse Mussel Reefs",-65.4052959199078,"HMR","Bay of Fundy","2-6",0.428571428571429,0.0476190476190476,"RCP 2.6",NA,NA,0.0476190476190476,0.0476190476190476
+"Jordan Basin Conservation Area",-67.0474488071341,"JBCA","Western Scotian Shelf","2-6",0.0952380952380952,0.0476190476190476,"RCP 2.6",0.0476190476190476,NA,NA,NA
+"Jordan Basin Conservation Area",-67.0474488071341,"JBCA","Western Scotian Shelf","2-6",0.333333333333333,0.142857142857143,"RCP 2.6",NA,0.285714285714286,NA,NA
+"Jordan Basin Conservation Area",-67.0474488071341,"JBCA","Western Scotian Shelf","2-6",0.523809523809524,0.142857142857143,"RCP 2.6",NA,NA,0.380952380952381,NA
+"Jordan Basin Conservation Area",-67.0474488071341,"JBCA","Western Scotian Shelf","2-6",0.523809523809524,0.238095238095238,"RCP 2.6",NA,NA,NA,0.380952380952381
+"LaHave Basin",-63.5860220466103,"LB","Western Scotian Shelf","2-6",0.0454545454545455,0.0454545454545455,"RCP 2.6",NA,0.0454545454545455,NA,NA
+"LaHave Basin",-63.5860220466103,"LB","Western Scotian Shelf","2-6",0.136363636363636,0.0454545454545455,"RCP 2.6",NA,NA,0.0454545454545455,NA
+"LaHave Basin",-63.5860220466103,"LB","Western Scotian Shelf","2-6",0.181818181818182,0.0454545454545455,"RCP 2.6",NA,NA,NA,0.0454545454545455
+"Long Eddy",-66.8012924086791,"LE","Bay of Fundy","2-6",0.25,0.0833333333333333,"RCP 2.6",0.0833333333333333,NA,NA,NA
+"Long Eddy",-66.8012924086791,"LE","Bay of Fundy","2-6",0.333333333333333,0.0833333333333333,"RCP 2.6",NA,0.25,NA,NA
+"Long Eddy",-66.8012924086791,"LE","Bay of Fundy","2-6",0.375,0.125,"RCP 2.6",NA,NA,0.25,NA
+"Long Eddy",-66.8012924086791,"LE","Bay of Fundy","2-6",0.375,0.25,"RCP 2.6",NA,NA,NA,0.25
+"Lophelia Coral Conservation Area",-57.1831003721921,"LCCA","Eastern Scotian Shelf","2-6",0.153846153846154,0.0769230769230769,"RCP 2.6",NA,0.0769230769230769,NA,NA
+"Lophelia Coral Conservation Area",-57.1831003721921,"LCCA","Eastern Scotian Shelf","2-6",0.230769230769231,0.0769230769230769,"RCP 2.6",NA,NA,0.153846153846154,NA
+"Lophelia Coral Conservation Area",-57.1831003721921,"LCCA","Eastern Scotian Shelf","2-6",0.461538461538462,0.0769230769230769,"RCP 2.6",NA,NA,NA,0.153846153846154
+"Machias Seal Island Migratory Bird Sanctuary",-67.0971259973971,"MSIMBS","Bay of Fundy","2-6",0.0434782608695652,0.0434782608695652,"RCP 2.6",0.0434782608695652,NA,NA,NA
+"Machias Seal Island Migratory Bird Sanctuary",-67.0971259973971,"MSIMBS","Bay of Fundy","2-6",0.173913043478261,0.0434782608695652,"RCP 2.6",NA,0.130434782608696,NA,NA
+"Machias Seal Island Migratory Bird Sanctuary",-67.0971259973971,"MSIMBS","Bay of Fundy","2-6",0.260869565217391,0.0434782608695652,"RCP 2.6",NA,NA,0.217391304347826,0.217391304347826
+"Misaine Bank and Laurentian Channel",-57.9220858373558,"MBLC","Eastern Scotian Shelf","2-6",0.05,0.05,"RCP 2.6",NA,NA,0.05,0.05
+"North of Emerald Basin Sea Pen Field",-62.33703573871,"NOEBSPF","Western Scotian Shelf","2-6",0.0526315789473684,0.0526315789473684,"RCP 2.6",NA,0.0526315789473684,0.0526315789473684,0.0526315789473684
+"Northeast Channel Coral Conservation Area",-65.5904750828048,"NCCCA","Western Scotian Shelf","2-6",0.333333333333333,0.0476190476190476,"RCP 2.6",NA,0.19047619047619,NA,NA
+"Northeast Channel Coral Conservation Area",-65.5904750828048,"NCCCA","Western Scotian Shelf","2-6",0.380952380952381,0.0476190476190476,"RCP 2.6",NA,NA,0.285714285714286,NA
+"Northeast Channel Coral Conservation Area",-65.5904750828048,"NCCCA","Western Scotian Shelf","2-6",0.476190476190476,0.0952380952380952,"RCP 2.6",NA,NA,NA,0.285714285714286
+"Northern Gulf of Maine",-67.146723009294,"NGOM","Bay of Fundy","2-6",0.08,0.04,"RCP 2.6",0.04,NA,NA,NA
+"Northern Gulf of Maine",-67.146723009294,"NGOM","Bay of Fundy","2-6",0.24,0.12,"RCP 2.6",NA,0.12,NA,NA
+"Northern Gulf of Maine",-67.146723009294,"NGOM","Bay of Fundy","2-6",0.36,0.12,"RCP 2.6",NA,NA,0.16,NA
+"Northern Gulf of Maine",-67.146723009294,"NGOM","Bay of Fundy","2-6",0.4,0.12,"RCP 2.6",NA,NA,NA,0.16
+"Roseway Bank",-64.8517152837932,"RB","Western Scotian Shelf","2-6",0.0869565217391304,0.0434782608695652,"RCP 2.6",NA,0.0434782608695652,NA,NA
+"Roseway Bank",-64.8517152837932,"RB","Western Scotian Shelf","2-6",0.173913043478261,0.0434782608695652,"RCP 2.6",NA,NA,0.0434782608695652,NA
+"Roseway Bank",-64.8517152837932,"RB","Western Scotian Shelf","2-6",0.217391304347826,0.0434782608695652,"RCP 2.6",NA,NA,NA,0.0434782608695652
+"Sable Island Bank",-61.1834970445032,"SIB","Western Scotian Shelf","2-6",0.12,0.04,"RCP 2.6",NA,0.04,NA,NA
+"Sable Island Bank",-61.1834970445032,"SIB","Western Scotian Shelf","2-6",0.24,0.04,"RCP 2.6",NA,NA,0.04,NA
+"Sable Island Bank",-61.1834970445032,"SIB","Western Scotian Shelf","2-6",0.28,0.04,"RCP 2.6",NA,NA,NA,0.04
+"Sambro Bank Sponge Conservation Area",-63.0750009543143,"SBSCA","Western Scotian Shelf","2-6",0.105263157894737,0.0526315789473684,"RCP 2.6",0.0526315789473684,NA,NA,NA
+"Sambro Bank Sponge Conservation Area",-63.0750009543143,"SBSCA","Western Scotian Shelf","2-6",0.263157894736842,0.0526315789473684,"RCP 2.6",NA,0.157894736842105,NA,NA
+"Sambro Bank Sponge Conservation Area",-63.0750009543143,"SBSCA","Western Scotian Shelf","2-6",0.315789473684211,0.105263157894737,"RCP 2.6",NA,NA,0.210526315789474,0.210526315789474
+"Sambro Ledges - Prospect",-63.6272709681532,"SLP","Western Scotian Shelf","2-6",0.0476190476190476,0.0476190476190476,"RCP 2.6",NA,0.0476190476190476,NA,NA
+"Sambro Ledges - Prospect",-63.6272709681532,"SLP","Western Scotian Shelf","2-6",0.0952380952380952,0.0476190476190476,"RCP 2.6",NA,NA,0.0476190476190476,NA
+"Sambro Ledges - Prospect",-63.6272709681532,"SLP","Western Scotian Shelf","2-6",0.238095238095238,0.0476190476190476,"RCP 2.6",NA,NA,NA,0.0476190476190476
+"Scotian Gulf",-63.3519462725813,"SG","Western Scotian Shelf","2-6",0.12,0.04,"RCP 2.6",0.04,NA,NA,NA
+"Scotian Gulf",-63.3519462725813,"SG","Western Scotian Shelf","2-6",0.32,0.04,"RCP 2.6",NA,0.16,NA,NA
+"Scotian Gulf",-63.3519462725813,"SG","Western Scotian Shelf","2-6",0.36,0.08,"RCP 2.6",NA,NA,0.24,0.24
+"South Grand Manan",-66.7105657120497,"SGM","Bay of Fundy","2-6",0.08,0.04,"RCP 2.6",0.04,NA,NA,NA
+"South Grand Manan",-66.7105657120497,"SGM","Bay of Fundy","2-6",0.24,0.08,"RCP 2.6",NA,0.16,NA,NA
+"South Grand Manan",-66.7105657120497,"SGM","Bay of Fundy","2-6",0.4,0.12,"RCP 2.6",NA,NA,0.2,NA
+"South Grand Manan",-66.7105657120497,"SGM","Bay of Fundy","2-6",0.4,0.16,"RCP 2.6",NA,NA,NA,0.2
+"St Anns Bank Marine Protected Area",-59.0534289907244,"SABMPA","Eastern Scotian Shelf","2-6",0.0454545454545455,0.0454545454545455,"RCP 2.6",NA,NA,0.0454545454545455,0.0454545454545455
+"The Gully Marine Protected Area",-58.9375686593847,"TGMPA","Eastern Scotian Shelf","2-6",0.115384615384615,0.0769230769230769,"RCP 2.6",NA,0.0769230769230769,NA,NA
+"The Gully Marine Protected Area",-58.9375686593847,"TGMPA","Eastern Scotian Shelf","2-6",0.153846153846154,0.0384615384615385,"RCP 2.6",NA,NA,0.115384615384615,0.153846153846154
+"Western Emerald Bank Conservation Area",-62.3600764345835,"WEBCA","Western Scotian Shelf","2-6",0.185185185185185,0.037037037037037,"RCP 2.6",NA,0.037037037037037,NA,NA
+"Western Emerald Bank Conservation Area",-62.3600764345835,"WEBCA","Western Scotian Shelf","2-6",0.296296296296296,0.037037037037037,"RCP 2.6",NA,NA,0.037037037037037,0.037037037037037
+"Western Jordan Basin",-67.4231406115492,"WJB","Western Scotian Shelf","2-6",0.0909090909090909,0.0909090909090909,"RCP 2.6",0.0909090909090909,NA,NA,NA
+"Western Jordan Basin",-67.4231406115492,"WJB","Western Scotian Shelf","2-6",0.318181818181818,0.0909090909090909,"RCP 2.6",NA,0.318181818181818,NA,NA
+"Western Jordan Basin",-67.4231406115492,"WJB","Western Scotian Shelf","2-6",0.409090909090909,0.0909090909090909,"RCP 2.6",NA,NA,0.409090909090909,0.409090909090909
+"Big Glace Bay",-59.9299217815252,"BGB","Eastern Scotian Shelf","8-5",0.333333333333333,0.333333333333333,"RCP 8.5",NA,0.333333333333333,0.333333333333333,0.333333333333333
+"Bird Islands",-60.3841298405562,"BRDI","Eastern Scotian Shelf","8-5",0.25,0.25,"RCP 8.5",NA,0.25,0.25,NA
+"Bird Islands",-60.3841298405562,"BRDI","Eastern Scotian Shelf","8-5",0.5,0.5,"RCP 8.5",NA,NA,NA,0.5
+"Brier Island",-66.4830041915504,"BI","Bay of Fundy","8-5",0.12,0.04,"RCP 8.5",0.08,NA,NA,NA
+"Brier Island",-66.4830041915504,"BI","Bay of Fundy","8-5",0.36,0.08,"RCP 8.5",NA,0.24,NA,NA
+"Brier Island",-66.4830041915504,"BI","Bay of Fundy","8-5",0.56,0.36,"RCP 8.5",NA,NA,0.36,NA
+"Brier Island",-66.4830041915504,"BI","Bay of Fundy","8-5",0.64,0.52,"RCP 8.5",NA,NA,NA,0.52
+"Canso Ledges - Sugar Harbour Islands",-60.9839773096852,"CLSHI","Eastern Scotian Shelf","8-5",0.15,0.05,"RCP 8.5",NA,0.05,NA,NA
+"Canso Ledges - Sugar Harbour Islands",-60.9839773096852,"CLSHI","Eastern Scotian Shelf","8-5",0.25,0.1,"RCP 8.5",NA,NA,0.25,NA
+"Canso Ledges - Sugar Harbour Islands",-60.9839773096852,"CLSHI","Eastern Scotian Shelf","8-5",0.45,0.3,"RCP 8.5",NA,NA,NA,0.45
+"Central Scotian Slope, Rise and Abyss",-62.2224459202933,"CSSRA","Western Scotian Shelf","8-5",0.4,0.0666666666666667,"RCP 8.5",0.2,NA,NA,NA
+"Central Scotian Slope, Rise and Abyss",-62.2224459202933,"CSSRA","Western Scotian Shelf","8-5",0.466666666666667,0.2,"RCP 8.5",NA,0.333333333333333,NA,NA
+"Central Scotian Slope, Rise and Abyss",-62.2224459202933,"CSSRA","Western Scotian Shelf","8-5",0.533333333333333,0.4,"RCP 8.5",NA,NA,0.533333333333333,NA
+"Central Scotian Slope, Rise and Abyss",-62.2224459202933,"CSSRA","Western Scotian Shelf","8-5",0.6,0.466666666666667,"RCP 8.5",NA,NA,NA,0.6
+"Chebogue",-66.0451270756522,"CHEB","Western Scotian Shelf","8-5",0.2,0.2,"RCP 8.5",0.2,0.2,NA,NA
+"Chebogue",-66.0451270756522,"CHEB","Western Scotian Shelf","8-5",0.4,0.2,"RCP 8.5",NA,NA,0.4,NA
+"Chebogue",-66.0451270756522,"CHEB","Western Scotian Shelf","8-5",0.4,0.4,"RCP 8.5",NA,NA,NA,0.4
+"Corsair/Georges Canyons Conservation Area",-65.4125011822388,"CGCCA","Western Scotian Shelf","8-5",0.266666666666667,0.0666666666666667,"RCP 8.5",0.2,NA,NA,NA
+"Corsair/Georges Canyons Conservation Area",-65.4125011822388,"CGCCA","Western Scotian Shelf","8-5",0.333333333333333,0.133333333333333,"RCP 8.5",NA,0.333333333333333,NA,NA
+"Corsair/Georges Canyons Conservation Area",-65.4125011822388,"CGCCA","Western Scotian Shelf","8-5",0.533333333333333,0.333333333333333,"RCP 8.5",NA,NA,0.533333333333333,NA
+"Corsair/Georges Canyons Conservation Area",-65.4125011822388,"CGCCA","Western Scotian Shelf","8-5",0.666666666666667,0.4,"RCP 8.5",NA,NA,NA,0.6
+"Eastern Canyons",-57.5858032406183,"EC","Eastern Scotian Shelf","8-5",0.16,0.04,"RCP 8.5",NA,0.08,NA,NA
+"Eastern Canyons",-57.5858032406183,"EC","Eastern Scotian Shelf","8-5",0.32,0.2,"RCP 8.5",NA,NA,0.28,NA
+"Eastern Canyons",-57.5858032406183,"EC","Eastern Scotian Shelf","8-5",0.44,0.36,"RCP 8.5",NA,NA,NA,0.44
+"Eastern Shoal",-57.7247211311895,"ES","Eastern Scotian Shelf","8-5",0.105263157894737,0.0526315789473684,"RCP 8.5",NA,0.105263157894737,NA,NA
+"Eastern Shoal",-57.7247211311895,"ES","Eastern Scotian Shelf","8-5",0.368421052631579,0.263157894736842,"RCP 8.5",NA,NA,0.315789473684211,NA
+"Eastern Shoal",-57.7247211311895,"ES","Eastern Scotian Shelf","8-5",0.473684210526316,0.368421052631579,"RCP 8.5",NA,NA,NA,0.473684210526316
+"Eastern Shore Islands",-62.501492948066,"ESI","Western Scotian Shelf","8-5",0.0952380952380952,0.0476190476190476,"RCP 8.5",NA,0.0952380952380952,NA,NA
+"Eastern Shore Islands",-62.501492948066,"ESI","Western Scotian Shelf","8-5",0.285714285714286,0.142857142857143,"RCP 8.5",NA,NA,0.285714285714286,NA
+"Eastern Shore Islands",-62.501492948066,"ESI","Western Scotian Shelf","8-5",0.428571428571429,0.380952380952381,"RCP 8.5",NA,NA,NA,0.428571428571429
+"Emerald Basin Sponge Conservation Area",-62.6051342783411,"EBSCA","Western Scotian Shelf","8-5",0.157894736842105,0.0526315789473684,"RCP 8.5",NA,0.105263157894737,NA,NA
+"Emerald Basin Sponge Conservation Area",-62.6051342783411,"EBSCA","Western Scotian Shelf","8-5",0.421052631578947,0.315789473684211,"RCP 8.5",NA,NA,0.368421052631579,NA
+"Emerald Basin Sponge Conservation Area",-62.6051342783411,"EBSCA","Western Scotian Shelf","8-5",0.631578947368421,0.526315789473684,"RCP 8.5",NA,NA,NA,0.631578947368421
+"Fundian Channel-Browns Bank",-65.9862976711695,"FCB","Western Scotian Shelf","8-5",0.0740740740740741,0.037037037037037,"RCP 8.5",0.0740740740740741,NA,NA,NA
+"Fundian Channel-Browns Bank",-65.9862976711695,"FCB","Western Scotian Shelf","8-5",0.222222222222222,0.0740740740740741,"RCP 8.5",NA,0.148148148148148,NA,NA
+"Fundian Channel-Browns Bank",-65.9862976711695,"FCB","Western Scotian Shelf","8-5",0.37037037037037,0.222222222222222,"RCP 8.5",NA,NA,0.333333333333333,NA
+"Fundian Channel-Browns Bank",-65.9862976711695,"FCB","Western Scotian Shelf","8-5",0.444444444444444,0.37037037037037,"RCP 8.5",NA,NA,NA,0.444444444444444
+"Georges Bank",-66.6726824737281,"GB","Western Scotian Shelf","8-5",0.208333333333333,0.125,"RCP 8.5",0.166666666666667,NA,NA,NA
+"Georges Bank",-66.6726824737281,"GB","Western Scotian Shelf","8-5",0.375,0.333333333333333,"RCP 8.5",NA,0.333333333333333,NA,NA
+"Georges Bank",-66.6726824737281,"GB","Western Scotian Shelf","8-5",0.583333333333333,0.333333333333333,"RCP 8.5",NA,NA,0.5,NA
+"Georges Bank",-66.6726824737281,"GB","Western Scotian Shelf","8-5",0.708333333333333,0.458333333333333,"RCP 8.5",NA,NA,NA,0.583333333333333
+"Head Harbour, West Isles and The Passages",-66.9344221223068,"HHWITP","Bay of Fundy","8-5",0.260869565217391,0.0434782608695652,"RCP 8.5",0.0434782608695652,NA,NA,NA
+"Head Harbour, West Isles and The Passages",-66.9344221223068,"HHWITP","Bay of Fundy","8-5",0.434782608695652,0.0434782608695652,"RCP 8.5",NA,0.217391304347826,NA,NA
+"Head Harbour, West Isles and The Passages",-66.9344221223068,"HHWITP","Bay of Fundy","8-5",0.521739130434783,0.347826086956522,"RCP 8.5",NA,NA,0.391304347826087,NA
+"Head Harbour, West Isles and The Passages",-66.9344221223068,"HHWITP","Bay of Fundy","8-5",0.608695652173913,0.521739130434783,"RCP 8.5",NA,NA,NA,0.565217391304348
+"Horse Mussel Reefs",-65.4052959199078,"HMR","Bay of Fundy","8-5",0.285714285714286,0.0476190476190476,"RCP 8.5",0.0476190476190476,NA,NA,NA
+"Horse Mussel Reefs",-65.4052959199078,"HMR","Bay of Fundy","8-5",0.333333333333333,0.0952380952380952,"RCP 8.5",NA,0.142857142857143,NA,NA
+"Horse Mussel Reefs",-65.4052959199078,"HMR","Bay of Fundy","8-5",0.428571428571429,0.285714285714286,"RCP 8.5",NA,NA,0.285714285714286,NA
+"Horse Mussel Reefs",-65.4052959199078,"HMR","Bay of Fundy","8-5",0.619047619047619,0.380952380952381,"RCP 8.5",NA,NA,NA,0.380952380952381
+"Jordan Basin Conservation Area",-67.0474488071341,"JBCA","Western Scotian Shelf","8-5",0.238095238095238,0.0952380952380952,"RCP 8.5",0.0952380952380952,NA,NA,NA
+"Jordan Basin Conservation Area",-67.0474488071341,"JBCA","Western Scotian Shelf","8-5",0.428571428571429,0.333333333333333,"RCP 8.5",NA,0.380952380952381,NA,NA
+"Jordan Basin Conservation Area",-67.0474488071341,"JBCA","Western Scotian Shelf","8-5",0.619047619047619,0.523809523809524,"RCP 8.5",NA,NA,0.619047619047619,NA
+"Jordan Basin Conservation Area",-67.0474488071341,"JBCA","Western Scotian Shelf","8-5",0.666666666666667,0.619047619047619,"RCP 8.5",NA,NA,NA,0.666666666666667
+"LaHave Basin",-63.5860220466103,"LB","Western Scotian Shelf","8-5",0.136363636363636,0.0454545454545455,"RCP 8.5",NA,0.0909090909090909,NA,NA
+"LaHave Basin",-63.5860220466103,"LB","Western Scotian Shelf","8-5",0.363636363636364,0.272727272727273,"RCP 8.5",NA,NA,0.363636363636364,NA
+"LaHave Basin",-63.5860220466103,"LB","Western Scotian Shelf","8-5",0.545454545454545,0.5,"RCP 8.5",NA,NA,NA,0.545454545454545
+"LaHave Islands",-64.3528264975098,"LI","Western Scotian Shelf","8-5",0.111111111111111,0.111111111111111,"RCP 8.5",NA,NA,0.111111111111111,NA
+"LaHave Islands",-64.3528264975098,"LI","Western Scotian Shelf","8-5",0.333333333333333,0.111111111111111,"RCP 8.5",NA,NA,NA,0.333333333333333
+"Long Eddy",-66.8012924086791,"LE","Bay of Fundy","8-5",0.291666666666667,0.0833333333333333,"RCP 8.5",0.0833333333333333,NA,NA,NA
+"Long Eddy",-66.8012924086791,"LE","Bay of Fundy","8-5",0.458333333333333,0.0833333333333333,"RCP 8.5",NA,0.25,NA,NA
+"Long Eddy",-66.8012924086791,"LE","Bay of Fundy","8-5",0.541666666666667,0.375,"RCP 8.5",NA,NA,0.458333333333333,NA
+"Long Eddy",-66.8012924086791,"LE","Bay of Fundy","8-5",0.625,0.541666666666667,"RCP 8.5",NA,NA,NA,0.625
+"Lophelia Coral Conservation Area",-57.1831003721921,"LCCA","Eastern Scotian Shelf","8-5",0.307692307692308,0.0769230769230769,"RCP 8.5",NA,0.153846153846154,NA,NA
+"Lophelia Coral Conservation Area",-57.1831003721921,"LCCA","Eastern Scotian Shelf","8-5",0.615384615384615,0.461538461538462,"RCP 8.5",NA,NA,0.538461538461538,NA
+"Lophelia Coral Conservation Area",-57.1831003721921,"LCCA","Eastern Scotian Shelf","8-5",0.769230769230769,0.615384615384615,"RCP 8.5",NA,NA,NA,0.769230769230769
+"Machias Seal Island Migratory Bird Sanctuary",-67.0971259973971,"MSIMBS","Bay of Fundy","8-5",0.130434782608696,0.0434782608695652,"RCP 8.5",0.0434782608695652,NA,NA,NA
+"Machias Seal Island Migratory Bird Sanctuary",-67.0971259973971,"MSIMBS","Bay of Fundy","8-5",0.391304347826087,0.130434782608696,"RCP 8.5",NA,0.217391304347826,NA,NA
+"Machias Seal Island Migratory Bird Sanctuary",-67.0971259973971,"MSIMBS","Bay of Fundy","8-5",0.478260869565217,0.217391304347826,"RCP 8.5",NA,NA,0.478260869565217,NA
+"Machias Seal Island Migratory Bird Sanctuary",-67.0971259973971,"MSIMBS","Bay of Fundy","8-5",0.652173913043478,0.391304347826087,"RCP 8.5",NA,NA,NA,0.652173913043478
+"Middle Bank-Canso Bank",-60.2017395954907,"MBB","Eastern Scotian Shelf","8-5",0.0434782608695652,0.0434782608695652,"RCP 8.5",NA,0.0434782608695652,NA,NA
+"Middle Bank-Canso Bank",-60.2017395954907,"MBB","Eastern Scotian Shelf","8-5",0.217391304347826,0.130434782608696,"RCP 8.5",NA,NA,0.130434782608696,NA
+"Middle Bank-Canso Bank",-60.2017395954907,"MBB","Eastern Scotian Shelf","8-5",0.434782608695652,0.304347826086957,"RCP 8.5",NA,NA,NA,0.304347826086957
+"Misaine Bank and Laurentian Channel",-57.9220858373558,"MBLC","Eastern Scotian Shelf","8-5",0.05,0.05,"RCP 8.5",NA,0.05,NA,NA
+"Misaine Bank and Laurentian Channel",-57.9220858373558,"MBLC","Eastern Scotian Shelf","8-5",0.25,0.1,"RCP 8.5",NA,NA,0.25,NA
+"Misaine Bank and Laurentian Channel",-57.9220858373558,"MBLC","Eastern Scotian Shelf","8-5",0.5,0.25,"RCP 8.5",NA,NA,NA,0.45
+"North of Emerald Basin Sea Pen Field",-62.33703573871,"NOEBSPF","Western Scotian Shelf","8-5",0.105263157894737,0.0526315789473684,"RCP 8.5",NA,0.105263157894737,NA,NA
+"North of Emerald Basin Sea Pen Field",-62.33703573871,"NOEBSPF","Western Scotian Shelf","8-5",0.315789473684211,0.0526315789473684,"RCP 8.5",NA,NA,0.315789473684211,NA
+"North of Emerald Basin Sea Pen Field",-62.33703573871,"NOEBSPF","Western Scotian Shelf","8-5",0.526315789473684,0.0526315789473684,"RCP 8.5",NA,NA,NA,0.526315789473684
+"Northeast Channel Coral Conservation Area",-65.5904750828048,"NCCCA","Western Scotian Shelf","8-5",0.238095238095238,0.0476190476190476,"RCP 8.5",0.0952380952380952,NA,NA,NA
+"Northeast Channel Coral Conservation Area",-65.5904750828048,"NCCCA","Western Scotian Shelf","8-5",0.380952380952381,0.142857142857143,"RCP 8.5",NA,0.333333333333333,NA,NA
+"Northeast Channel Coral Conservation Area",-65.5904750828048,"NCCCA","Western Scotian Shelf","8-5",0.523809523809524,0.333333333333333,"RCP 8.5",NA,NA,0.523809523809524,NA
+"Northeast Channel Coral Conservation Area",-65.5904750828048,"NCCCA","Western Scotian Shelf","8-5",0.571428571428571,0.571428571428571,"RCP 8.5",NA,NA,NA,0.571428571428571
+"Northern Gulf of Maine",-67.146723009294,"NGOM","Bay of Fundy","8-5",0.12,0.08,"RCP 8.5",0.08,NA,NA,NA
+"Northern Gulf of Maine",-67.146723009294,"NGOM","Bay of Fundy","8-5",0.36,0.12,"RCP 8.5",NA,0.28,NA,NA
+"Northern Gulf of Maine",-67.146723009294,"NGOM","Bay of Fundy","8-5",0.56,0.4,"RCP 8.5",NA,NA,0.4,NA
+"Northern Gulf of Maine",-67.146723009294,"NGOM","Bay of Fundy","8-5",0.6,0.56,"RCP 8.5",NA,NA,NA,0.56
+"Pearl Island",-64.0493704420438,"PI","Western Scotian Shelf","8-5",0.153846153846154,0.153846153846154,"RCP 8.5",NA,NA,0.153846153846154,NA
+"Pearl Island",-64.0493704420438,"PI","Western Scotian Shelf","8-5",0.384615384615385,0.307692307692308,"RCP 8.5",NA,NA,NA,0.384615384615385
+"Point Michaud and Basque Islands",-60.6537916896027,"PMBI","Eastern Scotian Shelf","8-5",0.333333333333333,0.333333333333333,"RCP 8.5",NA,NA,NA,0.333333333333333
+"Port Joli and Surrounding Areas",-64.9021101075357,"PJSA","Western Scotian Shelf","8-5",0.428571428571429,0.142857142857143,"RCP 8.5",NA,NA,0.142857142857143,NA
+"Port Joli and Surrounding Areas",-64.9021101075357,"PJSA","Western Scotian Shelf","8-5",0.571428571428571,0.428571428571429,"RCP 8.5",NA,NA,NA,0.571428571428571
+"Roseway Bank",-64.8517152837932,"RB","Western Scotian Shelf","8-5",0.0434782608695652,0.0434782608695652,"RCP 8.5",0.0434782608695652,NA,NA,NA
+"Roseway Bank",-64.8517152837932,"RB","Western Scotian Shelf","8-5",0.173913043478261,0.0434782608695652,"RCP 8.5",NA,0.0434782608695652,NA,NA
+"Roseway Bank",-64.8517152837932,"RB","Western Scotian Shelf","8-5",0.391304347826087,0.217391304347826,"RCP 8.5",NA,NA,0.217391304347826,NA
+"Roseway Bank",-64.8517152837932,"RB","Western Scotian Shelf","8-5",0.521739130434783,0.260869565217391,"RCP 8.5",NA,NA,NA,0.260869565217391
+"Sable Island Bank",-61.1834970445032,"SIB","Western Scotian Shelf","8-5",0.08,0.04,"RCP 8.5",0.04,NA,NA,NA
+"Sable Island Bank",-61.1834970445032,"SIB","Western Scotian Shelf","8-5",0.32,0.04,"RCP 8.5",NA,0.12,NA,NA
+"Sable Island Bank",-61.1834970445032,"SIB","Western Scotian Shelf","8-5",0.52,0.24,"RCP 8.5",NA,NA,0.4,NA
+"Sable Island Bank",-61.1834970445032,"SIB","Western Scotian Shelf","8-5",0.6,0.36,"RCP 8.5",NA,NA,NA,0.48
+"Sambro Bank Sponge Conservation Area",-63.0750009543143,"SBSCA","Western Scotian Shelf","8-5",0.105263157894737,0.0526315789473684,"RCP 8.5",0.105263157894737,NA,NA,NA
+"Sambro Bank Sponge Conservation Area",-63.0750009543143,"SBSCA","Western Scotian Shelf","8-5",0.368421052631579,0.157894736842105,"RCP 8.5",NA,0.210526315789474,NA,NA
+"Sambro Bank Sponge Conservation Area",-63.0750009543143,"SBSCA","Western Scotian Shelf","8-5",0.526315789473684,0.315789473684211,"RCP 8.5",NA,NA,0.473684210526316,NA
+"Sambro Bank Sponge Conservation Area",-63.0750009543143,"SBSCA","Western Scotian Shelf","8-5",0.684210526315789,0.578947368421053,"RCP 8.5",NA,NA,NA,0.631578947368421
+"Sambro Ledges - Prospect",-63.6272709681532,"SLP","Western Scotian Shelf","8-5",0.238095238095238,0.0476190476190476,"RCP 8.5",NA,0.0476190476190476,NA,NA
+"Sambro Ledges - Prospect",-63.6272709681532,"SLP","Western Scotian Shelf","8-5",0.285714285714286,0.19047619047619,"RCP 8.5",NA,NA,0.19047619047619,NA
+"Sambro Ledges - Prospect",-63.6272709681532,"SLP","Western Scotian Shelf","8-5",0.523809523809524,0.238095238095238,"RCP 8.5",NA,NA,NA,0.238095238095238
+"Scotian Gulf",-63.3519462725813,"SG","Western Scotian Shelf","8-5",0.16,0.04,"RCP 8.5",0.08,NA,NA,NA
+"Scotian Gulf",-63.3519462725813,"SG","Western Scotian Shelf","8-5",0.44,0.08,"RCP 8.5",NA,0.2,NA,NA
+"Scotian Gulf",-63.3519462725813,"SG","Western Scotian Shelf","8-5",0.52,0.32,"RCP 8.5",NA,NA,0.36,NA
+"Scotian Gulf",-63.3519462725813,"SG","Western Scotian Shelf","8-5",0.6,0.44,"RCP 8.5",NA,NA,NA,0.44
+"South Grand Manan",-66.7105657120497,"SGM","Bay of Fundy","8-5",0.24,0.04,"RCP 8.5",0.08,NA,NA,NA
+"South Grand Manan",-66.7105657120497,"SGM","Bay of Fundy","8-5",0.44,0.08,"RCP 8.5",NA,0.2,NA,NA
+"South Grand Manan",-66.7105657120497,"SGM","Bay of Fundy","8-5",0.52,0.32,"RCP 8.5",NA,NA,0.44,NA
+"South Grand Manan",-66.7105657120497,"SGM","Bay of Fundy","8-5",0.6,0.48,"RCP 8.5",NA,NA,NA,0.6
+"Southern Bight",-64.2663749470546,"SB","Bay of Fundy","8-5",0.2,0.2,"RCP 8.5",NA,0.2,0.2,NA
+"Southern Bight",-64.2663749470546,"SB","Bay of Fundy","8-5",0.4,0.4,"RCP 8.5",NA,NA,NA,0.4
+"St Anns Bank Marine Protected Area",-59.0534289907244,"SABMPA","Eastern Scotian Shelf","8-5",0.272727272727273,0.0454545454545455,"RCP 8.5",NA,NA,0.181818181818182,NA
+"St Anns Bank Marine Protected Area",-59.0534289907244,"SABMPA","Eastern Scotian Shelf","8-5",0.409090909090909,0.272727272727273,"RCP 8.5",NA,NA,NA,0.318181818181818
+"The Gully Marine Protected Area",-58.9375686593847,"TGMPA","Eastern Scotian Shelf","8-5",0.115384615384615,0.0384615384615385,"RCP 8.5",0.0384615384615385,NA,NA,NA
+"The Gully Marine Protected Area",-58.9375686593847,"TGMPA","Eastern Scotian Shelf","8-5",0.307692307692308,0.0384615384615385,"RCP 8.5",NA,0.0769230769230769,NA,NA
+"The Gully Marine Protected Area",-58.9375686593847,"TGMPA","Eastern Scotian Shelf","8-5",0.384615384615385,0.230769230769231,"RCP 8.5",NA,NA,0.307692307692308,NA
+"The Gully Marine Protected Area",-58.9375686593847,"TGMPA","Eastern Scotian Shelf","8-5",0.538461538461538,0.346153846153846,"RCP 8.5",NA,NA,NA,0.461538461538462
+"Western Emerald Bank Conservation Area",-62.3600764345835,"WEBCA","Western Scotian Shelf","8-5",0.37037037037037,0.037037037037037,"RCP 8.5",NA,0.037037037037037,NA,NA
+"Western Emerald Bank Conservation Area",-62.3600764345835,"WEBCA","Western Scotian Shelf","8-5",0.444444444444444,0.185185185185185,"RCP 8.5",NA,NA,0.222222222222222,NA
+"Western Emerald Bank Conservation Area",-62.3600764345835,"WEBCA","Western Scotian Shelf","8-5",0.518518518518518,0.222222222222222,"RCP 8.5",NA,NA,NA,0.222222222222222
+"Western Jordan Basin",-67.4231406115492,"WJB","Western Scotian Shelf","8-5",0.272727272727273,0.0454545454545455,"RCP 8.5",0.136363636363636,NA,NA,NA
+"Western Jordan Basin",-67.4231406115492,"WJB","Western Scotian Shelf","8-5",0.409090909090909,0.181818181818182,"RCP 8.5",NA,0.409090909090909,NA,NA
+"Western Jordan Basin",-67.4231406115492,"WJB","Western Scotian Shelf","8-5",0.636363636363636,0.272727272727273,"RCP 8.5",NA,NA,0.636363636363636,0.636363636363636
+"Musquash Estuary Marine Protected Area",-66.2566445275119,"MEMPA","Bay of Fundy","2-6",NA,NA,"RCP 2.6",0,0,0,0
+"Chignecto Bay",-64.5593743789582,"CB","Bay of Fundy","2-6",NA,NA,"RCP 2.6",0,0,0,0
+"Boot Island National Wildlife Area",-64.269891486202,"BINWA","Bay of Fundy","2-6",NA,NA,"RCP 2.6",0,0,0,0
+"Southern Bight",-64.2663749470546,"SB","Bay of Fundy","2-6",NA,NA,"RCP 2.6",0,0,0,0
+"Canso Ledges - Sugar Harbour Islands",-60.9839773096852,"CLSHI","Eastern Scotian Shelf","2-6",NA,NA,"RCP 2.6",0,NA,NA,NA
+"Point Michaud and Basque Islands",-60.6537916896027,"PMBI","Eastern Scotian Shelf","2-6",NA,NA,"RCP 2.6",0,0,0,0
+"Bird Islands",-60.3841298405562,"BRDI","Eastern Scotian Shelf","2-6",NA,NA,"RCP 2.6",0,NA,NA,NA
+"Middle Bank-Canso Bank",-60.2017395954907,"MBB","Eastern Scotian Shelf","2-6",NA,NA,"RCP 2.6",0,0,0,0
+"Big Glace Bay",-59.9299217815252,"BGB","Eastern Scotian Shelf","2-6",NA,NA,"RCP 2.6",0,NA,NA,NA
+"St Anns Bank Marine Protected Area",-59.0534289907244,"SABMPA","Eastern Scotian Shelf","2-6",NA,NA,"RCP 2.6",0,0,NA,NA
+"The Gully Marine Protected Area",-58.9375686593847,"TGMPA","Eastern Scotian Shelf","2-6",NA,NA,"RCP 2.6",0,NA,NA,NA
+"Misaine Bank and Laurentian Channel",-57.9220858373558,"MBLC","Eastern Scotian Shelf","2-6",NA,NA,"RCP 2.6",0,0,NA,NA
+"Eastern Shoal",-57.7247211311895,"ES","Eastern Scotian Shelf","2-6",NA,NA,"RCP 2.6",0,NA,NA,NA
+"Eastern Canyons",-57.5858032406183,"EC","Eastern Scotian Shelf","2-6",NA,NA,"RCP 2.6",0,NA,NA,NA
+"Lophelia Coral Conservation Area",-57.1831003721921,"LCCA","Eastern Scotian Shelf","2-6",NA,NA,"RCP 2.6",0,NA,NA,NA
+"Chebogue",-66.0451270756522,"CHEB","Western Scotian Shelf","2-6",NA,NA,"RCP 2.6",0,NA,NA,NA
+"Bon Portage Island",-65.754561456428,"BPI","Western Scotian Shelf","2-6",NA,NA,"RCP 2.6",0,0,0,0
+"Northeast Channel Coral Conservation Area",-65.5904750828048,"NCCCA","Western Scotian Shelf","2-6",NA,NA,"RCP 2.6",0,NA,NA,NA
+"Corsair/Georges Canyons Conservation Area",-65.4125011822388,"CGCCA","Western Scotian Shelf","2-6",NA,NA,"RCP 2.6",0,NA,NA,NA
+"Port Joli and Surrounding Areas",-64.9021101075357,"PJSA","Western Scotian Shelf","2-6",NA,NA,"RCP 2.6",0,0,0,0
+"Roseway Bank",-64.8517152837932,"RB","Western Scotian Shelf","2-6",NA,NA,"RCP 2.6",0,NA,NA,NA
+"Kejimkujik Seaside National Park and Historic Site",-64.8129545073926,"KSNPHS","Western Scotian Shelf","2-6",NA,NA,"RCP 2.6",0,0,0,0
+"LaHave Islands",-64.3528264975098,"LI","Western Scotian Shelf","2-6",NA,NA,"RCP 2.6",0,0,0,0
+"Pearl Island",-64.0493704420438,"PI","Western Scotian Shelf","2-6",NA,NA,"RCP 2.6",0,0,0,0
+"Sambro Ledges - Prospect",-63.6272709681532,"SLP","Western Scotian Shelf","2-6",NA,NA,"RCP 2.6",0,NA,NA,NA
+"LaHave Basin",-63.5860220466103,"LB","Western Scotian Shelf","2-6",NA,NA,"RCP 2.6",0,NA,NA,NA
+"Emerald Basin Sponge Conservation Area",-62.6051342783411,"EBSCA","Western Scotian Shelf","2-6",NA,NA,"RCP 2.6",0,NA,NA,NA
+"Eastern Shore Islands",-62.501492948066,"ESI","Western Scotian Shelf","2-6",NA,NA,"RCP 2.6",0,NA,NA,NA
+"Western Emerald Bank Conservation Area",-62.3600764345835,"WEBCA","Western Scotian Shelf","2-6",NA,NA,"RCP 2.6",0,NA,NA,NA
+"North of Emerald Basin Sea Pen Field",-62.33703573871,"NOEBSPF","Western Scotian Shelf","2-6",NA,NA,"RCP 2.6",0,NA,NA,NA
+"Sable Island Bank",-61.1834970445032,"SIB","Western Scotian Shelf","2-6",NA,NA,"RCP 2.6",0,NA,NA,NA
+"Musquash Estuary Marine Protected Area",-66.2566445275119,"MEMPA","Bay of Fundy","8-5",NA,NA,"RCP 8.5",0,0,0,0
+"Chignecto Bay",-64.5593743789582,"CB","Bay of Fundy","8-5",NA,NA,"RCP 8.5",0,0,0,0
+"Boot Island National Wildlife Area",-64.269891486202,"BINWA","Bay of Fundy","8-5",NA,NA,"RCP 8.5",0,0,0,0
+"Southern Bight",-64.2663749470546,"SB","Bay of Fundy","8-5",NA,NA,"RCP 8.5",0,NA,NA,NA
+"Canso Ledges - Sugar Harbour Islands",-60.9839773096852,"CLSHI","Eastern Scotian Shelf","8-5",NA,NA,"RCP 8.5",0,NA,NA,NA
+"Point Michaud and Basque Islands",-60.6537916896027,"PMBI","Eastern Scotian Shelf","8-5",NA,NA,"RCP 8.5",0,0,0,NA
+"Bird Islands",-60.3841298405562,"BRDI","Eastern Scotian Shelf","8-5",NA,NA,"RCP 8.5",0,NA,NA,NA
+"Middle Bank-Canso Bank",-60.2017395954907,"MBB","Eastern Scotian Shelf","8-5",NA,NA,"RCP 8.5",0,NA,NA,NA
+"Big Glace Bay",-59.9299217815252,"BGB","Eastern Scotian Shelf","8-5",NA,NA,"RCP 8.5",0,NA,NA,NA
+"St Anns Bank Marine Protected Area",-59.0534289907244,"SABMPA","Eastern Scotian Shelf","8-5",NA,NA,"RCP 8.5",0,0,NA,NA
+"Misaine Bank and Laurentian Channel",-57.9220858373558,"MBLC","Eastern Scotian Shelf","8-5",NA,NA,"RCP 8.5",0,NA,NA,NA
+"Eastern Shoal",-57.7247211311895,"ES","Eastern Scotian Shelf","8-5",NA,NA,"RCP 8.5",0,NA,NA,NA
+"Eastern Canyons",-57.5858032406183,"EC","Eastern Scotian Shelf","8-5",NA,NA,"RCP 8.5",0,NA,NA,NA
+"Lophelia Coral Conservation Area",-57.1831003721921,"LCCA","Eastern Scotian Shelf","8-5",NA,NA,"RCP 8.5",0,NA,NA,NA
+"Bon Portage Island",-65.754561456428,"BPI","Western Scotian Shelf","8-5",NA,NA,"RCP 8.5",0,0,0,0
+"Port Joli and Surrounding Areas",-64.9021101075357,"PJSA","Western Scotian Shelf","8-5",NA,NA,"RCP 8.5",0,0,NA,NA
+"Kejimkujik Seaside National Park and Historic Site",-64.8129545073926,"KSNPHS","Western Scotian Shelf","8-5",NA,NA,"RCP 8.5",0,0,0,0
+"LaHave Islands",-64.3528264975098,"LI","Western Scotian Shelf","8-5",NA,NA,"RCP 8.5",0,0,NA,NA
+"Pearl Island",-64.0493704420438,"PI","Western Scotian Shelf","8-5",NA,NA,"RCP 8.5",0,0,NA,NA
+"Sambro Ledges - Prospect",-63.6272709681532,"SLP","Western Scotian Shelf","8-5",NA,NA,"RCP 8.5",0,NA,NA,NA
+"LaHave Basin",-63.5860220466103,"LB","Western Scotian Shelf","8-5",NA,NA,"RCP 8.5",0,NA,NA,NA
+"Emerald Basin Sponge Conservation Area",-62.6051342783411,"EBSCA","Western Scotian Shelf","8-5",NA,NA,"RCP 8.5",0,NA,NA,NA
+"Eastern Shore Islands",-62.501492948066,"ESI","Western Scotian Shelf","8-5",NA,NA,"RCP 8.5",0,NA,NA,NA
+"Western Emerald Bank Conservation Area",-62.3600764345835,"WEBCA","Western Scotian Shelf","8-5",NA,NA,"RCP 8.5",0,NA,NA,NA
+"North of Emerald Basin Sea Pen Field",-62.33703573871,"NOEBSPF","Western Scotian Shelf","8-5",NA,NA,"RCP 8.5",0,NA,NA,NA

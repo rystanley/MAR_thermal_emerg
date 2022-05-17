@@ -301,7 +301,8 @@ network_loss_plot <- ggplot()+
                       theme_bw()+
                       labs(x="",y="Propotion of habitat")+
                       scale_y_continuous(labels=percent)+
-                      theme(legend.position = "none")+
+                      theme(legend.position = "none",
+                            strip.background = element_rect(fill="white"))+
                       scale_color_viridis(discrete = T);network_loss_plot
 
 ggsave("output/ENSEMBLE_habitat_loss-models_species.png",network_loss_plot,width=8,height=6,units="in",dpi=300)
@@ -378,7 +379,8 @@ ggsave("output/ENSEMBLE_habitat_loss-models_species.png",network_loss_plot,width
                   labs(x="Lost species",y="",fill="")+
                   scale_x_continuous(labels=percent,breaks=c(0,0.25,0.5,0.75),limits = c(0,round(max(plotdata_comp$comp),1)),expand=c(0,0))+
                     theme(legend.position = "bottom",
-                          axis.text.x=element_text(size=6));p_comp
+                          axis.text.x=element_text(size=6),
+                          strip.background = element_rect(fill="white"));p_comp
 
         #save the plot
         ggsave("output/ENSEMBLE_species_lost_2100.png",p_comp,width=9,height=6,units="in",dpi=300)    
@@ -424,10 +426,11 @@ ggsave("output/ENSEMBLE_habitat_loss-models_species.png",network_loss_plot,width
                         labs(x="Lost species",y="",col="")+
                         scale_x_continuous(labels=percent,breaks=c(0,0.25,0.5,0.75),limits = c(0,round(max(plotdata_comp$comp),1)),expand=c(0,0))+
                         theme(legend.position = "bottom",
-                              axis.text.x=element_text(size=6));p_comp_rng
+                              axis.text.x=element_text(size=6),
+                              strip.background = element_rect(fill="white"));p_comp_rng
         
         ggsave("output/ENSEMBLE_species_lost_2100_range.png",p_comp_rng,width=9,height=6,units="in",dpi=300)
-                      
+        write.csv(plotdata_comp_rng,file="output/ENSEMBLE_species_lost_range.csv",row.names=F)              
 
 ## Species by site loss for benchmark years  --------------------------------------
 benchmark_years <- c(2025,2050,2075,2100)
@@ -440,14 +443,12 @@ for(i in benchmark_years){
             
             habitat_loss_site%>%
             filter(ToE != 2500, #these are species that did not emerge
-                   mod!="GFDL", #no GFDL for 2-6
                    !species%in%c("Sebastes mentella","Calanus glacialis"),
                    cum_sum==1,
                    ToE<=i)%>%
             group_by(climate_proj,mod,NAME)%>%
             summarise(count=n())%>%
             ungroup()%>%
-            
             left_join(.,species_count)%>%
             mutate(prop_lost = count/n_species,
                    benchmark=i)%>%
@@ -458,28 +459,34 @@ for(i in benchmark_years){
 
 ##make the data for plotting
 
-benchmark_buffer = rbind(site_dummy,site_dummy,site_dummy,site_dummy)%>%mutate(benchmark = rep(benchmark_years,each=nrow(site_dummy)),
-                                                                                comp=0,
-                                                                               id=paste(climate_proj,NAME,benchmark,sep="-"))
+benchmark_buffer  <-  rbind(site_dummy,site_dummy,site_dummy,site_dummy)%>% # four times, on dummy dataframe for each benchmark year
+                    mutate(benchmark = rep(benchmark_years,each=nrow(site_dummy)),
+                           max=NA,
+                           min=NA,
+                           comp=0,
+                           id=paste(climate_proj,NAME,benchmark,sep="-"))
 
 
 plot_benchmark_formatted <- species_lost_benchmark%>%
                             group_by(climate_proj,NAME,benchmark)%>%
-                            summarise(comp=max(prop_lost,na.rm=T))%>%
+                            summarise(max=max(prop_lost,na.rm=T), #min among models
+                                      min=min(prop_lost,na..rm=T), #max among models
+                                      comp=prop_lost[mod == "Ensemble"])%>%
                             ungroup()%>%
                             mutate(id=paste(climate_proj,NAME,benchmark,sep="-"))%>%
                             left_join(.,site_names)%>%
-                            left_join(.,network_cents%>%select(NAME,region))
+                            left_join(.,network_cents%>%select(NAME,region,long))%>%
+                            dplyr::select(names(benchmark_buffer)) #line up the rows for the rbind() next
                             
 
 plot_benchmark_formatted <- rbind(plot_benchmark_formatted,
                                   benchmark_buffer%>%
-                                    filter(id %in% setdiff(benchmark_buffer$id,plot_benchmark_formatted$id))%>%
-                                    select(climate_proj,NAME,benchmark,comp,id,abbreviation,region))%>%
-                             mutate(facet_lab = ifelse(climate_proj == "2-6","RCP 2.6","RCP 8.5"),
+                                    filter(id %in% setdiff(benchmark_buffer$id,plot_benchmark_formatted$id)))%>%
+                              mutate(facet_lab = ifelse(climate_proj == "2-6","RCP 2.6","RCP 8.5"),
                                     NAME = factor(NAME,levels=.[]%>%filter(climate_proj == "8-5",benchmark==2100)%>%arrange(region,comp)%>%pull(NAME)),
                                     abbreviation = factor(abbreviation,levels=.[]%>%filter(climate_proj == "8-5",benchmark==2100)%>%arrange(region,comp)%>%pull(abbreviation)))%>%
                              data.frame()
+            
 
 benchmark_plot <-  ggplot(,aes(x=comp,y=abbreviation,fill=factor(benchmark)))+
                     geom_bar(data=plot_benchmark_formatted%>%filter(benchmark==2100),stat="identity",col="black")+
@@ -495,7 +502,8 @@ benchmark_plot <-  ggplot(,aes(x=comp,y=abbreviation,fill=factor(benchmark)))+
                           axis.text.x = element_text(size=6))+
                     scale_fill_viridis(discrete=T); benchmark_plot
 
-ggsave("output/benchmark_species_lost.png",benchmark_plot,width=9,height=6,units="in",dpi=300)
+ggsave("output/ENSEMBLE_benchmark_species_lost.png",benchmark_plot,width=9,height=6,units="in",dpi=300)
+write.csv()
 
 #create dataframe for Shaylyn to make maps from 
 
@@ -503,7 +511,8 @@ species_lost_df <- plot_benchmark_formatted%>%
                    select(-id)%>%
                    spread(benchmark,comp)
 
-save(species_lost_df,file="data/species_lost_df.RData")
+save(species_lost_df,file="data/ENSEMBLE_species_lost_df.RData")
+write.csv(species_lost_df,file="output/ENSEMBLE_species_lost.csv",row.names=FALSE)
                      
 
 ##Species area loss plot --------------------------------------
@@ -516,7 +525,6 @@ for(i in benchmark_years){
                                   
                                   habitat_loss_site%>%
                                     filter(ToE != 2500, #these are species that did not emerge
-                                           mod!="GFDL", #no GFDL for 2-6
                                            !species%in%c("Sebastes mentella","Calanus glacialis"),
                                            ToE<=i)%>%
                                     group_by(climate_proj,mod,species)%>%
@@ -535,14 +543,18 @@ for(i in benchmark_years){
 
 plot_area_benchmark_formatted <- species_area_lost_benchmark%>%
                                 group_by(climate_proj,species,benchmark)%>%
-                                summarise(comp=max(prop_lost,na.rm=T))%>%
+                                summarise(max=max(prop_lost,na.rm=T), #min among models
+                                          min=min(prop_lost,na..rm=T), #max among models
+                                          comp=prop_lost[mod == "Ensemble"])%>%
                                 ungroup()%>%
                                 mutate(id = paste(climate_proj,benchmark,species,sep="-"))
 
 plot_area_benchmark_formatted <- rbind(plot_area_benchmark_formatted,
                                        species_dummy%>%
                                          filter(id %in% setdiff(species_dummy$id,plot_area_benchmark_formatted$id))%>%
-                                         mutate(comp=0)%>%
+                                         mutate(max=NA,
+                                                min=NA,
+                                                comp=0)%>%
                                          select(names(plot_area_benchmark_formatted)))%>%
                                  left_join(.,niches%>%rename(species=SciName)%>%select(species,functional_group))%>%
                                 mutate(facet_lab = ifelse(climate_proj == "2-6","RCP 2.6","RCP 8.5"),
@@ -573,7 +585,8 @@ benchmark_area_plot <-  ggplot(,aes(x=comp,y=species,fill=factor(benchmark)))+
                               panel.spacing.x = unit(4, "mm"))+
                          scale_fill_viridis(discrete=T); benchmark_area_plot
 
-ggsave("output/benchmark_species_area_lost.png",benchmark_area_plot,width=9,height=6,units="in",dpi=300)
+ggsave("output/ENSEMBLE_benchmark_species_area_lost.png",benchmark_area_plot,width=9,height=6,units="in",dpi=300)
+write.csv(plot_area_benchmark_formatted,file="output/ENSEMBLE_species_area_lost.csv",row.names=FALSE)
 
 ### Loss of habitat by MPA summary tile plot --------------------------------------
 
@@ -596,7 +609,6 @@ for(i in benchmark_years){
                                        
                    habitat_loss_site%>%
                    filter(ToE != 2500, #these are species that did not emerge
-                          mod!="GFDL", #no GFDL for 2-6
                           !species%in%c("Sebastes mentella","Calanus glacialis"),
                           ToE<=i)%>%
                    group_by(climate_proj,mod,NAME,species)%>%
@@ -614,7 +626,7 @@ for(i in benchmark_years){
 
 
 tile_df_formatted <- tile_df%>%
-                     filter(mod=="AWI")%>% #just focusing on this model
+                     filter(mod=="Ensemble")%>% #just focusing on this model
                      mutate(id=paste(climate_proj,benchmark,species,NAME,sep="-"))%>%
                      select(names(tile_buffer))
 
@@ -699,10 +711,10 @@ pfacet_85 <- ggplot(data=tile_df_formatted%>%mutate(prop_lost=ifelse(prop_lost==
                 strip.text.y = element_text(color="black",angle = 360))+
           labs(x="",y="",fill="% habitat lost",title = "RCP 8.5")
 
-#knit them all together using facet
+#knit them all together using facet *** note thee is something wonky going on here with guides="collect' that has something to do with the R version. 
 combo_tile <- pfacet_26 + 
               pfacet_85 + 
               plot_layout(ncol=2,guides = "collect") & ## the '&' here comes from the help file. Not sure exactly what it is doing or how it works, but it does. 
               theme(legend.position = "bottom")
 
-ggsave("output/combination_tile_plot.png",combo_tile,width=12,height=6,units="in",dpi=300)
+ggsave("output/ENSEMBLE_combination_tile_plot.png",combo_tile,width=12,height=6,units="in",dpi=300)
