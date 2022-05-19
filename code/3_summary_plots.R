@@ -829,8 +829,13 @@ temp_series_strat_plot_extra <- ggplot()+
                                   facet_grid(climate_proj~region)+
                                   labs(x="",y=expression("Temperature " ( degree*C)),col="")+
                                   theme_bw()+
-                                  theme(strip.background = element_rect(fill="white"))+
+                                  theme(strip.background = element_rect(fill="white"),
+                                        legend.position = c(0.05,0.91), #this code will make it render differently in RStudio vs. the image by ggsave below. We might need to update to Facets dimenions. 
+                                        legend.title = element_blank(),
+                                        legend.margin=margin(t=0, r=0, b=0, l=0, unit="cm"),
+                                        legend.text = element_text(size=7))+
                                   scale_color_manual(values=plot_cols);temp_series_strat_plot_extra 
+
 
 ##save plots
 ggsave("output/ENSEMBLE_temperature_mean_timeseries.png",temp_series_plot,width=9,height=6,units="in",dpi=300)
