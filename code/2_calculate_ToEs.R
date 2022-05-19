@@ -11,6 +11,7 @@ source("code/toe_function.R")
 extract_fls <- list.files("output/climate_extracts/", full.names=T)
 extract_fls <- extract_fls[!grepl("shape",extract_fls)] #there aer some additional shape files that aren't needed
 extract_fls <- extract_fls[!grepl("CNRM",extract_fls)] #the CNRM model was duplicated from GFDL
+extract_fls <- extract_fls[!grepl("GFDL",extract_fls)] #the CNRM model was duplicated from GFDL
 
 #read in species niches
 niche<-read.csv("data/species_niche_final.csv")
