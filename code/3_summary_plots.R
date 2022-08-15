@@ -74,7 +74,7 @@ network_cents <- network_cents%>%
                                           NAME %in% western_SS ~ "Western Scotian Shelf"))%>%
                   arrange(long)
 #save output
-write.csv(network_cents,"output/network_centriods.csv",row.names=FALSE)
+#write.csv(network_cents,"output/network_centriods.csv",row.names=FALSE)
 
 #create sf version for plotting
 network_cents_sf <- network_cents%>%st_as_sf(coords=c("long","lat"),crs=latlong)
@@ -83,7 +83,6 @@ network_cents_sf <- network_cents%>%st_as_sf(coords=c("long","lat"),crs=latlong)
 network <- network_base%>%
            left_join(.,network_cents)%>%
            st_transform(latlong)
-
 
 #add the network centriod data to the toe_summaries data file. 
 toe_dat <- toe_summaries%>%
@@ -122,7 +121,7 @@ sites_grid <- network%>%
 
 
 p1 <- ggplot()+
-  geom_sf(data=basemap,fill="darkolivegreen3")+
+  geom_sf(data=basemap,fill="grey80")+
   geom_sf(data=bioregion,fill=NA)+
   geom_sf(data=sites_grid,aes(fill=region))+
   geom_sf(data=network_cents_sf,size=1.25)+
@@ -136,17 +135,58 @@ p1 <- ggplot()+
 
 ggsave("output/regional_centriod_plot.png",p1,width=8,height=8,units="in",dpi=300)
 
+
 #quick and dirty plot to add labels. 
+
+p1+geom_sf_label_repel(data=network_cents_sf,aes(label=abbreviation))
+
 p1_labs <- ggplot()+
-        geom_sf(data=basemap,fill="darkolivegreen3")+
-        geom_sf(data=network_cents_sf,size=1.25)+
-        geom_sf_label(data=network_cents_sf,aes(label=abbreviation),label.size = 0.1)+ #this type of thing is notoriously hard to do. there is a package you can try with the function geom_sf_label_repel() https://yutannihilation.github.io/ggsflabel/reference/geom_sf_label.html
-        theme_bw()+
-        labs(fill="")+
-        coord_sf(expand=0)+
-        theme(legend.position="bottom")
+  geom_sf(data=basemap,fill="darkolivegreen3")+
+  geom_sf(data=network_cents_sf,size=1.25)+
+  geom_sf_label(data=network_cents_sf,aes(label=abbreviation),label.size = 0.1)+ #this type of thing is notoriously hard to do. there is a package you can try with the function geom_sf_label_repel() https://yutannihilation.github.io/ggsflabel/reference/geom_sf_label.html
+  theme_bw()+
+  labs(fill="")+
+  coord_sf(expand=0)+
+  theme(legend.position="bottom")
 
 ggsave("output/sites_with_labs.png",p1_labs,width=6,height=6,units="in",dpi=300)
+
+
+## create inset
+
+nw_atlantic_inset <- st_bbox(c(xmin = -72 , xmax = -47.9, ymax = 61, ymin = 39.8 ),crs=latlong)%>%
+  st_as_sfc()%>%st_bbox()%>%st_as_sfc() #this is for ~ the Canadian NW Atlantic
+
+nw_box_inset <- st_bbox(nw_atlantic)
+
+basemap_inset <- rbind(ne_states(country = "Canada",returnclass = "sf")%>%
+                            dplyr::select(name_en,geometry)%>%
+                            st_as_sf()%>%
+                            st_union()%>%
+                            st_transform(latlong)%>%
+                            st_as_sf()%>%
+                            mutate(country="Canada"),
+                          ne_states(country = "United States of America",returnclass = "sf")%>%
+                            dplyr::select(name_en,geometry)%>%
+                            st_as_sf()%>%
+                            st_union()%>%
+                            st_transform(latlong)%>%
+                            st_as_sf()%>%
+                            mutate(country="USA"))%>%
+                    st_intersection(.,nw_atlantic_inset)
+
+p1_inset <- ggplot()+
+  geom_sf(data=bioregion,fill=NA)+
+  geom_sf(data=basemap_inset,fill="grey80")+
+  coord_sf(expand=0,xlim=nw_box_inset[c(1,3)],ylim=nw_box_inset[c(2,4)])+
+  theme_bw()+
+  theme(panel.grid = element_blank())
+#annotation_north_arrow(location="tr")
+
+ggsave("output/obis_range.png",p1_inset,height=6,width=5,units="in",dpi=300)
+
+
+
 
 ##Data prep species,site summaries ------------
 
