@@ -807,14 +807,14 @@ if(!file.exists("output/ENSEMBLE_temperature_timeseries.RData")& !file.exists("o
                  group_by(species,NAME,year,month)%>%
                  summarise(meant = weighted.mean(temp,cell_area,na.rm=T))%>% #monthly averages - species, site, year (area weighted)
                  ungroup()%>%
-                 group_by(NAME,year)%>%
+                 group_by(year)%>%
                  summarise(sd = sd(meant,na.rm=T),
                            meant = mean(meant, na.rm=T))%>% #annual average with sd
                  ungroup()%>%
                  data.frame()%>%
                  mutate(climate_proj = climate_proj,
                         mod = mod)%>%
-                 dplyr::select(climate_proj,mod,year,NAME,meant,sd)
+                 dplyr::select(climate_proj,mod,year,meant,sd)
     
     #mean stratified among regional sites
     mean_temp_strat <- dat%>%
@@ -839,7 +839,6 @@ if(!file.exists("output/ENSEMBLE_temperature_timeseries.RData")& !file.exists("o
   #save intermediate outputs - takes a while to run so no need to do it twice unless the data has changed. 
   save(timeseries_temp,file="output/ENSEMBLE_temperature_timeseries.RData")
   save(timeseries_temp_strat,file="output/ENSEMBLE_temperature_timeseries_strat.RData")
-  save(mean_temp,file="output/meantemp_sites_timeseries.RData")
    
 } #end if for the intermediate file checks ('do we need to run this code or not?' check)
 
@@ -860,7 +859,7 @@ temp_series_plot <- ggplot()+
                       geom_line(data=timeseries_temp%>%filter(mod != "Ensemble"),aes(x=year,y=meant,group=mod,col=mod))+
                       stat_smooth(data=timeseries_temp%>%filter(mod != "Ensemble"),aes(x=year,y=meant,group=mod,col=mod),se=F)+
                       stat_smooth(data=timeseries_temp,aes(x=year,y=meant),col="black",lwd=2)+
-                      facet_wrap(NAME~climate_proj,ncol=2)+
+                      facet_wrap(~climate_proj,ncol=2)+
                       labs(x="",y=expression("Temperature " ( degree*C)),col="")+
                       theme_bw()+
                       theme(strip.background = element_rect(fill="white"))+
