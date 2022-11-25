@@ -23,7 +23,7 @@ toe_summaries <- toe_summaries%>%
 
 
 #load the species groupings and niche information
-groupings <- read.csv("data/species_grouping.csv")%>%select(SciName,functional_group,cosewic_status)
+groupings <- read.csv("data/species_grouping.csv")%>%dplyr::select(SciName,functional_group,cosewic_status)
 niches <- read.csv("data/species_niche_final.csv")%>%
           left_join(.,groupings)
 
@@ -103,7 +103,7 @@ site_names <- unique(toe_dat$NAME)%>%
                            toupper(paste(substring(x, 1, 1), collapse = ""))}))%>%
               mutate(abbreviation = ifelse(NAME =="Bird Islands","BRDI",abbreviation), #bird island and brier island get the same 'BI'
                      abbreviation = ifelse(NAME =="Chebogue","CHEB",abbreviation))%>% # Chebogue had a boring acronym
-              select(NAME,abbreviation)%>%
+              dplyr::select(NAME,abbreviation)%>%
               arrange(abbreviation)
 
 #plot out the centriods on the MPAs ------
@@ -118,7 +118,6 @@ bioregion_grid <- bioregion%>%st_intersection(study_grid)
 sites_grid <- network%>%
   st_make_valid()%>%
   st_intersection(study_grid)
-
 
 p1 <- ggplot()+
   geom_sf(data=basemap,fill="grey80")+
@@ -210,7 +209,7 @@ ggsave("output/obis_range.png",p1_inset,height=6,width=5,units="in",dpi=300)
     ## species dummy data frame
     sd1<- niches%>%
                filter(!SciName %in% c("Sebastes mentella","Calanus glacialis"))%>%
-               select(SciName,functional_group,cosewic_status)%>%
+               dplyr::select(SciName,functional_group,cosewic_status)%>%
                rename(species=SciName)
     
     sd2 <- rbind(sd1,sd1,sd1,sd1)%>%
@@ -230,7 +229,7 @@ ggsave("output/obis_range.png",p1_inset,height=6,width=5,units="in",dpi=300)
                           group_by(NAME)%>%
                            summarise(area=round(as.numeric(st_area(geometry))/1000/1000,2))%>%
                            data.frame()%>%
-                           select(NAME,area)%>%
+                           dplyr::select(NAME,area)%>%
                            suppressMessages())%>%#suppress the planar coordinate warning. 
                rename(site=NAME)%>%
                arrange(region,long)
@@ -238,8 +237,8 @@ ggsave("output/obis_range.png",p1_inset,height=6,width=5,units="in",dpi=300)
     write.csv(site_df,"output/site_description_table.csv",row.names=F)
     
     #dummy dataframe that can be used to buffer the site summaries
-    site_dummy <- rbind(site_df%>%select(site,long,abbreviation,region)%>%mutate(climate_proj="2-6"),
-                        site_df%>%select(site,long,abbreviation,region)%>%mutate(climate_proj="8-5"))%>%
+    site_dummy <- rbind(site_df%>%dplyr::select(site,long,abbreviation,region)%>%mutate(climate_proj="2-6"),
+                        site_df%>%dplyr::select(site,long,abbreviation,region)%>%mutate(climate_proj="8-5"))%>%
                   rename(NAME = site)%>%
                   mutate(id = paste(NAME,climate_proj,sep="-"))
 
@@ -296,11 +295,11 @@ projs <- unique(agg_annual_toe$climate_proj)
 habitat_loss_ave <- habitat_loss%>%
                     gather(key = "var",value="value",c("area_lost","cum_lost","prop_lost"))%>%
                     filter(mod == "Ensemble")%>%
-                    rename(mean = value)
-                    group_by(climate_proj,species,ToE,var)%>% #this will average the models but note that some models have a 0 in the early years so they pull down the average
-                    summarise(mean=mean(value,na.rm=T),
-                              sd=sd(value,na.rm=T))%>%
-                    ungroup()%>%
+                    rename(mean = value)%>%
+                    # group_by(climate_proj,species,ToE,var)%>% #this will average the models but note that some models have a 0 in the early years so they pull down the average
+                    # summarise(mean=mean(value,na.rm=T),
+                    #           sd=sd(value,na.rm=T))%>%
+                    #ungroup()%>%
                     data.frame()
 
 #format for the plot
@@ -385,12 +384,12 @@ ggsave("output/ENSEMBLE_habitat_loss-models_species.png",network_loss_plot,width
       
       #species lost by 2100
         species_lost_site_format <- species_lost_site%>%
-                                    select(climate_proj,mod,NAME,prop_lost)%>%
+                                    dplyr::select(climate_proj,mod,NAME,prop_lost)%>%
                                     spread(mod,prop_lost)%>% #this just reformats the data so that models are represented as columns
                                     rowwise()%>%
                                     mutate(comp = Ensemble)%>% #just select the ensemble 
                                     data.frame()%>%
-                                    left_join(.,network_cents%>%select(NAME,long,region))
+                                    left_join(.,network_cents%>%dplyr::select(NAME,long,region))
         
         #plot data
         plotdata_comp <- species_lost_site_format%>%
@@ -398,14 +397,14 @@ ggsave("output/ENSEMBLE_habitat_loss-models_species.png",network_loss_plot,width
                           arrange(climate_proj,region,long)%>%
                           mutate(id=paste(NAME,climate_proj,sep="-"),
                                  comp=ifelse(is.na(comp),0,comp))%>%
-                          select(NAME,region,climate_proj,comp,id,long)%>%
+                          dplyr::select(NAME,region,climate_proj,comp,id,long)%>%
                           left_join(.,site_names)
         
         plotdata_comp <- rbind(plotdata_comp,
                                   site_dummy%>% #add the sites that are missing and didn't loose any 
                                   filter(id %in% setdiff(site_dummy$id,plotdata_comp%>%pull(id)))%>%
                                   mutate(comp=0)%>%
-                                  select(NAME,region,climate_proj,comp,id,long,abbreviation))%>%
+                                  dplyr::select(NAME,region,climate_proj,comp,id,long,abbreviation))%>%
                           arrange(climate_proj,region,long)%>%
                           mutate(facet_lab = ifelse(climate_proj == "2-6","RCP 2.6","RCP 8.5"),
                                  NAME = factor(NAME,levels=.[]%>%filter(climate_proj=="8-5")%>%arrange(region,comp)%>%pull(NAME)),
@@ -428,21 +427,21 @@ ggsave("output/ENSEMBLE_habitat_loss-models_species.png",network_loss_plot,width
         #make a range plot 
         
         species_lost_site_format_rng <- species_lost_site%>%
-                                        select(climate_proj,mod,NAME,prop_lost)%>%
+                                        dplyr::select(climate_proj,mod,NAME,prop_lost)%>%
                                         spread(mod,prop_lost)%>% #this just reformats the data so that models are represented as columns
                                         rowwise()%>%
                                         mutate(comp = Ensemble,
                                                min = pmin(AWI,HAD,IPSL,na.rm=T),
                                                max = pmax(AWI,HAD,IPSL,na.rm=T))%>% #just select the ensemble 
                                         data.frame()%>%
-                                        left_join(.,network_cents%>%select(NAME,long,region))
+                                        left_join(.,network_cents%>%dplyr::select(NAME,long,region))
         
         plotdata_comp_rng <- species_lost_site_format_rng%>%
                                   mutate(region = factor(region,levels=c("Bay of Fundy","Western Scotian Shelf","Eastern Scotian Shelf")))%>%
                                   arrange(climate_proj,region,long)%>%
                                   mutate(id=paste(NAME,climate_proj,sep="-"),
                                          comp=ifelse(is.na(comp),0,comp))%>%
-                                  select(NAME,region,climate_proj,comp,min,max,id,long)%>%
+                                  dplyr::select(NAME,region,climate_proj,comp,min,max,id,long)%>%
                                   left_join(.,site_names)
         
         
@@ -450,7 +449,7 @@ ggsave("output/ENSEMBLE_habitat_loss-models_species.png",network_loss_plot,width
                                site_dummy%>% #add the sites that are missing and didn't loose any 
                                  filter(id %in% setdiff(site_dummy$id,plotdata_comp_rng%>%pull(id)))%>%
                                  mutate(comp=0,min=NA,max=NA)%>%
-                                 select(NAME,region,climate_proj,comp,min,max,id,long,abbreviation))%>%
+                                 dplyr::select(NAME,region,climate_proj,comp,min,max,id,long,abbreviation))%>%
                               arrange(climate_proj,region,long)%>%
                               mutate(facet_lab = ifelse(climate_proj == "2-6","RCP 2.6","RCP 8.5"),
                                      NAME = factor(NAME,levels=.[]%>%filter(climate_proj=="8-5")%>%arrange(region,comp)%>%pull(NAME)),
@@ -515,7 +514,7 @@ plot_benchmark_formatted <- species_lost_benchmark%>%
                             ungroup()%>%
                             mutate(id=paste(climate_proj,NAME,benchmark,sep="-"))%>%
                             left_join(.,site_names)%>%
-                            left_join(.,network_cents%>%select(NAME,region,long))%>%
+                            left_join(.,network_cents%>%dplyr::select(NAME,region,long))%>%
                             dplyr::select(names(benchmark_buffer)) #line up the rows for the rbind() next
                             
 
@@ -543,12 +542,11 @@ benchmark_plot <-  ggplot(,aes(x=comp,y=abbreviation,fill=factor(benchmark)))+
                     scale_fill_viridis(discrete=T); benchmark_plot
 
 ggsave("output/ENSEMBLE_benchmark_species_lost.png",benchmark_plot,width=9,height=6,units="in",dpi=300)
-write.csv()
 
 #create dataframe for Shaylyn to make maps from 
 
 species_lost_df <- plot_benchmark_formatted%>%
-                   select(-id)%>%
+                   dplyr::select(-id)%>%
                    spread(benchmark,comp)
 
 save(species_lost_df,file="data/ENSEMBLE_species_lost_df.RData")
@@ -556,7 +554,6 @@ write.csv(species_lost_df,file="output/ENSEMBLE_species_lost.csv",row.names=FALS
                      
 
 ##Species area loss plot --------------------------------------
-
 
 species_area_lost_benchmark <- NULL
 for(i in benchmark_years){
@@ -595,11 +592,12 @@ plot_area_benchmark_formatted <- rbind(plot_area_benchmark_formatted,
                                          mutate(max=NA,
                                                 min=NA,
                                                 comp=0)%>%
-                                         select(names(plot_area_benchmark_formatted)))%>%
-                                 left_join(.,niches%>%rename(species=SciName)%>%select(species,functional_group))%>%
+                                         dplyr::select(names(plot_area_benchmark_formatted)))%>%
+                                 left_join(.,niches%>%rename(species=SciName)%>%dplyr::select(species,functional_group))%>%
                                 mutate(facet_lab = ifelse(climate_proj == "2-6","RCP 2.6","RCP 8.5"),
+                                       functional_group = ifelse(species %in% c("Sebastes fasciatus","Pollachius virens","Melanogrammus aeglefinus","Gadus morhua"), "Benthopelagic fish",functional_group), #this was an add-in later
                                        functional_group = factor(functional_group,levels=rev(c("Mammals/Reptiles","Copepod","Benthic Invertebrates",
-                                                                                           "Pelagic Fish/Cepholopods","Benthic fish"))))%>%
+                                                                                               "Pelagic Fish/Cepholopods","Benthopelagic fish","Benthic fish"))))%>%
                                 data.frame()
 
 #set plotting levels
@@ -620,6 +618,7 @@ benchmark_area_plot <-  ggplot(,aes(x=comp,y=species,fill=factor(benchmark)))+
                                           expand=c(0,0.01))+
                         theme(legend.position = "bottom",
                               strip.background.y = element_blank(),
+                              strip.background.x = element_rect(fill="white"),
                               strip.text.y = element_blank(),
                               axis.text.x = element_text(size=6,colour="black"),
                               panel.spacing.x = unit(4, "mm"))+
@@ -640,7 +639,7 @@ tb1 <- rbind(species_site%>%mutate(prop_lost=0,benchmark=2025),
 tile_buffer <- rbind(tb1,tb1)%>%
                 mutate(climate_proj = rep(c("2-6","8-5"),each=nrow(tb1)),
                        id=paste(climate_proj,benchmark,species,NAME,sep="-"))%>% #unique ID we can use to pad the actual data extracted below
-                select(climate_proj,NAME,species,prop_lost,benchmark,id)
+                dplyr::select(climate_proj,NAME,species,prop_lost,benchmark,id)
 
 tile_df <- NULL
 for(i in benchmark_years){
@@ -668,7 +667,7 @@ for(i in benchmark_years){
 tile_df_formatted <- tile_df%>%
                      filter(mod=="Ensemble")%>% #just focusing on this model
                      mutate(id=paste(climate_proj,benchmark,species,NAME,sep="-"))%>%
-                     select(names(tile_buffer))
+                     dplyr::select(names(tile_buffer))
 
 tile_df_formatted <- rbind(tile_df_formatted,
                            tile_buffer%>%filter(id %in% setdiff(tile_buffer$id,tile_df_formatted$id)))%>%#pad the dataframe
@@ -687,7 +686,7 @@ tile_df_formatted$species_ord <- factor(tile_df_formatted$species,levels=plot_ar
 site_order <- network_cents%>%
               mutate(region_ord = factor(region,levels=c("Bay of Fundy","Western Scotian Shelf","Eastern Scotian Shelf")))%>% #order the regions first
               arrange(region_ord,long)%>%
-              left_join(.,tile_df_formatted%>%distinct(NAME,.keep_all=TRUE)%>%select(NAME,abbreviation))%>%
+              left_join(.,tile_df_formatted%>%distinct(NAME,.keep_all=TRUE)%>%dplyr::select(NAME,abbreviation))%>%
               pull(abbreviation)
                        
 
