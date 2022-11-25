@@ -839,7 +839,7 @@ if(!file.exists("output/ENSEMBLE_temperature_timeseries.RData")& !file.exists("o
   #save intermediate outputs - takes a while to run so no need to do it twice unless the data has changed. 
   save(timeseries_temp,file="output/ENSEMBLE_temperature_timeseries.RData")
   save(timeseries_temp_strat,file="output/ENSEMBLE_temperature_timeseries_strat.RData")
-
+   
 } #end if for the intermediate file checks ('do we need to run this code or not?' check)
 
 

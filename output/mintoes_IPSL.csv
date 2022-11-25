@@ -1,65 +1,65 @@
-climate_proj,NAME,species,toe
-RCP 2.6,Brier Island,Chionoecetes opilio,2015
-RCP 2.6,"Central Scotian Slope, Rise and Abyss",Chionoecetes opilio,2018
-RCP 2.6,Chebogue,Anarhichas lupus,2038
-RCP 2.6,Corsair/Georges Canyons Conservation Area,Hippoglossus hippoglossus,2052.453883
-RCP 2.6,Eastern Canyons,Chionoecetes opilio,2054.768366
-RCP 2.6,Eastern Shore Islands,Chionoecetes opilio,2050.654918
-RCP 2.6,Emerald Basin Sponge Conservation Area,Chionoecetes opilio,2048
-RCP 2.6,Fundian Channel-Browns Bank,Chionoecetes opilio,2016.373653
-RCP 2.6,Georges Bank,Anarhichas lupus,2015.375393
-RCP 2.6,"Head Harbour, West Isles and The Passages",Anarhichas lupus,2024
-RCP 2.6,Horse Mussel Reefs,Anarhichas lupus,2015
-RCP 2.6,Jordan Basin Conservation Area,Anarhichas lupus,2025
-RCP 2.6,LaHave Basin,Chionoecetes opilio,2045.09504
-RCP 2.6,Long Eddy,Chionoecetes opilio,2015
-RCP 2.6,Lophelia Coral Conservation Area,Chionoecetes opilio,2051
-RCP 2.6,Machias Seal Island Migratory Bird Sanctuary,Hippoglossus hippoglossus,2048
-RCP 2.6,North of Emerald Basin Sea Pen Field,Chionoecetes opilio,2048.453477
-RCP 2.6,Northeast Channel Coral Conservation Area,Anarhichas lupus,2040.033214
-RCP 2.6,Northern Gulf of Maine,Chionoecetes opilio,2015
-RCP 2.6,Roseway Bank,Chionoecetes opilio,2042.143369
-RCP 2.6,Sable Island Bank,Chionoecetes opilio,2040.424884
-RCP 2.6,Sambro Bank Sponge Conservation Area,Chionoecetes opilio,2036
-RCP 2.6,Sambro Ledges - Prospect,Chionoecetes opilio,2048
-RCP 2.6,Scotian Gulf,Chionoecetes opilio,2025.123775
-RCP 2.6,South Grand Manan,Chionoecetes opilio,2015
-RCP 2.6,The Gully Marine Protected Area,Chionoecetes opilio,2050.869322
-RCP 2.6,Western Emerald Bank Conservation Area,Chionoecetes opilio,2022.110157
-RCP 2.6,Western Jordan Basin,Chionoecetes opilio,2015
-RCP 8.5,Brier Island,Chionoecetes opilio,2019
-RCP 8.5,Canso Ledges - Sugar Harbour Islands,Chionoecetes opilio,2047
-RCP 8.5,"Central Scotian Slope, Rise and Abyss",Chionoecetes opilio,2015
-RCP 8.5,Chebogue,Anarhichas lupus,2023
-RCP 8.5,Corsair/Georges Canyons Conservation Area,Hippoglossus hippoglossus,2023.775641
-RCP 8.5,Eastern Canyons,Chionoecetes opilio,2046.360561
-RCP 8.5,Eastern Shoal,Chionoecetes opilio,2047
-RCP 8.5,Eastern Shore Islands,Chionoecetes opilio,2044.0058
-RCP 8.5,Emerald Basin Sponge Conservation Area,Chionoecetes opilio,2042
-RCP 8.5,Fundian Channel-Browns Bank,Chionoecetes opilio,2015.817732
-RCP 8.5,Georges Bank,Anarhichas lupus,2015
-RCP 8.5,"Head Harbour, West Isles and The Passages",Anarhichas lupus,2023
-RCP 8.5,Horse Mussel Reefs,Anarhichas lupus,2019
-RCP 8.5,Jordan Basin Conservation Area,Anarhichas lupus,2023
-RCP 8.5,LaHave Basin,Chionoecetes opilio,2032.033569
-RCP 8.5,LaHave Islands,Melanogrammus aeglefinus,2092
-RCP 8.5,Long Eddy,Chionoecetes opilio,2019
-RCP 8.5,Lophelia Coral Conservation Area,Chionoecetes opilio,2047
-RCP 8.5,Machias Seal Island Migratory Bird Sanctuary,Hippoglossus hippoglossus,2043.788688
-RCP 8.5,Middle Bank-Canso Bank,Chionoecetes opilio,2046.952553
-RCP 8.5,Misaine Bank and Laurentian Channel,Chionoecetes opilio,2047
-RCP 8.5,North of Emerald Basin Sea Pen Field,Chionoecetes opilio,2043.906016
-RCP 8.5,Northeast Channel Coral Conservation Area,Anarhichas lupus,2023
-RCP 8.5,Northern Gulf of Maine,Chionoecetes opilio,2019
-RCP 8.5,Pearl Island,Pollachius virens,2078.910981
-RCP 8.5,Port Joli and Surrounding Areas,Amblyraja radiata,2073
-RCP 8.5,Roseway Bank,Chionoecetes opilio,2023
-RCP 8.5,Sable Island Bank,Chionoecetes opilio,2028.616744
-RCP 8.5,Sambro Bank Sponge Conservation Area,Chionoecetes opilio,2023
-RCP 8.5,Sambro Ledges - Prospect,Chionoecetes opilio,2042
-RCP 8.5,Scotian Gulf,Chionoecetes opilio,2019.913351
-RCP 8.5,South Grand Manan,Chionoecetes opilio,2019
-RCP 8.5,St Anns Bank Marine Protected Area,Chionoecetes opilio,2053.511432
-RCP 8.5,The Gully Marine Protected Area,Chionoecetes opilio,2042.52454
-RCP 8.5,Western Emerald Bank Conservation Area,Chionoecetes opilio,2018.861089
-RCP 8.5,Western Jordan Basin,Chionoecetes opilio,2015
+"","climate_proj","NAME","species","toe"
+"1","2-6","Brier Island","Chionoecetes opilio",2015
+"2","2-6","Central Scotian Slope, Rise and Abyss","Chionoecetes opilio",2018
+"3","2-6","Chebogue","Anarhichas lupus",2038
+"4","2-6","Corsair/Georges Canyons Conservation Area","Hippoglossus hippoglossus",2055
+"5","2-6","Eastern Canyons","Chionoecetes opilio",2063
+"6","2-6","Eastern Shore Islands","Chionoecetes opilio",2077
+"7","2-6","Emerald Basin Sponge Conservation Area","Chionoecetes opilio",2048
+"8","2-6","Fundian Channel-Browns Bank","Chionoecetes opilio",2037
+"9","2-6","Georges Bank","Anarhichas lupus",2018
+"10","2-6","Head Harbour, West Isles and The Passages","Anarhichas lupus",2024
+"11","2-6","Horse Mussel Reefs","Anarhichas lupus",2015
+"12","2-6","Jordan Basin Conservation Area","Anarhichas lupus",2025
+"13","2-6","LaHave Basin","Chionoecetes opilio",2048
+"14","2-6","Long Eddy","Chionoecetes opilio",2015
+"15","2-6","Lophelia Coral Conservation Area","Chionoecetes opilio",2051
+"16","2-6","Machias Seal Island Migratory Bird Sanctuary","Hippoglossus hippoglossus",2048
+"17","2-6","North of Emerald Basin Sea Pen Field","Chionoecetes opilio",2069
+"18","2-6","Northeast Channel Coral Conservation Area","Anarhichas lupus",2048
+"19","2-6","Northern Gulf of Maine","Chionoecetes opilio",2015
+"20","2-6","Roseway Bank","Chionoecetes opilio",2048
+"21","2-6","Sable Island Bank","Chionoecetes opilio",2055
+"22","2-6","Sambro Bank Sponge Conservation Area","Chionoecetes opilio",2036
+"23","2-6","Sambro Ledges - Prospect","Chionoecetes opilio",2048
+"24","2-6","Scotian Gulf","Chionoecetes opilio",2044
+"25","2-6","South Grand Manan","Chionoecetes opilio",2015
+"26","2-6","The Gully Marine Protected Area","Chionoecetes opilio",2051
+"27","2-6","Western Emerald Bank Conservation Area","Chionoecetes opilio",2048
+"28","2-6","Western Jordan Basin","Chionoecetes opilio",2015
+"29","8-5","Brier Island","Chionoecetes opilio",2019
+"30","8-5","Canso Ledges - Sugar Harbour Islands","Chionoecetes opilio",2047
+"31","8-5","Central Scotian Slope, Rise and Abyss","Chionoecetes opilio",2015
+"32","8-5","Chebogue","Anarhichas lupus",2023
+"33","8-5","Corsair/Georges Canyons Conservation Area","Hippoglossus hippoglossus",2024
+"34","8-5","Eastern Canyons","Chionoecetes opilio",2047
+"35","8-5","Eastern Shoal","Chionoecetes opilio",2047
+"36","8-5","Eastern Shore Islands","Chionoecetes opilio",2047
+"37","8-5","Emerald Basin Sponge Conservation Area","Chionoecetes opilio",2042
+"38","8-5","Fundian Channel-Browns Bank","Chionoecetes opilio",2023
+"39","8-5","Georges Bank","Anarhichas lupus",2015
+"40","8-5","Head Harbour, West Isles and The Passages","Anarhichas lupus",2023
+"41","8-5","Horse Mussel Reefs","Anarhichas lupus",2019
+"42","8-5","Jordan Basin Conservation Area","Anarhichas lupus",2023
+"43","8-5","LaHave Basin","Chionoecetes opilio",2042
+"44","8-5","LaHave Islands","Gadus morhua",2092
+"45","8-5","Long Eddy","Chionoecetes opilio",2019
+"46","8-5","Lophelia Coral Conservation Area","Chionoecetes opilio",2047
+"47","8-5","Machias Seal Island Migratory Bird Sanctuary","Amblyraja radiata",2047
+"48","8-5","Middle Bank-Canso Bank","Chionoecetes opilio",2047
+"49","8-5","Misaine Bank and Laurentian Channel","Chionoecetes opilio",2047
+"50","8-5","North of Emerald Basin Sea Pen Field","Chionoecetes opilio",2047
+"51","8-5","Northeast Channel Coral Conservation Area","Anarhichas lupus",2023
+"52","8-5","Northern Gulf of Maine","Chionoecetes opilio",2019
+"53","8-5","Pearl Island","Pollachius virens",2084
+"54","8-5","Port Joli and Surrounding Areas","Amblyraja radiata",2073
+"55","8-5","Roseway Bank","Chionoecetes opilio",2023
+"56","8-5","Sable Island Bank","Chionoecetes opilio",2042
+"57","8-5","Sambro Bank Sponge Conservation Area","Chionoecetes opilio",2023
+"58","8-5","Sambro Ledges - Prospect","Chionoecetes opilio",2042
+"59","8-5","Scotian Gulf","Chionoecetes opilio",2023
+"60","8-5","South Grand Manan","Chionoecetes opilio",2019
+"61","8-5","St Anns Bank Marine Protected Area","Chionoecetes opilio",2064
+"62","8-5","The Gully Marine Protected Area","Chionoecetes opilio",2047
+"63","8-5","Western Emerald Bank Conservation Area","Chionoecetes opilio",2042
+"64","8-5","Western Jordan Basin","Chionoecetes opilio",2015
